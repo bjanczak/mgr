@@ -1,0 +1,6 @@
+1)    When we choose projection dimension as pruning criteria we base the comparison on a little slice of data and we loose all other dimension values data.
+	  The less efficient algorithm with dimension projection works, the more data is lost while dimensions projection. 
+	  This is why such a solution for projection on one dimension works better for low dimensional data than for high dimensional data.
+	  So the more data we loose using projection the more inefficient the algorithm becomes.
+	  For example if we choose value of dimension 'd' as a pruning criteria, than all the points that has equal value of dimension 'd' are treated the same, despite the fact thay can be freely distant from each other.
+	  Therefore lots of points passes to the algorithm phase were real distance is calculated.

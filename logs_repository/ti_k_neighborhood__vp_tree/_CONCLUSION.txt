@@ -1,0 +1,5 @@
+1)    Gdy reprezentacja wewnêtrzena rzadka to, w przypadku zbioru gêstego zdecydowanie lepiej radzi sobie TI-NBC a w przypadku zbioru rzadkiego TI-NBC radzi
+      sobie tylko trochê lepiej ni¿ VP_TREE.
+
+2)    Gdy reprezentacja wewnêtrzna jest gêsta, to zdecydowanie lepiej radzi sobie VP-TREE. Spowodowane jest to d³ugim czasem sortowania punktów w TI-NBC.
+      Zdecydowanie d³u¿szym ni¿ przy reprezentacji wewnêtrzej rzadkiej, a przecie¿ to nie powinno mnieæ wp³ywu.
