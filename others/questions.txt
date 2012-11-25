@@ -1,0 +1,18 @@
+1)	k_neighborhood can't classify, it needs calculating distance to reference point.
+2)	sorting is done using all available criteria.
+3)  placing is fucked up.
+4)  should posotioning be added to algorithms calculation time
+5)  Verification report:
+	+5a) Code review.
+	+5b) Comparison tests.	
+	+5c) Profiler.
+	+5d) Gathering data.
+6)
+	6a) DBSCAN and TI_DBSCAN shows distance / point representation / dataset characteristic differences (DBSCAN *_60, TI-DBSCAN *_120).
+	6b) TI_DBSCAN shows choosing reference point difference for high dimensional data and how (>*_120).
+	6c) TI_DBSCAN_REF shows choosing reference point difference and it's ordering for high dimensional data
+	6d) TI_DBSCAN_REF_PROJECTION shows that projection is a poor pruning criteria.
+
+7)  do all datasets should have the same querry or should it have querry that returns some clusters?
+
+8) test index against not index access to data?

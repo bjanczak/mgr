@@ -1,0 +1,30 @@
+
+--------------------------------------------------------------------------------------------------------------------------------------------------
+Id		|	Description										|	Properties files								|	Conclusions
+--------------------------------------------------------------------------------------------------------------------------------------------------
+
+1a)			DBSCAN algorithm execution differences in 			dbscan_5, dbscan_6
+			using INTERNAL REPRESENTATION on SMALL 
+			DIMENSION dataset WITHOUT COSINE distance.
+
+1b)			DBSCAN algorithm execution differences in 			dbscan_7, dbscan_8
+			using INTERNAL REPRESENTATION on SMALL 
+			DIMENSION dataset WITH COSINE distance.
+
+2a)			DBSCAN algorithm execution differences in			dbscan_5, dbscan_7 / dbscan_6, dbscan_8
+			USING COSINE distance and DENSE/SPARSE
+			INTERNAL representation using SMALL 
+			DIMENSION dataset.
+			
+2b)			DBSCAN algorithm execution differences in			dbscan_4, dbscan_2 / dbscan_3, dbscan_1
+			USING COSINE distance and DENSE/SPARSE
+			INTERNAL representation using HIGH 
+			DIMENSION dataset.	
+
+3a)			DBSCAN algorithm execution differences in 			dbscan_1, dbscan_2
+			using INTERNAL REPRESENTATION on HIGH 
+			DIMENSION dataset WITHOUT COSINE distance.
+
+3b)			DBSCAN algorithm execution differences in 			dbscan_3, dbscan_4
+			using INTERNAL REPRESENTATION on HIGH 
+			DIMENSION dataset WITH COSINE distance.			

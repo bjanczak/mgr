@@ -1,0 +1,55 @@
+Non algorithm time report:
+	*dataset read,
+	*reference points calculation,
+	*normalization calculation.
+
+Dbscan:
+	*algorithmExecution = clustering.
+	
+TiDbscan:
+	*algorithmExecition = clustering + distance + sorting,
+	*clustering,
+	*distance,
+	*sorting.
+	
+TiDbscanRef:
+	*algorithmExecition = clustering + distance + sorting,
+	*clustering,
+	*distance, - calculating distance to all reference points
+	*sorting, - sorting using all criterias.
+	
+TiDbscanRefProjection:
+	*algorithmExecition = clustering + distance + sorting,
+	*clustering,
+	*distance, - calculating distance to all reference points and assigning dimension value
+	*sorting, - sorting using all criterias.
+	
+KNeighborhood:
+	*algorithmExecution = clustering.
+
+TiKNieghborhood:
+	*algorithmExecition = clustering + distance + sorting,
+	*clustering,
+	*distance, - calculating distance to reference point for both dataset points and , if classification, classified points.
+	*sorting, - sorting,
+	*positioning - if classification.
+
+TiKNieghborhoodRef:
+	*algorithmExecition = clustering + distance + sorting,
+	*clustering,
+	*distance, - calculating distance to all reference points for both dataset points and , if classification, classified points.
+	*sorting, - sorting using all criterias.
+	*positioning - if classification.
+	
+TiKNieghborhoodRefProjection:
+	*algorithmExecition = clustering + distance + sorting,
+	*clustering,
+	*distance, - calculating distance to all reference  and assigning dimension value points for both dataset points and , if classification, classified points.
+	*sorting, - sorting using all criterias.
+	*positioning - if classification.
+
+VpTree:
+	*algorithmExecution = clustering + index building,
+	*clustering, - searching k_neighborhood or eps_neighborhood in VPTree index,
+	*building index, - building VPTree.
+

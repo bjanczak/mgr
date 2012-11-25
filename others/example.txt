@@ -1,0 +1,56 @@
+********************************************
+               Properties
+********************************************
+
+
+
+
+/*Algorithm settings*/
+algorithms_group_name = k_neighborhood
+algorithm_variant = projection
+
+
+/*DBSCAN settings*/
+eps = 900
+min_pts = 7
+
+
+/*K-NEIGHBORHOOD settings*/
+k = 4
+
+
+/*Cosine similarity settings*/
+use_cosine_similarity = 1
+
+
+/*Input dataset settings*/
+dataset_file_format = 1
+dataset_file_path = dense_dataset.txt
+dataset_dimension = 10
+dataset_dimension_value_threshold = 20
+dataset_elements_number = 5
+
+
+/*Internal data representation settings*/
+dataset_internal_format = 0
+
+
+/*Reference point settings*/
+reference_point = [1,1][min][max]
+reference_point_format = 0
+
+
+/*Projection settings*/
+projection_dimensions = 1,5,8,34,654
+projection_source_sequence = r1,r2,r3
+
+
+/*Classification subset generation*/
+classification_subset_factor = 1
+
+
+/*VPS-Tree settings*/
+p_sample_index = 10
+s_sample_index = 8
+constant_vantage_point = [0]
+constant_vantage_point_format = 0

@@ -1,0 +1,53 @@
+Finding K neighborhood using vantage point tree.
+
+I) Building index
+
+
+	Complexity:		O(n (1 + 2logn)) ~= O(nlogn)
+
+
+	Step	Complexity		Actions
+
+	1)		O(n)			For each point p from D and 
+							reference point r {
+								distance = d(p ,r);
+								criteria.add(distance);
+							}
+
+	2)		O(nlogn)		Sort criteria by distance;
+
+	3)		O(nlogn)		Build VP tree.
+
+II) Searching k neighbors of point q 	
+
+
+	Complexity:		O(2logn+k(3+logk)+slogs+2), where s>=k
+					if n>>k, then O(logn)
+
+
+	Step	Complexity		Actions
+	
+	1)		O(1)			q_distance = d(q, r);
+
+	2)		O(k + logn)		Find k values nearest to q_distance
+							using binary search and add them to
+							k_n_distance collection.
+
+	3)		O(k)			For each value v from k_n_distance 
+							and q_distance{
+							
+								eps_candidates.add(|v - q_distance|);
+							}
+	
+	4)		O(klogk)		Sort eps_candidates;
+								
+	5)		O(1)			eps = eps_candidates.get_last_element();
+	
+	6)		O(logn)			Search eps neighborhood using vantage point
+							tree. (Search result k_neighborhood is a 
+							collection of pairs (p.id, 
+							distance = d(p, q)) of size s)
+	
+	7)		O(slogs)		Sort k_neighborhood;
+	
+	8)		O(k)			result = k_neighborhood[0..k-1]

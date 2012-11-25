@@ -1,0 +1,40 @@
+Comments:
+
+1) Dense representation for high dimensional data leads to std:bad alloc exception!
+   Application reaches 2GB user-mode virtual address limit (http://msdn.microsoft.com/en-us/library/aa366778(VS.85).aspx#physical_memory_limits_windows_7).
+   This is why parameters were changed to address 3GB of memory.
+   If application reaches 3,2GB of virtual memory occupation than OS forces std:bad_alloc exception.
+
+   Every new run, there should be some delay f.e. 10s, so that OS could do his job and not influance the test.
+
+DBSCAN TI-DBSCAN
+
+1) Differences in ti-dbscan and dbscan culster sizes result in boundary points.
+2) Using sparse internal point representation significantly reduces clustering time.
+3) Forward-neighbourhood function is much more often called than backward-neighbourhood.
+4) The most often called operation is eclidean distance calculation.
+5) The greatest impact on distance calculation has power function. Using multiplying than power is much more faster.
+6) Why NOISE groups sizes differs depending on neighborhood method?
+
+K_NEIGHBORHOOD
+
+1) k_neighborhood has <k points, still algorithm lets k_neighborhood to have k points.
+2) All K-NEIGHBORHOOD implementation must reside in one cpp file because sglib definition of RB Tree must reside in one file.
+3) RB-Tree implementation casts double distance valu to int value
+
+K_NN
+
+1) Its bettor to choose reference point as position criteria, because it returns closer points.
+
+reference point definition functions [max], [min] consume significant amount of time when calculated.
+
+PROJECTION
+1) distance to reference point is far better pruning criteria than projection.
+
+SORTING
+
+The sort algorithm is not stable and so does not guarantee that the relative ordering of equivalent elements will be preserved.
+The algorithms complegity is N*logN where N is dataset size.
+The variations in points sorting time was due to copy constructor used why sorting. Size of point has influance on sorting time, therefore dataset characteristic has influance on sorting time.
+In order to get rid of sorting time dependency on dataset, the dataset index build of iterators is created. Instead of dataset the dataset index is sorted. Index element has always the same size so sorting time 
+does not depend on dataset. This way dataset sorting times of different point typeas are comparable.

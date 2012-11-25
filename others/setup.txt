@@ -1,0 +1,28 @@
+dense_d2_a1.txt
+eps 			900
+minpts 			7
+cos/eps			0.999996
+cos/minpts 		3
+
+nr_of_rows		3000
+dimension		2
+-------------------------------------
+
+dataset_dense_d15.txt
+eps 			100000
+minpts 			9
+cos/eps			0.999
+cos/minpts 		2
+
+nr_of_rows		10125
+dimension		15
+-------------------------------------
+
+karypis_sport.txt
+eps 			15
+minpts 			3
+cos/eps			0.999
+cos/minpts 		2
+
+nr_of_rows		8580
+dimension		126373

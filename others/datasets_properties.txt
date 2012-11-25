@@ -1,0 +1,97 @@
+dense_d2_r3000.txt
+	minEps = 5.09902
+	avgEps = 23283.1
+	maxEps = 65598.7
+
+dense_d2_r62556_sequoia.txt
+	
+	/*5 000*/
+	minEps = 23.77
+	avgEps = 421888.52
+	maxEps = 1337796.81
+	
+	/*10 000*/
+	minEps = 23.77
+	avgEps = 421459.61
+	maxEps = 1337796.81
+	
+	/*30 000*/
+	minEps = 22.80
+	avgEps = 422107.92
+	maxEps = 1402344.17
+	
+	/*60 000*/
+	minEps = 22.56
+	avgEps = 421860.94
+	maxEps = 1403499.27
+	
+	/*62 556*/
+	minEps = 22.56
+	avgEps = 421990.70
+	maxEps = 1403499.27
+	
+dense_d2_r100000_birch1.txt
+
+	/*5 000*/
+	minEps = 25
+	avgEps = 307723.73
+	maxEps = 998615.20
+	
+	/*10 000*/
+	minEps = 23.60
+	avgEps = 331861.39
+	maxEps = 1008274.39
+	
+	/*30 000*/
+	minEps = 21.63
+	avgEps = 382405.97
+	maxEps = 1058297.05
+	
+	/*60 000*/
+	minEps = 2
+	avgEps = 425318.31
+	maxEps = 1200663.73
+	
+	/*100 000*/
+	minEps = 2
+	avgEps = 479980.80
+	maxEps = 1336078.23
+	
+dense_d56_r100000_cup98.txt
+
+	/*5 000*/
+	minEps = 2.83
+	avgEps = 1279.20
+	maxEps = 8505.76
+	
+	/*10 000*/
+	minEps = 2.83
+	avgEps = 1286.93
+	maxEps = 8505.76
+	
+	/*30 000*/
+	minEps = 2
+	avgEps = 1272.58
+	maxEps = 8534.87
+	
+	/*60 000*/
+	minEps = 1
+	avgEps = 1262.47
+	maxEps = 8534.87
+	
+	/*100 000*/
+	minEps = 1
+	avgEps = 1265.69
+	maxEps = 8534.87
+	
+sparse_d126373_r8580_karypis_sport.txt
+
+	/*5 000*/
+	minEps = 1
+	avgEps = 30.76
+	maxEps = 181.55
+	
+	/*8 580*/
+	minEps = 1
+	avgEps = 31.73
+	maxEps = 283.16

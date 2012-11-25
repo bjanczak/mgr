@@ -1,0 +1,5 @@
+1) wyznaczyæ, czas po którym uznajemy, ¿e nie przeprowadzamy dalej eksperymentu poniewa¿ trwa zbyt d³ugo,
+2) eksperymenty powinny byæ powtarzane conajmniej 4 razy
+3) jeœli czas trwania eksperymentu przekroczy wartoœæ T lub braknie pamiêci to brak czasu wykonania ekpserymentu,
+4) W przypadku s¹siedztwa przyjmujemy k=4 i szukamy s¹siadów dla ka¿dego punktu,
+5) W przypadku grupowania eps stanowi 1/20 przek¹tnej dziedziny a minpts stanowi 1/20 liczby punktow.
