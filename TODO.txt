@@ -1,0 +1,26 @@
+/*Improvement ideas*/
+
+*	change to percentage:
+		-classification_subset_factor,
+		-p_sample_index,
+		-s_sample_index.
+* change classification result to hold distance to each neighbor.
+* delete history and boundaries from VPSTreePoint
+* TiDbScanRef is candidate?
+* zamiana unsigned long na size_t?
+* think of clearing the datasetPoint
+* change double to sth with higher precision.
+* test against double values
+* random value in every dimension of scale.
+
+/*Testing ideas*/
+Test algorithms:
+	* wykonaæ dla TI-DBSCAN/TI-KNEIGHBORHOOD podobne testy podobne do wawrowych w zale¿noœci od reprezentacji wewnêtrznej i u¿ycia okdleg³oœci dla 
+	     covtype, 
+		 cup98, 
+		 birch, 
+		 sequoia,
+		 karypis_sport,
+		 karypis_review,
+		 karypis_hitech,
+	 po 10 uruchomieñ na zbiór.
