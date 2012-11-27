@@ -23,7 +23,7 @@
  * Inserts found neighbors to kNeighborhood collection.
  *
  * @dataset                Dataset of elements.
- * @pointIt                Iterator pointing to the point for which 
+ * @point                  Point for which 
  *                         neighbors are verified.
  * @pointBackwardIt        Iterator pointing to the point preceding
  *                         a point pointIt is pointing at.
@@ -36,7 +36,7 @@
  */
 typedef void verifyKCandidateNeighborsBackwardFunction (
 	const vector<vector<KNeighborhoodPoint>::iterator>& dataset
-	, vector<vector<KNeighborhoodPoint>::iterator>::iterator pointIt
+	, KNeighborhoodPoint& point
 	, vector<vector<KNeighborhoodPoint>::iterator>::iterator& pointBackwardIt
 	, bool& backwardSearch
 	, multimap<double, vector<KNeighborhoodPoint>::iterator, DistanceComparator>& kNeighborhood
@@ -48,7 +48,7 @@ typedef void verifyKCandidateNeighborsBackwardFunction (
  * Inserts found neighbors to kNeighborhood collection.
  *
  * @dataset                Dataset of elements.
- * @pointIt                Iterator pointing to the point for which 
+ * @point                  Point for which 
  *                         neighbors are verified.
  * @pointForwardIt         Iterator pointing to the point following
  *                         a point pointIt is pointing at.
@@ -61,7 +61,7 @@ typedef void verifyKCandidateNeighborsBackwardFunction (
  */
 typedef void verifyKCandidateNeighborsForwardFunction (
 	const vector<vector<KNeighborhoodPoint>::iterator>& dataset
-	, vector<vector<KNeighborhoodPoint>::iterator>::iterator pointIt
+	, KNeighborhoodPoint& point
 	, vector<vector<KNeighborhoodPoint>::iterator>::iterator& pointForwardIt
 	, bool& forwardSearch
 	, multimap<double, vector<KNeighborhoodPoint>::iterator, DistanceComparator>& kNeighborhood
@@ -88,6 +88,8 @@ protected:
 	 * @dataset                Dataset of elements.
 	 * @pointIt                Iterator pointing to the point for which
 	 *                         K-Neighborhood is calculated.
+	 * @point                  Point for which
+	 *                         K-Neighborhood is calculated.
 	 * @backwardVerification   Function verifying K neighborhood searching
 	 *                         backward.
 	 * @forwardVerification    Function verifying K neighborhood searching
@@ -99,6 +101,7 @@ protected:
 	multimap<double, vector<KNeighborhoodPoint>::iterator, DistanceComparator> tiKNeighborhood(
 		const vector<vector<KNeighborhoodPoint>::iterator>& dataset
 		, vector<vector<KNeighborhoodPoint>::iterator>::iterator pointIt
+		, KNeighborhoodPoint& point
 		, verifyKCandidateNeighborsBackwardFunction backwardVerification
 		, verifyKCandidateNeighborsForwardFunction forwardVerification);
 
@@ -139,7 +142,7 @@ protected:
 	 * and backward. Inserts found neighbors to kNeighborhood collection.
 	 *
 	 * @dataset                Dataset of elements.
-	 * @pointIt                Iterator pointing to the point for which 
+	 * @point                  Point for which 
 	 *                         neighbors are found.
 	 * @pointBackwardIt        Iterator pointing to the point preceding
 	 *                         a point pointIt is pointing at.
@@ -154,7 +157,7 @@ protected:
 	 */
 	void findFirstKCandidateNeighborsForwardAndBackward(
 		const vector<vector<KNeighborhoodPoint>::iterator>& dataset
-		, vector<vector<KNeighborhoodPoint>::iterator>::iterator pointIt
+		, const KNeighborhoodPoint& point
 		, vector<vector<KNeighborhoodPoint>::iterator>::iterator& pointBackwardIt
 		, vector<vector<KNeighborhoodPoint>::iterator>::iterator& pointForwardIt
 		, bool &backwardSearch
@@ -167,7 +170,7 @@ protected:
 	 * Inserts found neighbors to kNeighborhood collection.
 	 *
 	 * @dataset                Dataset of elements.
-	 * @pointIt                Iterator pointing to the point for which 
+	 * @point                  Point for which 
 	 *                         neighbors are found.
 	 * @pointBackwardIt        Iterator pointing to the point preceding
 	 *                         a point pointIt is pointing at.
@@ -179,7 +182,7 @@ protected:
 	 */
 	void findFirstKCandidateNeighborsBackward(
 		const vector<vector<KNeighborhoodPoint>::iterator>& dataset
-		, vector<vector<KNeighborhoodPoint>::iterator>::iterator pointIt
+		, const KNeighborhoodPoint& point
 		, vector<vector<KNeighborhoodPoint>::iterator>::iterator& pointBackwardIt
 		, bool &backwardSearch
 		, multimap<double, vector<KNeighborhoodPoint>::iterator, DistanceComparator>& kNeighborhood
@@ -190,7 +193,7 @@ protected:
 	 * Inserts found neighbors to kNeighborhood collection.
 	 *
 	 * @dataset                Dataset of elements.
-	 * @pointIt                Iterator pointing to the point for which 
+	 * @point                  Point for which 
 	 *                         neighbors are found.
 	 * @pointForwardIt         Iterator pointing to the point following
 	 *                         a point pointIt is pointing at.
@@ -202,7 +205,7 @@ protected:
 	 */
 	void findFirstKCandidateNeighborsForward(
 		const vector<vector<KNeighborhoodPoint>::iterator>& dataset
-		, vector<vector<KNeighborhoodPoint>::iterator>::iterator pointIt
+		, const KNeighborhoodPoint& point
 		, vector<vector<KNeighborhoodPoint>::iterator>::iterator& pointForwardIt
 		, bool &forwardSearch
 		, multimap<double, vector<KNeighborhoodPoint>::iterator, DistanceComparator>& kNeighborhood

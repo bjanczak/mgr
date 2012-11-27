@@ -28,19 +28,25 @@ VpTree::VpTree(const VpTree& object){
 TimeReport VpTree::run(const Properties& properties, Dataset& dataset){
 
 	TimeReport timeReport;
+
 	list<VpsPoint> tempDataset;
 	list<VpsPoint>::iterator it;
 	list<VpsPoint>::iterator end;
-	list<list<VpsPoint>::iterator> pointList;
-	list<Point*> kNeighbors;
+
 	vector<pair<Point*, list<Point*>>>* classificationResult = &dataset.classificationResult;
+
 	vector<pair<Point, Point*>>* classificationDataset = &dataset.classificationDataset;
-	unsigned long classificationDatasetSize = classificationDataset->size();
 	vector<pair<Point, Point*>>::iterator classificationIt = classificationDataset->begin();
 	vector<pair<Point, Point*>>::iterator classificationEnd = classificationDataset->end();
+
+	unsigned long classificationDatasetSize = classificationDataset->size();
+	
 	vector<multimap<double, Point*, DistanceComparator>> tempKNeighbors(classificationDataset->size());
 	multimap<double, Point*, DistanceComparator>::iterator multimapIt;
 	multimap<double, Point*, DistanceComparator>::iterator multimapEnd;
+
+	list<list<VpsPoint>::iterator> pointList;
+	list<Point*> kNeighbors;
 	unsigned long k = properties.k;
 	unsigned long counter;
 	double eps;

@@ -42,9 +42,9 @@ TimeReport TiKNeighborhood::run(const Properties& properties, Dataset& dataset){
 	vector<pair<Point, Point*>>::iterator classificationIt;
 	vector<pair<Point, Point*>>::iterator classificationEnd = classificationDataset->end();
 	
-	vector<vector<vector<KNeighborhoodPoint>::iterator>::iterator> classificationDatasetEquivalent;
-	vector<vector<vector<KNeighborhoodPoint>::iterator>::iterator>::iterator classificationEquivalentIt;
-	vector<vector<vector<KNeighborhoodPoint>::iterator>::iterator>::iterator classificationEquivalentEnd;
+	vector<pair<KNeighborhoodPoint, vector<vector<KNeighborhoodPoint>::iterator>::iterator>> classificationDatasetEquivalent;
+	vector<pair<KNeighborhoodPoint, vector<vector<KNeighborhoodPoint>::iterator>::iterator>>::iterator classificationEquivalentIt;
+	vector<pair<KNeighborhoodPoint, vector<vector<KNeighborhoodPoint>::iterator>::iterator>>::iterator classificationEquivalentEnd;
 
 	clock_t distanceCalculationStart;
 	clock_t distanceCalculationFinish;
@@ -113,7 +113,7 @@ TimeReport TiKNeighborhood::run(const Properties& properties, Dataset& dataset){
 		
 				placementIt = Dataset::getPlacementBinary(datasetIterators,classificationIt->first);
 				classificationIt->second = &(**placementIt);
-				classificationDatasetEquivalent.push_back(placementIt);
+				classificationDatasetEquivalent.push_back(pair<Point, vector<vector<KNeighborhoodPoint>::iterator>::iterator>(classificationIt->first, placementIt));
 			}
 		}
 		else{
@@ -122,7 +122,7 @@ TimeReport TiKNeighborhood::run(const Properties& properties, Dataset& dataset){
 		
 				placementIt = Dataset::getPlacementLineary(datasetIterators,classificationIt->first);
 				classificationIt->second = &(**placementIt);
-				classificationDatasetEquivalent.push_back(placementIt);
+				classificationDatasetEquivalent.push_back(pair<Point, vector<vector<KNeighborhoodPoint>::iterator>::iterator>(classificationIt->first, placementIt));
 			}
 		}
 
@@ -141,7 +141,7 @@ TimeReport TiKNeighborhood::run(const Properties& properties, Dataset& dataset){
 
 		for(datasetIteratorsIt = datasetIterators.begin(); datasetIteratorsIt != datasetIteratorsEnd; datasetIteratorsIt++){
 	
-			(*datasetIteratorsIt)->neighbors = tiKNeighborhood(datasetIterators, datasetIteratorsIt, TiKNeighborhood::verifyKCandidateNeighborsBackward, TiKNeighborhood::verifyKCandidateNeighborsForward);
+			(*datasetIteratorsIt)->neighbors = tiKNeighborhood(datasetIterators, datasetIteratorsIt, (**datasetIteratorsIt), TiKNeighborhood::verifyKCandidateNeighborsBackward, TiKNeighborhood::verifyKCandidateNeighborsForward);
 		}
 	}
 	else
@@ -151,7 +151,7 @@ TimeReport TiKNeighborhood::run(const Properties& properties, Dataset& dataset){
 
 			for(classificationEquivalentIt = classificationDatasetEquivalent.begin(); classificationEquivalentIt != classificationEquivalentEnd; classificationEquivalentIt++){
 				
-				(**classificationEquivalentIt)->neighbors = tiKNeighborhood(datasetIterators, (*classificationEquivalentIt), TiKNeighborhood::verifyKCandidateNeighborsBackward, TiKNeighborhood::verifyKCandidateNeighborsForward);
+				(**classificationEquivalentIt->second).neighbors = tiKNeighborhood(datasetIterators, classificationEquivalentIt->second, classificationEquivalentIt->first, TiKNeighborhood::verifyKCandidateNeighborsBackward, TiKNeighborhood::verifyKCandidateNeighborsForward);
 			}
 		}
 
@@ -172,7 +172,7 @@ TimeReport TiKNeighborhood::run(const Properties& properties, Dataset& dataset){
 
 void TiKNeighborhood::verifyKCandidateNeighborsBackward (
 	const vector<vector<KNeighborhoodPoint>::iterator>& dataset
-	, vector<vector<KNeighborhoodPoint>::iterator>::iterator pointIt
+	, KNeighborhoodPoint& point
 	, vector<vector<KNeighborhoodPoint>::iterator>::iterator& pointBackwardIt
 	, bool& backwardSearch
 	, multimap<double, vector<KNeighborhoodPoint>::iterator, DistanceComparator>& kNeighborhood
@@ -181,19 +181,19 @@ void TiKNeighborhood::verifyKCandidateNeighborsBackward (
 	double distance;
 	unsigned long i;
 
-	while(backwardSearch && (((*pointIt)->distance[0] - (*pointBackwardIt)->distance[0]) <= (*pointIt)->eps)){
+	while(backwardSearch && ((point.distance[0] - (*pointBackwardIt)->distance[0]) <= point.eps)){
 
-		distance = Point::minkowskiDistance((**pointBackwardIt), (**pointIt), 2);
+		distance = Point::minkowskiDistance((**pointBackwardIt), point, 2);
 
-		if(distance < (*pointIt)->eps){
+		if(distance < point.eps){
 		
-			i = getKeysNr(kNeighborhood, (*pointIt)->eps);
+			i = getKeysNr(kNeighborhood, point.eps);
 
 			if((kNeighborhood.size() - i) >= (k - 1)){
 			
-				kNeighborhood.erase((*pointIt)->eps);
+				kNeighborhood.erase(point.eps);
 				kNeighborhood.insert(pair<double, vector<KNeighborhoodPoint>::iterator>(distance, *pointBackwardIt));
-				(*pointIt)->eps = getMaxDistance(kNeighborhood);
+				point.eps = getMaxDistance(kNeighborhood);
 			}
 			else{
 				
@@ -201,7 +201,7 @@ void TiKNeighborhood::verifyKCandidateNeighborsBackward (
 			}
 		}
 		else
-			if(distance == (*pointIt)->eps){
+			if(distance == point.eps){
 		
 				kNeighborhood.insert(pair<double, vector<KNeighborhoodPoint>::iterator>(distance, *pointBackwardIt));
 			}
@@ -212,7 +212,7 @@ void TiKNeighborhood::verifyKCandidateNeighborsBackward (
 
 void TiKNeighborhood::verifyKCandidateNeighborsForward (
 	const vector<vector<KNeighborhoodPoint>::iterator>& dataset
-	, vector<vector<KNeighborhoodPoint>::iterator>::iterator pointIt
+	, KNeighborhoodPoint& point
 	, vector<vector<KNeighborhoodPoint>::iterator>::iterator& pointForwardIt
 	, bool& forwardSearch
 	, multimap<double, vector<KNeighborhoodPoint>::iterator, DistanceComparator>& kNeighborhood
@@ -221,19 +221,19 @@ void TiKNeighborhood::verifyKCandidateNeighborsForward (
 	double distance;
 	unsigned long i;
 
-	while(forwardSearch && (((*pointForwardIt)->distance[0] - (*pointIt)->distance[0]) <= (*pointIt)->eps)){
+	while(forwardSearch && (((*pointForwardIt)->distance[0] - point.distance[0]) <= point.eps)){
 
-		distance = Point::minkowskiDistance((**pointForwardIt), (**pointIt), 2);
+		distance = Point::minkowskiDistance((**pointForwardIt), point, 2);
 
-		if(distance < (*pointIt)->eps){
+		if(distance < point.eps){
 		
-			i = getKeysNr(kNeighborhood, (*pointIt)->eps);
+			i = getKeysNr(kNeighborhood, point.eps);
 
 			if((kNeighborhood.size() - i) >= (k - 1)){
 			
-				kNeighborhood.erase((*pointIt)->eps);
+				kNeighborhood.erase(point.eps);
 				kNeighborhood.insert(pair<double, vector<KNeighborhoodPoint>::iterator>(distance, *pointForwardIt));
-				(*pointIt)->eps = getMaxDistance(kNeighborhood);
+				point.eps = getMaxDistance(kNeighborhood);
 			}
 			else{
 				
@@ -241,7 +241,7 @@ void TiKNeighborhood::verifyKCandidateNeighborsForward (
 			}
 		}
 		else
-			if(distance == (*pointIt)->eps){
+			if(distance == point.eps){
 		
 				kNeighborhood.insert(pair<double, vector<KNeighborhoodPoint>::iterator>(distance, *pointForwardIt));
 			}

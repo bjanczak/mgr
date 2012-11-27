@@ -30,7 +30,7 @@
 #include <stdio.h>
 #include <iostream>
 
-#define TEST_REPEAT 5
+#define TEST_REPEAT 1
 
 const string AlgorithmsEngine::LOGS_DIRECTORY_PATH = "logs";
 const string AlgorithmsEngine::PARAMETERS_DIRECTORY_PATH = "properties/";

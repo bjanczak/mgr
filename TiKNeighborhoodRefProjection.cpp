@@ -41,9 +41,9 @@ TimeReport TiKNeighborhoodRefProjection::run(const Properties& properties, Datas
 	vector<pair<Point, Point*>>::iterator classificationIt;
 	vector<pair<Point, Point*>>::iterator classificationEnd = classificationDataset->end();
 	
-	vector<vector<vector<KNeighborhoodPoint>::iterator>::iterator> classificationDatasetEquivalent;
-	vector<vector<vector<KNeighborhoodPoint>::iterator>::iterator>::iterator classificationEquivalentIt;
-	vector<vector<vector<KNeighborhoodPoint>::iterator>::iterator>::iterator classificationEquivalentEnd;
+	vector<pair<KNeighborhoodPoint, vector<vector<KNeighborhoodPoint>::iterator>::iterator>> classificationDatasetEquivalent;
+	vector<pair<KNeighborhoodPoint, vector<vector<KNeighborhoodPoint>::iterator>::iterator>>::iterator classificationEquivalentIt;
+	vector<pair<KNeighborhoodPoint, vector<vector<KNeighborhoodPoint>::iterator>::iterator>>::iterator classificationEquivalentEnd;
 	
 	const vector<Point> *referencePoints = &properties.referencePoints;
 	vector<Point>::const_iterator referencePointsIt;
@@ -141,7 +141,7 @@ TimeReport TiKNeighborhoodRefProjection::run(const Properties& properties, Datas
 		
 				placementIt = Dataset::getPlacementBinary(datasetIterators,classificationIt->first);
 				classificationIt->second = &(**placementIt);
-				classificationDatasetEquivalent.push_back(placementIt);
+				classificationDatasetEquivalent.push_back(pair<Point, vector<vector<KNeighborhoodPoint>::iterator>::iterator>(classificationIt->first, placementIt));
 			}
 		}
 		else{
@@ -150,7 +150,7 @@ TimeReport TiKNeighborhoodRefProjection::run(const Properties& properties, Datas
 		
 				placementIt = Dataset::getPlacementLineary(datasetIterators,classificationIt->first);
 				classificationIt->second = &(**placementIt);
-				classificationDatasetEquivalent.push_back(placementIt);
+				classificationDatasetEquivalent.push_back(pair<Point, vector<vector<KNeighborhoodPoint>::iterator>::iterator>(classificationIt->first, placementIt));
 			}
 		}
 
@@ -166,7 +166,7 @@ TimeReport TiKNeighborhoodRefProjection::run(const Properties& properties, Datas
 		
 		for(datasetIteratorsIt = datasetIterators.begin(); datasetIteratorsIt != datasetIteratorsEnd; datasetIteratorsIt++){
 	
-			(*datasetIteratorsIt)->neighbors = tiKNeighborhood(datasetIterators, datasetIteratorsIt, TiKNeighborhoodRef::verifyKCandidateNeighborsBackward, TiKNeighborhoodRef::verifyKCandidateNeighborsForward);
+			(*datasetIteratorsIt)->neighbors = tiKNeighborhood(datasetIterators, datasetIteratorsIt, (**datasetIteratorsIt), TiKNeighborhoodRef::verifyKCandidateNeighborsBackward, TiKNeighborhoodRef::verifyKCandidateNeighborsForward);
 		}
 	}
 	else
@@ -176,7 +176,7 @@ TimeReport TiKNeighborhoodRefProjection::run(const Properties& properties, Datas
 
 			for(classificationEquivalentIt = classificationDatasetEquivalent.begin(); classificationEquivalentIt != classificationEquivalentEnd; classificationEquivalentIt++){
 				
-				(**classificationEquivalentIt)->neighbors = tiKNeighborhood(datasetIterators, (*classificationEquivalentIt), TiKNeighborhoodRef::verifyKCandidateNeighborsBackward, TiKNeighborhoodRef::verifyKCandidateNeighborsForward);
+				(**classificationEquivalentIt->second).neighbors = tiKNeighborhood(datasetIterators, classificationEquivalentIt->second, classificationEquivalentIt->first, TiKNeighborhoodRef::verifyKCandidateNeighborsBackward, TiKNeighborhoodRef::verifyKCandidateNeighborsForward);
 			}
 		}
 

@@ -43,7 +43,7 @@ private:
 	 * reference point. Inserts found neighbors to kNeighborhood collection.
 	 *
 	 * @dataset                Dataset of elements.
-	 * @pointIt                Iterator pointing to the point for which 
+	 * @point                  Point for which 
 	 *                         neighbors are verified.
 	 * @pointBackwardIt        Iterator pointing to the point preceding
 	 *                         a point pointIt is pointing at.
@@ -56,7 +56,7 @@ private:
 	 */
 	static void verifyKCandidateNeighborsBackward (
 		const vector<vector<KNeighborhoodPoint>::iterator>& dataset
-		, vector<vector<KNeighborhoodPoint>::iterator>::iterator pointIt
+		, KNeighborhoodPoint& point
 		, vector<vector<KNeighborhoodPoint>::iterator>::iterator& pointBackwardIt
 		, bool& backwardSearch
 		, multimap<double, vector<KNeighborhoodPoint>::iterator, DistanceComparator>& kNeighborhood
@@ -67,7 +67,7 @@ private:
 	 * reference point. Inserts found neighbors to kNeighborhood collection.
 	 *
 	 * @dataset                Dataset of elements.
-	 * @pointIt                Iterator pointing to the point for which 
+	 * @point                  Point for which 
 	 *                         neighbors are verified.
 	 * @pointForwardIt         Iterator pointing to the point following
 	 *                         a point pointIt is pointing at.
@@ -80,7 +80,7 @@ private:
 	 */
 	static void verifyKCandidateNeighborsForward (
 		const vector<vector<KNeighborhoodPoint>::iterator>& dataset
-		, vector<vector<KNeighborhoodPoint>::iterator>::iterator pointIt
+		, KNeighborhoodPoint& point
 		, vector<vector<KNeighborhoodPoint>::iterator>::iterator& pointForwardIt
 		, bool& forwardSearch
 		, multimap<double, vector<KNeighborhoodPoint>::iterator, DistanceComparator>& kNeighborhood

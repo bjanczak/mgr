@@ -43,7 +43,7 @@ protected:
 	 * reference points. Inserts found neighbors to kNeighborhood collection.
 	 *
 	 * @dataset                Dataset of elements.
-	 * @pointIt                Iterator pointing to the point for which 
+	 * @point                  Point for which 
 	 *                         neighbors are verified.
 	 * @pointBackwardIt        Iterator pointing to the point preceding
 	 *                         a point pointIt is pointing at.
@@ -56,7 +56,7 @@ protected:
 	 */
 	static void verifyKCandidateNeighborsBackward (
 		const vector<vector<KNeighborhoodPoint>::iterator>& dataset
-		, vector<vector<KNeighborhoodPoint>::iterator>::iterator pointIt
+		, KNeighborhoodPoint& point
 		, vector<vector<KNeighborhoodPoint>::iterator>::iterator& pointBackwardIt
 		, bool& backwardSearch
 		, multimap<double, vector<KNeighborhoodPoint>::iterator, DistanceComparator>& kNeighborhood
@@ -67,7 +67,7 @@ protected:
 	 * reference points. Inserts found neighbors to kNeighborhood collection.
 	 *
 	 * @dataset                Dataset of elements.
-	 * @pointIt                Iterator pointing to the point for which 
+	 * @point                  Point for which 
 	 *                         neighbors are verified.
 	 * @pointForwardIt         Iterator pointing to the point following
 	 *                         a point pointIt is pointing at.
@@ -80,7 +80,7 @@ protected:
 	 */
 	static void verifyKCandidateNeighborsForward (
 		const vector<vector<KNeighborhoodPoint>::iterator>& dataset
-		, vector<vector<KNeighborhoodPoint>::iterator>::iterator pointIt
+		, KNeighborhoodPoint& point
 		, vector<vector<KNeighborhoodPoint>::iterator>::iterator& pointForwardIt
 		, bool& forwardSearch
 		, multimap<double, vector<KNeighborhoodPoint>::iterator, DistanceComparator>& kNeighborhood
@@ -90,7 +90,7 @@ protected:
 	 * Verifies whether the query point given (queryPointIt) is a neighbor
 	 * of the point given (pointIt).
 	 *
-	 * @pointIt                Iterator pointing to the point for which 
+	 * @point                  Point for which 
 	 *                         query point neighborhood is verified.
 	 * @queryPointIt           Iterator pointing to the point verified
 	 *                         to be the point (pointIt) neighbor.
@@ -101,7 +101,7 @@ protected:
 	 *                         or false otherwise.
 	 */
 	static bool isCandidateNeighborByAdditionalReferencePoints(
-		const vector<vector<KNeighborhoodPoint>::iterator>::iterator pointIt
+		const KNeighborhoodPoint& point
 		, vector<vector<KNeighborhoodPoint>::iterator>::iterator queryPointIt
 		, double eps);
 };

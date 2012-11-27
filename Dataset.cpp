@@ -1389,67 +1389,7 @@ vector<KNeighborhoodPoint>::iterator Dataset::getPlacementBinary(const Point& po
 		}
 	}
 
-	/*
-	 * Find all points as distant from reference poinnt
-	 * as query point moving left and right from point found.
-	 * Calculate distance to query point for each point found
-	 * and put point found into a map.
-	 */
-	bool isLeftStop = currentIndex == 0 ? false :true;
-	bool isRightStop = true;
-	unsigned long tempCurrentIndex = currentIndex - 1;
-	unsigned long size = datasetKNeighborhoodPoint.size();
-	
-	/*
-	 * multimap complexity:
-	 *	insert	O(n),
-	 *	search	O(n).
-	 */
-	multimap<double, vector<KNeighborhoodPoint>::iterator, DistanceComparator> candidates;
-
-	candidates.insert(pair<double, vector<KNeighborhoodPoint>::iterator>(Point::minkowskiDistance(point, datasetKNeighborhoodPoint[currentIndex], 2), datasetKNeighborhoodPoint.begin() + currentIndex));
-
-	while(isLeftStop && (tempCurrentIndex >= 0)){
-		
-		if(tempValue == datasetKNeighborhoodPoint[tempCurrentIndex].distance[0] ){
-		
-			candidates.insert(pair<double, vector<KNeighborhoodPoint>::iterator>(Point::minkowskiDistance(point, datasetKNeighborhoodPoint[tempCurrentIndex], 2), datasetKNeighborhoodPoint.begin() + tempCurrentIndex));
-			
-			if(tempCurrentIndex==0){
-				isLeftStop = false;
-			}
-			else{
-				tempCurrentIndex--;
-			}
-
-		}
-		else{
-			
-			isLeftStop = false;
-		}
-	}
-
-	tempCurrentIndex = currentIndex + 1;
-
-	while(isRightStop && (tempCurrentIndex < size)){
-		
-		if(tempValue == datasetKNeighborhoodPoint[tempCurrentIndex].distance[0]){
-		
-			candidates.insert(pair<double, vector<KNeighborhoodPoint>::iterator>(Point::minkowskiDistance(point, datasetKNeighborhoodPoint[tempCurrentIndex], 2), datasetKNeighborhoodPoint.begin() + tempCurrentIndex));
-			tempCurrentIndex++;
-		}
-		else{
-			
-			isRightStop = false;
-		}
-	}
-
-	/*
-	 * Get the point nearest to the query point.
-	 */
-	result = candidates.begin()->second;
-
-	return result;
+	return datasetKNeighborhoodPoint.begin() + currentIndex;	
 }
 
 vector<vector<KNeighborhoodPoint>::iterator>::iterator Dataset::getPlacementBinary(vector<vector<KNeighborhoodPoint>::iterator>& datasetIndex, const Point& point){
@@ -1493,67 +1433,7 @@ vector<vector<KNeighborhoodPoint>::iterator>::iterator Dataset::getPlacementBina
 		}
 	}
 
-	/*
-	 * Find all points as distant from reference poinnt
-	 * as query point moving left and right from point found.
-	 * Calculate distance to query point for each point found
-	 * and put point found into a map.
-	 */
-	bool isLeftStop = currentIndex == 0 ? false :true;
-	bool isRightStop = true;
-	unsigned long tempCurrentIndex = currentIndex - 1;
-	unsigned long size = datasetIndex.size();
-	
-	/*
-	 * multimap complexity:
-	 *	insert	O(n),
-	 *	search	O(n).
-	 */
-	multimap<double, vector<vector<KNeighborhoodPoint>::iterator>::iterator, DistanceComparator> candidates;
-
-	candidates.insert(pair<double, vector<vector<KNeighborhoodPoint>::iterator>::iterator>(Point::minkowskiDistance(point, (*datasetIndex[currentIndex]), 2), datasetIndex.begin() + currentIndex));
-
-	while(isLeftStop && (tempCurrentIndex >= 0)){
-		
-		if(tempValue == (*datasetIndex[tempCurrentIndex]).distance[0] ){
-		
-			candidates.insert(pair<double, vector<vector<KNeighborhoodPoint>::iterator>::iterator>(Point::minkowskiDistance(point, (*datasetIndex[tempCurrentIndex]), 2), datasetIndex.begin() + tempCurrentIndex));
-			
-			if(tempCurrentIndex==0){
-				isLeftStop = false;
-			}
-			else{
-				tempCurrentIndex--;
-			}
-
-		}
-		else{
-			
-			isLeftStop = false;
-		}
-	}
-
-	tempCurrentIndex = currentIndex + 1;
-
-	while(isRightStop && (tempCurrentIndex < size)){
-		
-		if(tempValue == (*datasetIndex[tempCurrentIndex]).distance[0]){
-		
-			candidates.insert(pair<double, vector<vector<KNeighborhoodPoint>::iterator>::iterator>(Point::minkowskiDistance(point, (*datasetIndex[tempCurrentIndex]), 2), datasetIndex.begin() + tempCurrentIndex));
-			tempCurrentIndex++;
-		}
-		else{
-			
-			isRightStop = false;
-		}
-	}
-
-	/*
-	 * Get the point nearest to the query point.
-	 */
-	result = vector<vector<KNeighborhoodPoint>::iterator>::iterator(candidates.begin()->second);
-
-	return result;
+	return datasetIndex.begin() + currentIndex;
 }
 
 vector<KNeighborhoodPoint>::iterator Dataset::getPlacementLineary(const Point& point){
@@ -1602,30 +1482,6 @@ vector<KNeighborhoodPoint>::iterator Dataset::getPlacementLineary(const Point& p
 
 		result = it;
 	}
-
-	/*
-	 * Find all points as distant from reference poinnt
-	 * as query point moving right from point found.
-	 * Calculate distance to query point for each point found
-	 * and put point found into a map.
-	 */
-	while(it != end){
-		
-		if(result->distance[0] == criteriaValue){
-			
-			candidates.insert(pair<double, vector<KNeighborhoodPoint>::iterator>(Point::minkowskiDistance(point, *result, 2), result));
-			result++;
-		}
-		else{
-		
-			break;
-		}
-	}
-
-	/*
-	 * Get the point nearest to the query point.
-	 */
-	result = candidates.begin()->second;
 
 	return result;
 }
@@ -1676,30 +1532,6 @@ vector<vector<KNeighborhoodPoint>::iterator>::iterator Dataset::getPlacementLine
 
 		result = it;
 	}
-
-	/*
-	 * Find all points as distant from reference poinnt
-	 * as query point moving right from point found.
-	 * Calculate distance to query point for each point found
-	 * and put point found into a map.
-	 */
-	while(it != end){
-		
-		if((*result)->distance[0] == criteriaValue){
-			
-			candidates.insert(pair<double, vector<vector<KNeighborhoodPoint>::iterator>::iterator>(Point::minkowskiDistance(point, **result, 2), result));
-			result++;
-		}
-		else{
-		
-			break;
-		}
-	}
-
-	/*
-	 * Get the point nearest to the query point.
-	 */
-	result = candidates.begin()->second;
 
 	return result;
 }
