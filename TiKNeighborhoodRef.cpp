@@ -83,16 +83,13 @@ TimeReport TiKNeighborhoodRef::run(const Properties& properties, Dataset& datase
 	}
 
 	/*
-	 * If CLASSIFICATION, then calculate criteria fo classification dataset.
-	 */
-	if(properties.algorithmType == Properties::CLASSIFICATION){
-	
-		for(classificationIt = classificationDataset->begin(); classificationIt != classificationEnd; classificationIt++){
+	 * Calculate criteria fo classification dataset.
+	 */	
+	for(classificationIt = classificationDataset->begin(); classificationIt != classificationEnd; classificationIt++){
 		
-			for(referencePointsIt = referencePoints->begin(); referencePointsIt!= referencePointsEnd; referencePointsIt++){
+		for(referencePointsIt = referencePoints->begin(); referencePointsIt!= referencePointsEnd; referencePointsIt++){
 				
-				classificationIt->first.distance.push_back(Point::minkowskiDistance((*referencePointsIt), classificationIt->first, 2));
-			}
+			classificationIt->first.distance.push_back(Point::minkowskiDistance((*referencePointsIt), classificationIt->first, 2));
 		}
 	}
 
@@ -109,55 +106,41 @@ TimeReport TiKNeighborhoodRef::run(const Properties& properties, Dataset& datase
 
 	/*
 	 * Find dataset points nearest to classification points by distance criteria.
-	 */
-	if(properties.algorithmType == Properties::CLASSIFICATION){
-	
-		positioningStart = clock();
+	 */	
+	positioningStart = clock();
 
-		if(properties.useBinaryPlacement){
+	if(properties.useBinaryPlacement){
 	
-			for(classificationIt = classificationDataset->begin(); classificationIt != classificationEnd; classificationIt++){
+		for(classificationIt = classificationDataset->begin(); classificationIt != classificationEnd; classificationIt++){
 		
-				placementIt = Dataset::getPlacementBinary(datasetIterators, classificationIt->first);
-				classificationIt->second = &(**placementIt);
-				classificationDatasetEquivalent.push_back(pair<Point, vector<vector<KNeighborhoodPoint>::iterator>::iterator>(classificationIt->first, placementIt));
-			}
+			placementIt = Dataset::getPlacementBinary(datasetIterators, classificationIt->first);
+			classificationIt->second = &(**placementIt);
+			classificationDatasetEquivalent.push_back(pair<Point, vector<vector<KNeighborhoodPoint>::iterator>::iterator>(classificationIt->first, placementIt));
 		}
-		else{
-	
-			for(classificationIt = classificationDataset->begin(); classificationIt != classificationEnd; classificationIt++){
-		
-				placementIt = Dataset::getPlacementLineary(datasetIterators, classificationIt->first);
-				classificationIt->second = &(**placementIt);
-				classificationDatasetEquivalent.push_back(pair<Point, vector<vector<KNeighborhoodPoint>::iterator>::iterator>(classificationIt->first, placementIt));
-			}
-		}
-	
-		positioningFinish = clock();
 	}
+	else{
+	
+		for(classificationIt = classificationDataset->begin(); classificationIt != classificationEnd; classificationIt++){
+		
+			placementIt = Dataset::getPlacementLineary(datasetIterators, classificationIt->first);
+			classificationIt->second = &(**placementIt);
+			classificationDatasetEquivalent.push_back(pair<Point, vector<vector<KNeighborhoodPoint>::iterator>::iterator>(classificationIt->first, placementIt));
+		}
+	}
+	
+	positioningFinish = clock();
 
 	/*
 	 * Clustering.
 	 */
 	clusteringStart = clock();
-
-	if(properties.algorithmType == Properties::GROUPING){
-	
-		for(datasetIteratorsIt = datasetIterators.begin(); datasetIteratorsIt != datasetIteratorsEnd; datasetIteratorsIt++){
-	
-			(*datasetIteratorsIt)->neighbors = tiKNeighborhood(datasetIterators, datasetIteratorsIt, (**datasetIteratorsIt), TiKNeighborhoodRef::verifyKCandidateNeighborsBackward, TiKNeighborhoodRef::verifyKCandidateNeighborsForward);
-		}
-	}
-	else
-		if(properties.algorithmType == Properties::CLASSIFICATION){
 			
-			classificationEquivalentEnd = classificationDatasetEquivalent.end();
+	classificationEquivalentEnd = classificationDatasetEquivalent.end();
 
-			for(classificationEquivalentIt = classificationDatasetEquivalent.begin(); classificationEquivalentIt != classificationEquivalentEnd; classificationEquivalentIt++){
+	for(classificationEquivalentIt = classificationDatasetEquivalent.begin(); classificationEquivalentIt != classificationEquivalentEnd; classificationEquivalentIt++){
 				
-				(**classificationEquivalentIt->second).neighbors = tiKNeighborhood(datasetIterators, classificationEquivalentIt->second, classificationEquivalentIt->first, TiKNeighborhoodRef::verifyKCandidateNeighborsBackward, TiKNeighborhoodRef::verifyKCandidateNeighborsForward);
-			}
-		}
+		(**classificationEquivalentIt->second).neighbors = tiKNeighborhood(datasetIterators, classificationEquivalentIt->second, classificationEquivalentIt->first, TiKNeighborhoodRef::verifyKCandidateNeighborsBackward, TiKNeighborhoodRef::verifyKCandidateNeighborsForward);
+	}
 
 	clusteringFinish = clock();
 
@@ -165,11 +148,7 @@ TimeReport TiKNeighborhoodRef::run(const Properties& properties, Dataset& datase
 	timeReport.distanceCalculationExecutionTime = ((double)(distanceCalculationFinish - distanceCalculationStart))/CLOCKS_PER_SEC;
 	timeReport.sortingPointsExecutionTime =  ((double)(sortingFinish - sortingStart))/CLOCKS_PER_SEC;
 	timeReport.algorithmExecutionTime = timeReport.clusteringExecutionTime + timeReport.distanceCalculationExecutionTime + timeReport.sortingPointsExecutionTime;
-
-	if(properties.algorithmType == Properties::CLASSIFICATION){
-	
-		timeReport.positioningExecutionTime = ((double)(positioningFinish - positioningStart))/CLOCKS_PER_SEC;
-	}
+	timeReport.positioningExecutionTime = ((double)(positioningFinish - positioningStart))/CLOCKS_PER_SEC;
 
 	return timeReport;
 }

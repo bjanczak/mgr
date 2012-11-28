@@ -30,7 +30,7 @@
 #include <stdio.h>
 #include <iostream>
 
-#define TEST_REPEAT 1
+#define TEST_REPEAT 3
 
 const string AlgorithmsEngine::LOGS_DIRECTORY_PATH = "logs";
 const string AlgorithmsEngine::PARAMETERS_DIRECTORY_PATH = "properties/";
@@ -167,6 +167,8 @@ void AlgorithmsEngine::readData(){
 		properties->referencePoints = dataset->getReferencePoints(*properties);
 
 		calculateReferencePointsFinish = clock();
+
+		timeReport.calculatingReferencePointsTime = ((double)(calculateReferencePointsFinish - calculateReferencePointsStart))/CLOCKS_PER_SEC;
 	}
 
 	/*
@@ -198,8 +200,7 @@ void AlgorithmsEngine::readData(){
 
 		sample.clear();
 	}
-
-	timeReport.calculatingReferencePointsTime = ((double)(calculateReferencePointsFinish - calculateReferencePointsStart))/CLOCKS_PER_SEC;;
+	
 	timeReport.datafileReadingTime = ((double)(readingFinish - readingStart))/CLOCKS_PER_SEC;
 
 	/*

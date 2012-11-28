@@ -31,7 +31,7 @@ multimap<double, vector<KNeighborhoodPoint>::iterator, DistanceComparator> TiKNe
 	multimap<double, vector<KNeighborhoodPoint>::iterator, DistanceComparator> kNeighborhood;
 	vector<vector<KNeighborhoodPoint>::iterator>::iterator pointBackwardIt = pointIt;
 	vector<vector<KNeighborhoodPoint>::iterator>::iterator pointForwardIt = pointIt;
-	bool backwardSearch = precedingPoint(dataset, pointBackwardIt);
+	bool backwardSearch = true;
 	bool forwardSearch = followingPoint(dataset, pointForwardIt);
 	unsigned long foundNeighborsCounter = 0;
 

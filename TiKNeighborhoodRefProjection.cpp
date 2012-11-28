@@ -94,26 +94,20 @@ TimeReport TiKNeighborhoodRefProjection::run(const Properties& properties, Datas
 				}
 		}
 	}
-
-	/*
-	 * If CLASSIFICATION, then calculate criteria fo classification dataset.
-	 */
-	if(properties.algorithmType == Properties::CLASSIFICATION){
 	
-		for(classificationIt = classificationDataset->begin(); classificationIt != classificationEnd; classificationIt++){
+	for(classificationIt = classificationDataset->begin(); classificationIt != classificationEnd; classificationIt++){
 		
-			for(projectionSourceSequenceIt = projectionSourceSequence->begin(); projectionSourceSequenceIt != projectionSourceSequenceEnd; projectionSourceSequenceIt++){
+		for(projectionSourceSequenceIt = projectionSourceSequence->begin(); projectionSourceSequenceIt != projectionSourceSequenceEnd; projectionSourceSequenceIt++){
 		
-				if((*projectionSourceSequenceIt).first == 'r'){
+			if((*projectionSourceSequenceIt).first == 'r'){
 
-					classificationIt->first.distance.push_back(Point::minkowskiDistance(referencePoints->at((*projectionSourceSequenceIt).second - 1), classificationIt->first, 2));
-				}
-				else
-					if((*projectionSourceSequenceIt).first == 'd'){
-
-					classificationIt->first.distance.push_back(classificationIt->first.getDimensionValue((*projectionSourceSequenceIt).second));
-					}
+				classificationIt->first.distance.push_back(Point::minkowskiDistance(referencePoints->at((*projectionSourceSequenceIt).second - 1), classificationIt->first, 2));
 			}
+			else
+				if((*projectionSourceSequenceIt).first == 'd'){
+
+				classificationIt->first.distance.push_back(classificationIt->first.getDimensionValue((*projectionSourceSequenceIt).second));
+				}
 		}
 	}
 
@@ -130,55 +124,41 @@ TimeReport TiKNeighborhoodRefProjection::run(const Properties& properties, Datas
 
 	/*
 	 * Find dataset points nearest to classification points by distance criteria.
-	 */
-	if(properties.algorithmType == Properties::CLASSIFICATION){
-	
-		positioningStart = clock();
+	 */	
+	positioningStart = clock();
 
-		if(properties.useBinaryPlacement){
+	if(properties.useBinaryPlacement){
 	
-			for(classificationIt = classificationDataset->begin(); classificationIt != classificationEnd; classificationIt++){
+		for(classificationIt = classificationDataset->begin(); classificationIt != classificationEnd; classificationIt++){
 		
-				placementIt = Dataset::getPlacementBinary(datasetIterators,classificationIt->first);
-				classificationIt->second = &(**placementIt);
-				classificationDatasetEquivalent.push_back(pair<Point, vector<vector<KNeighborhoodPoint>::iterator>::iterator>(classificationIt->first, placementIt));
-			}
+			placementIt = Dataset::getPlacementBinary(datasetIterators,classificationIt->first);
+			classificationIt->second = &(**placementIt);
+			classificationDatasetEquivalent.push_back(pair<Point, vector<vector<KNeighborhoodPoint>::iterator>::iterator>(classificationIt->first, placementIt));
 		}
-		else{
-	
-			for(classificationIt = classificationDataset->begin(); classificationIt != classificationEnd; classificationIt++){
-		
-				placementIt = Dataset::getPlacementLineary(datasetIterators,classificationIt->first);
-				classificationIt->second = &(**placementIt);
-				classificationDatasetEquivalent.push_back(pair<Point, vector<vector<KNeighborhoodPoint>::iterator>::iterator>(classificationIt->first, placementIt));
-			}
-		}
-
-		positioningFinish = clock();
 	}
+	else{
+	
+		for(classificationIt = classificationDataset->begin(); classificationIt != classificationEnd; classificationIt++){
+		
+			placementIt = Dataset::getPlacementLineary(datasetIterators,classificationIt->first);
+			classificationIt->second = &(**placementIt);
+			classificationDatasetEquivalent.push_back(pair<Point, vector<vector<KNeighborhoodPoint>::iterator>::iterator>(classificationIt->first, placementIt));
+		}
+	}
+	
+	positioningFinish = clock();
 
 	/*
 	 * Clustering.
 	 */
 	clusteringStart = clock();
-
-	if(properties.algorithmType == Properties::GROUPING){
-		
-		for(datasetIteratorsIt = datasetIterators.begin(); datasetIteratorsIt != datasetIteratorsEnd; datasetIteratorsIt++){
-	
-			(*datasetIteratorsIt)->neighbors = tiKNeighborhood(datasetIterators, datasetIteratorsIt, (**datasetIteratorsIt), TiKNeighborhoodRef::verifyKCandidateNeighborsBackward, TiKNeighborhoodRef::verifyKCandidateNeighborsForward);
-		}
-	}
-	else
-		if(properties.algorithmType == Properties::CLASSIFICATION){
 			
-			classificationEquivalentEnd = classificationDatasetEquivalent.end();
+	classificationEquivalentEnd = classificationDatasetEquivalent.end();
 
-			for(classificationEquivalentIt = classificationDatasetEquivalent.begin(); classificationEquivalentIt != classificationEquivalentEnd; classificationEquivalentIt++){
+	for(classificationEquivalentIt = classificationDatasetEquivalent.begin(); classificationEquivalentIt != classificationEquivalentEnd; classificationEquivalentIt++){
 				
-				(**classificationEquivalentIt->second).neighbors = tiKNeighborhood(datasetIterators, classificationEquivalentIt->second, classificationEquivalentIt->first, TiKNeighborhoodRef::verifyKCandidateNeighborsBackward, TiKNeighborhoodRef::verifyKCandidateNeighborsForward);
-			}
-		}
+		(**classificationEquivalentIt->second).neighbors = tiKNeighborhood(datasetIterators, classificationEquivalentIt->second, classificationEquivalentIt->first, TiKNeighborhoodRef::verifyKCandidateNeighborsBackward, TiKNeighborhoodRef::verifyKCandidateNeighborsForward);
+	}
 
 	clusteringFinish = clock();
 
@@ -186,11 +166,7 @@ TimeReport TiKNeighborhoodRefProjection::run(const Properties& properties, Datas
 	timeReport.distanceCalculationExecutionTime = ((double)(distanceCalculationFinish - distanceCalculationStart))/CLOCKS_PER_SEC;
 	timeReport.sortingPointsExecutionTime =  ((double)(sortingFinish - sortingStart))/CLOCKS_PER_SEC;
 	timeReport.algorithmExecutionTime = timeReport.clusteringExecutionTime + timeReport.distanceCalculationExecutionTime + timeReport.sortingPointsExecutionTime;
-
-	if(properties.algorithmType == Properties::CLASSIFICATION){
-	
-		timeReport.positioningExecutionTime = ((double)(positioningFinish - positioningStart))/CLOCKS_PER_SEC;
-	}
+	timeReport.positioningExecutionTime = ((double)(positioningFinish - positioningStart))/CLOCKS_PER_SEC;
 
 	return timeReport;
 }
