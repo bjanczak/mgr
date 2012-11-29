@@ -39,6 +39,26 @@ public:
 protected:
 
 	/**
+	 * Runs algorithm using index access to dataset.
+	 *
+	 * @properties      Application properties.
+	 * @dataset         Dataset of elements.
+	 *
+	 * @return          Execution times report as TimeReport object.
+	 */
+	TimeReport runDatasetIndexAccess(const Properties& properties, Dataset& dataset);
+
+	/**
+	 * Runs algorithm using direct access to dataset.
+	 *
+	 * @properties      Application properties.
+	 * @dataset         Dataset of elements.
+	 *
+	 * @return          Execution times report as TimeReport object.
+	 */
+	TimeReport runDatasetDirectAccess(const Properties& properties, Dataset& dataset);
+
+	/**
 	 * Verifies found K neighbors of point given (pointIt) using many
 	 * reference points. Inserts found neighbors to kNeighborhood collection.
 	 *
@@ -54,10 +74,17 @@ protected:
 	 *                         algorithm. K is a number of negihbor points
 	 *                         to be found for point given.
 	 */
-	static void verifyKCandidateNeighborsBackward (
+	static void indexVerifyKCandidateNeighborsBackward (
 		const vector<vector<KNeighborhoodPoint>::iterator>& dataset
 		, KNeighborhoodPoint& point
 		, vector<vector<KNeighborhoodPoint>::iterator>::iterator& pointBackwardIt
+		, bool& backwardSearch
+		, multimap<double, vector<KNeighborhoodPoint>::iterator, DistanceComparator>& kNeighborhood
+		, unsigned long k);
+	static void verifyKCandidateNeighborsBackward (
+		const vector<KNeighborhoodPoint>& dataset
+		, KNeighborhoodPoint& point
+		, vector<KNeighborhoodPoint>::iterator& pointBackwardIt
 		, bool& backwardSearch
 		, multimap<double, vector<KNeighborhoodPoint>::iterator, DistanceComparator>& kNeighborhood
 		, unsigned long k);
@@ -78,10 +105,17 @@ protected:
 	 *                         algorithm. K is a number of negihbor points
 	 *                         to be found for point given.
 	 */
-	static void verifyKCandidateNeighborsForward (
+	static void indexVerifyKCandidateNeighborsForward (
 		const vector<vector<KNeighborhoodPoint>::iterator>& dataset
 		, KNeighborhoodPoint& point
 		, vector<vector<KNeighborhoodPoint>::iterator>::iterator& pointForwardIt
+		, bool& forwardSearch
+		, multimap<double, vector<KNeighborhoodPoint>::iterator, DistanceComparator>& kNeighborhood
+		, unsigned long k);
+	static void verifyKCandidateNeighborsForward (
+		const vector<KNeighborhoodPoint>& dataset
+		, KNeighborhoodPoint& point
+		, vector<KNeighborhoodPoint>::iterator& pointForwardIt
 		, bool& forwardSearch
 		, multimap<double, vector<KNeighborhoodPoint>::iterator, DistanceComparator>& kNeighborhood
 		, unsigned long k);
@@ -100,9 +134,13 @@ protected:
 	 *                         is a neighbor of the point given (pointIt),
 	 *                         or false otherwise.
 	 */
-	static bool isCandidateNeighborByAdditionalReferencePoints(
+	static bool indexIsCandidateNeighborByAdditionalReferencePoints(
 		const KNeighborhoodPoint& point
 		, vector<vector<KNeighborhoodPoint>::iterator>::iterator queryPointIt
+		, double eps);
+	static bool isCandidateNeighborByAdditionalReferencePoints(
+		const KNeighborhoodPoint& point
+		, vector<KNeighborhoodPoint>::iterator queryPointIt
 		, double eps);
 };
 

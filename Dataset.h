@@ -156,7 +156,8 @@ public:
 	 * @return          Iterator pointing to the point most similar to
 	 *                  criteria given.
 	 */
-	static vector<vector<KNeighborhoodPoint>::iterator>::iterator getPlacementBinary(vector<vector<KNeighborhoodPoint>::iterator>& datasetIndex, const Point& point);
+	static vector<vector<KNeighborhoodPoint>::iterator>::iterator indexGetPlacementBinary(vector<vector<KNeighborhoodPoint>::iterator>& datasetIndex, const Point& point);
+	static vector<KNeighborhoodPoint>::iterator getPlacementBinary(vector<KNeighborhoodPoint>& datasetIndex, const Point& point);
 
 	/**
 	 * Finds most similar point in datasetKNeighborhoodPoint by
@@ -169,7 +170,8 @@ public:
 	 * @return          Iterator pointing to the point most similar to
 	 *                  criteria given.
 	 */
-	static vector<vector<KNeighborhoodPoint>::iterator>::iterator getPlacementLineary(vector<vector<KNeighborhoodPoint>::iterator>& datasetIndex, const Point& point);
+	static vector<vector<KNeighborhoodPoint>::iterator>::iterator indexGetPlacementLineary(vector<vector<KNeighborhoodPoint>::iterator>& datasetIndex, const Point& point);
+	static vector<KNeighborhoodPoint>::iterator getPlacementLineary(vector<KNeighborhoodPoint>& datasetIndex, const Point& point);
 
 	/**
 	 * Copies dataset to result.

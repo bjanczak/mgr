@@ -245,6 +245,11 @@ public:
 	double avgEps;
 
 	/**
+	 * Flag indicating whether dataset should be accessed by index.
+	 */
+	bool isUseDatasetIndexAcess;
+
+	/**
 	 * Public constants.
 	 */
 	static const string GROUPING;
@@ -340,7 +345,16 @@ private:
 	 */
 	unsigned long getAlgorithmGroupNameId(string algorithmGroupName);
 
-		/**
+	/**
+	 * Generates aprioprate algorithm type name for given algorithm name.
+	 *
+	 * @algorithmName   
+	 *
+	 * @return          Algorithm type name.
+	 */
+	string getAlgorithmType(string algorithmName);
+
+	/**
 	 * Prints reference points as text to given output stream.
 	 *
 	 * @os Output stream.
@@ -409,6 +423,8 @@ private:
 	static const string DENSE;
 
 	static const string SPARSE;
+
+	static const string IS_USE_DATASET_USE_INDEX;
 };
 
 #endif /* _PROPERTIES_H_ */

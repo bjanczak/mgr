@@ -35,6 +35,28 @@ public:
 	 * @return          Execution times report as TimeReport object.
 	 */
 	virtual TimeReport run(const Properties& properties, Dataset& dataset);
+
+private:
+	
+	/**
+	 * Runs algorithm using index access to dataset.
+	 *
+	 * @properties      Application properties.
+	 * @dataset         Dataset of elements.
+	 *
+	 * @return          Execution times report as TimeReport object.
+	 */
+	TimeReport runDatasetIndexAccess(const Properties& properties, Dataset& dataset);
+
+	/**
+	 * Runs algorithm using direct access to dataset.
+	 *
+	 * @properties      Application properties.
+	 * @dataset         Dataset of elements.
+	 *
+	 * @return          Execution times report as TimeReport object.
+	 */
+	TimeReport runDatasetDirectAccess(const Properties& properties, Dataset& dataset);
 };
 
 #endif /* _TI_DBSCAN_REF_PROJECTION_H_ */

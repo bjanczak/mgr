@@ -46,9 +46,34 @@ public:
 	 * @return                 Returns map of iterators to K neighbors
 	 *                         of point given.
 	 */
+	multimap<double, vector<KNeighborhoodPoint>::iterator, DistanceComparator> indexTiKNeighborhood(
+		vector<vector<KNeighborhoodPoint>::iterator>& dataset
+		, vector<vector<KNeighborhoodPoint>::iterator>::iterator pointIt);
 	multimap<double, vector<KNeighborhoodPoint>::iterator, DistanceComparator> tiKNeighborhood(
-		const vector<vector<KNeighborhoodPoint>::iterator>& dataset
-		, const vector<vector<KNeighborhoodPoint>::iterator>::iterator pointIt);
+		vector<KNeighborhoodPoint>& dataset
+		, vector<KNeighborhoodPoint>::iterator pointIt);
+
+private:
+
+	/**
+	 * Runs algorithm using index access to dataset.
+	 *
+	 * @properties      Application properties.
+	 * @dataset         Dataset of elements.
+	 *
+	 * @return          Execution times report as TimeReport object.
+	 */
+	TimeReport runDatasetIndexAccess(const Properties& properties, Dataset& dataset);
+
+	/**
+	 * Runs algorithm using direct access to dataset.
+	 *
+	 * @properties      Application properties.
+	 * @dataset         Dataset of elements.
+	 *
+	 * @return          Execution times report as TimeReport object.
+	 */
+	TimeReport runDatasetDirectAccess(const Properties& properties, Dataset& dataset);
 };
 
 

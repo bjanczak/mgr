@@ -38,6 +38,7 @@ const string Properties::USE_BINARY_PLACEMENT_PARAMETER_NAME = "use_binary_place
 const string Properties::P_SAMPLE_INDEX_PARAMETER_NAME = "p_sample_index";
 const string Properties::S_SAMPLE_INDEX_PARAMETER_NAME = "s_sample_index";
 const string Properties::SEARCH_METHOD_PARAMETER_NAME = "search_method";
+const string Properties::IS_USE_DATASET_USE_INDEX = "use_dataset_index_access";
 
 /*
  * Algorithms names.
@@ -122,6 +123,7 @@ void Properties::clear(){
 	constantVantagePointString = "";
 	projectionSortingCriteriaString = "";
 	projectionDimensionsString = "";
+	isUseDatasetIndexAcess = false;
 }
 
 
@@ -181,9 +183,9 @@ string Properties::getAlgorithmGroupName(string algorithmName){
 								result = Properties::K_NEIGHBORHOOD;
 							}
 							else
-								if(algorithmName == Properties::K_NEIGHBORHOOD){
+								if(algorithmName == Properties::TI_K_NEIGHBORHOOD_REF){
 	
-									result = Properties::TI_K_NEIGHBORHOOD_REF_ID;
+									result = Properties::K_NEIGHBORHOOD;
 								}
 								else
 									if(algorithmName == Properties::TI_K_NEIGHBORHOOD_REF_PROJECTION){
@@ -201,6 +203,31 @@ string Properties::getAlgorithmGroupName(string algorithmName){
 												result = Properties::OTHER;
 											}
 
+	return result;
+}
+
+string Properties::getAlgorithmType(string algorithmName){
+
+	string result;
+
+	if(algorithmName == Properties::DBSCAN
+		|| algorithmName == Properties::TI_DBSCAN
+		|| algorithmName == Properties::TI_DBSCAN_REF
+		|| algorithmName == Properties::TI_DBSCAN_REF_PROJECTION){
+
+			result = Properties::GROUPING;
+		}
+		else
+			if(algorithmName == Properties::K_NEIGHBORHOOD
+				|| algorithmName == Properties::TI_K_NEIGHBORHOOD
+				|| algorithmName == Properties::TI_K_NEIGHBORHOOD_REF
+				|| algorithmName == Properties::TI_K_NEIGHBORHOOD_REF_PROJECTION
+				|| algorithmName == Properties::VP_TREE
+				|| algorithmName == Properties::VPS_TREE){
+
+					result = Properties::CLASSIFICATION;
+			}
+						
 	return result;
 }
 
@@ -294,6 +321,7 @@ Properties::Properties(){
 	constantVantagePointString = "";
 	projectionSortingCriteriaString = "";
 	projectionDimensionsString = "";
+	isUseDatasetIndexAcess = false;
 }
 
 void Properties::readProperties(string propertiesFileName){
@@ -336,6 +364,8 @@ void Properties::readProperties(string propertiesFileName){
 					algorithmNameId = getAlgorithmNameId(algorithmName);
 					algorithmGroup = getAlgorithmGroupName(algorithmName);
 					algorithmGroupId = getAlgorithmGroupNameId(algorithmGroup);
+					if(algorithmType == "")
+						algorithmType = getAlgorithmType(algorithmName);
 				}
 				else
 				if(parameterName==EPS_PARAMETER_NAME){
@@ -507,6 +537,19 @@ void Properties::readProperties(string propertiesFileName){
 
 					searchMethod = parameterValue;
 				}
+				else
+				if(parameterName==IS_USE_DATASET_USE_INDEX){
+
+					if(parameterValue==DENSE){
+					
+						isUseDatasetIndexAcess = true;
+					}
+					else
+						if(parameterValue==SPARSE){
+						
+							isUseDatasetIndexAcess = false;
+					}
+				}
 			}
 		}
 
@@ -621,31 +664,23 @@ void Properties::print(ofstream& os){
 			break;
 		case 5:	//K-NEIGHBORHOOD
 			
-			if(this->algorithmType == Properties::CLASSIFICATION){
-			
-				os<<"/*Classification*/"<<endl;
-				os<<"classification_subset_factor      = "<<this->classificationSubsetFactor<<endl;
-				os<<"use_binary_placement              = "<<useBinaryPlacementValue<<endl;
-				os<<endl;
-				os<<endl;
-			}
-
+			os<<"/*Classification*/"<<endl;
+			os<<"classification_subset_factor      = "<<this->classificationSubsetFactor<<endl;
+			os<<"use_binary_placement              = "<<useBinaryPlacementValue<<endl;
+			os<<endl;
+			os<<endl;
 			os<<"/*Neighborhood settings*/"<<endl;
 			os<<"k                                 = "<<this->k<< endl;
 			break;		
 		case 6:	//TI-K-NEIGHBORHOOD
 	
 		case 7:	//TI-K-NEIGHBORHOOD-REF
-
-			if(this->algorithmType == Properties::CLASSIFICATION){
 			
-				os<<"/*Classification*/"<<endl;
-				os<<"classification_subset_factor      = "<<this->classificationSubsetFactor<<endl;
-				os<<"use_binary_placement              = "<<useBinaryPlacementValue<<endl;
-				os<<endl;
-				os<<endl;
-			}
-
+			os<<"/*Classification*/"<<endl;
+			os<<"classification_subset_factor      = "<<this->classificationSubsetFactor<<endl;
+			os<<"use_binary_placement              = "<<useBinaryPlacementValue<<endl;
+			os<<endl;
+			os<<endl;
 			os<<"/*Neighborhood settings*/"<<endl;
 			os<<"k                                 = "<<this->k<< endl;
 			os<<endl;
@@ -660,16 +695,12 @@ void Properties::print(ofstream& os){
 			printReferencePoint(os);
 			break;	
 		case 8:	//TI-K-NEIGHBORHOOD-REF-PROJECTION
-
-			if(this->algorithmType == Properties::CLASSIFICATION){
 			
-				os<<"/*Classification*/"<<endl;
-				os<<"classification_subset_factor      = "<<this->classificationSubsetFactor<<endl;
-				os<<"use_binary_placement              = "<<useBinaryPlacementValue<<endl;
-				os<<endl;
-				os<<endl;
-			}
-
+			os<<"/*Classification*/"<<endl;
+			os<<"classification_subset_factor      = "<<this->classificationSubsetFactor<<endl;
+			os<<"use_binary_placement              = "<<useBinaryPlacementValue<<endl;
+			os<<endl;
+			os<<endl;
 			os<<"/*Neighborhood settings*/"<<endl;
 			os<<"k                                 = "<<this->k<< endl;
 			os<<endl;

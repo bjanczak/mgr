@@ -34,10 +34,17 @@
  *                         algorithm. K is a number of negihbor points
  *                         to be found for point given.
  */
-typedef void verifyKCandidateNeighborsBackwardFunction (
+typedef void indexVerifyKCandidateNeighborsBackwardFunction (
 	const vector<vector<KNeighborhoodPoint>::iterator>& dataset
 	, KNeighborhoodPoint& point
 	, vector<vector<KNeighborhoodPoint>::iterator>::iterator& pointBackwardIt
+	, bool& backwardSearch
+	, multimap<double, vector<KNeighborhoodPoint>::iterator, DistanceComparator>& kNeighborhood
+	, unsigned long k);
+typedef void verifyKCandidateNeighborsBackwardFunction (
+	const vector<KNeighborhoodPoint>& dataset
+	, KNeighborhoodPoint& point
+	, vector<KNeighborhoodPoint>::iterator& pointBackwardIt
 	, bool& backwardSearch
 	, multimap<double, vector<KNeighborhoodPoint>::iterator, DistanceComparator>& kNeighborhood
 	, unsigned long k);
@@ -59,10 +66,17 @@ typedef void verifyKCandidateNeighborsBackwardFunction (
  *                         algorithm. K is a number of negihbor points
  *                         to be found for point given.
  */
-typedef void verifyKCandidateNeighborsForwardFunction (
+typedef void indexVerifyKCandidateNeighborsForwardFunction (
 	const vector<vector<KNeighborhoodPoint>::iterator>& dataset
 	, KNeighborhoodPoint& point
 	, vector<vector<KNeighborhoodPoint>::iterator>::iterator& pointForwardIt
+	, bool& forwardSearch
+	, multimap<double, vector<KNeighborhoodPoint>::iterator, DistanceComparator>& kNeighborhood
+	, unsigned long k);
+typedef void verifyKCandidateNeighborsForwardFunction (
+	const vector<KNeighborhoodPoint>& dataset
+	, KNeighborhoodPoint& point
+	, vector<KNeighborhoodPoint>::iterator& pointForwardIt
 	, bool& forwardSearch
 	, multimap<double, vector<KNeighborhoodPoint>::iterator, DistanceComparator>& kNeighborhood
 	, unsigned long k);
@@ -98,9 +112,15 @@ protected:
 	 * @return                 Returns map of iterators to K neighbors
 	 *                         of point given.
 	 */
-	multimap<double, vector<KNeighborhoodPoint>::iterator, DistanceComparator> tiKNeighborhood(
+	multimap<double, vector<KNeighborhoodPoint>::iterator, DistanceComparator> indexTiKNeighborhood(
 		const vector<vector<KNeighborhoodPoint>::iterator>& dataset
 		, vector<vector<KNeighborhoodPoint>::iterator>::iterator pointIt
+		, KNeighborhoodPoint& point
+		, indexVerifyKCandidateNeighborsBackwardFunction backwardVerification
+		, indexVerifyKCandidateNeighborsForwardFunction forwardVerification);
+	multimap<double, vector<KNeighborhoodPoint>::iterator, DistanceComparator> tiKNeighborhood(
+		const vector<KNeighborhoodPoint>& dataset
+		, vector<KNeighborhoodPoint>::iterator pointIt
 		, KNeighborhoodPoint& point
 		, verifyKCandidateNeighborsBackwardFunction backwardVerification
 		, verifyKCandidateNeighborsForwardFunction forwardVerification);
@@ -117,9 +137,12 @@ protected:
 	 * @return                 True if preceding point exists, or false
 	 *                         otherwise.
 	 */
-	static bool precedingPoint(
+	static bool indexPrecedingPoint(
 		const vector<vector<KNeighborhoodPoint>::iterator>& dataset
 		, vector<vector<KNeighborhoodPoint>::iterator>::iterator& pointIt);
+	static bool precedingPoint(
+		const vector<KNeighborhoodPoint>& dataset
+		, vector<KNeighborhoodPoint>::iterator& pointIt);
 
 	/**
 	 * Changes position of pointIt from the point, that pointIt
@@ -133,9 +156,12 @@ protected:
 	 * @return                 True if following point exists, or false 
 	 *                         otherwise.
 	 */
-	static bool followingPoint(
+	static bool indexFollowingPoint(
 		const vector<vector<KNeighborhoodPoint>::iterator>& dataset
 		, vector<vector<KNeighborhoodPoint>::iterator>::iterator& pointIt);
+	static bool followingPoint(
+		const vector<KNeighborhoodPoint>& dataset
+		, vector<KNeighborhoodPoint>::iterator& pointIt);
 
 	/**
 	 * Finds first K neighbors of point given (pointIt), searching forward
@@ -155,11 +181,20 @@ protected:
 	 * @foundNeighboursCounter Indicates how many neighbors were already
 	 *                         found for the point (pointIt).
 	 */
-	void findFirstKCandidateNeighborsForwardAndBackward(
+	void indexFindFirstKCandidateNeighborsForwardAndBackward(
 		const vector<vector<KNeighborhoodPoint>::iterator>& dataset
 		, const KNeighborhoodPoint& point
 		, vector<vector<KNeighborhoodPoint>::iterator>::iterator& pointBackwardIt
 		, vector<vector<KNeighborhoodPoint>::iterator>::iterator& pointForwardIt
+		, bool &backwardSearch
+		, bool &forwardSearch
+		, multimap<double, vector<KNeighborhoodPoint>::iterator, DistanceComparator>& kNeighborhood
+		, unsigned long& foundNeighboursCounter);
+	void findFirstKCandidateNeighborsForwardAndBackward(
+		const vector<KNeighborhoodPoint>& dataset
+		, const KNeighborhoodPoint& point
+		, vector<KNeighborhoodPoint>::iterator& pointBackwardIt
+		, vector<KNeighborhoodPoint>::iterator& pointForwardIt
 		, bool &backwardSearch
 		, bool &forwardSearch
 		, multimap<double, vector<KNeighborhoodPoint>::iterator, DistanceComparator>& kNeighborhood
@@ -180,10 +215,17 @@ protected:
 	 * @foundNeighboursCounter Indicates how many neighbors were already
 	 *                         found for the point (pointIt).
 	 */
-	void findFirstKCandidateNeighborsBackward(
+	void indexFindFirstKCandidateNeighborsBackward(
 		const vector<vector<KNeighborhoodPoint>::iterator>& dataset
 		, const KNeighborhoodPoint& point
 		, vector<vector<KNeighborhoodPoint>::iterator>::iterator& pointBackwardIt
+		, bool &backwardSearch
+		, multimap<double, vector<KNeighborhoodPoint>::iterator, DistanceComparator>& kNeighborhood
+		, unsigned long& foundNeighboursCounter);
+	void findFirstKCandidateNeighborsBackward(
+		const vector<KNeighborhoodPoint>& dataset
+		, const KNeighborhoodPoint& point
+		, vector<KNeighborhoodPoint>::iterator& pointBackwardIt
 		, bool &backwardSearch
 		, multimap<double, vector<KNeighborhoodPoint>::iterator, DistanceComparator>& kNeighborhood
 		, unsigned long& foundNeighboursCounter);
@@ -203,10 +245,17 @@ protected:
 	 * @foundNeighboursCounter Indicates how many neighbors were already
 	 *                         found for the point (pointIt).
 	 */
-	void findFirstKCandidateNeighborsForward(
+	void indexFindFirstKCandidateNeighborsForward(
 		const vector<vector<KNeighborhoodPoint>::iterator>& dataset
 		, const KNeighborhoodPoint& point
 		, vector<vector<KNeighborhoodPoint>::iterator>::iterator& pointForwardIt
+		, bool &forwardSearch
+		, multimap<double, vector<KNeighborhoodPoint>::iterator, DistanceComparator>& kNeighborhood
+		, unsigned long& foundNeighboursCounter);
+	void findFirstKCandidateNeighborsForward(
+		const vector<KNeighborhoodPoint>& dataset
+		, const KNeighborhoodPoint& point
+		, vector<KNeighborhoodPoint>::iterator& pointForwardIt
 		, bool &forwardSearch
 		, multimap<double, vector<KNeighborhoodPoint>::iterator, DistanceComparator>& kNeighborhood
 		, unsigned long& foundNeighboursCounter);

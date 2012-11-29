@@ -256,6 +256,11 @@ private:
 	 */
 	string searchMethod;
 
+	/**
+	 * Flag indicating whether dataset should be accessed by index.
+	 */
+	bool isUseDatasetIndexAcess;
+
 	/*
 	 * Algorithm execution time.
 	 */

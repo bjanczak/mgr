@@ -1274,50 +1274,26 @@ void Dataset::printClusteringSumUp(ofstream& os){
 			os<<endl;
 			os<<endl;
 
-			if(this->algorithmType == Properties::GROUPING){
+			vector<pair<Point, Point*>>::iterator it;
+			vector<pair<Point, Point*>>::iterator end = this->classificationDataset.end();
+
+			for(it = this->classificationDataset.begin(); it != end; it++){
 				
-				vector<KNeighborhoodPoint>::iterator it;
-				vector<KNeighborhoodPoint>::iterator end = this->datasetKNeighborhoodPoint.end();
+				os<<"Classification point ID         : "<<it->first.id<<endl;
+				os<<"Equivalent point ID             : "<<it->second->id<<endl;
+				os<<"    eps          : "<<((KNeighborhoodPoint*)(it->second))->eps<<endl;
+				os<<"    neighbors nr : "<<((KNeighborhoodPoint*)(it->second))->neighbors.size()<<endl;
+				os<<"    neighbors    : "<<endl;
 
-				for(it = this->datasetKNeighborhoodPoint.begin(); it != end; it++){
+				neighborsEnd = ((KNeighborhoodPoint*)(it->second))->neighbors.end();
 				
-					os<<"Point ID         : "<<it->id<<endl;
-					os<<"    eps          : "<<it->eps<<endl;
-					os<<"    neighbors nr : "<<it->neighbors.size()<<endl;
-					os<<"    neighbors    : "<<endl;
+				for(neighborsIt = ((KNeighborhoodPoint*)(it->second))->neighbors.begin(); neighborsIt != neighborsEnd; neighborsIt++){
 
-					neighborsEnd = it->neighbors.end();
-
-					for(neighborsIt = it->neighbors.begin(); neighborsIt != neighborsEnd; neighborsIt++){
-
-						os<<"        ID: "<<neighborsIt->second->id<<"\t distance: "<<neighborsIt->first<<endl;
-					}
-					os<<endl;
+					os<<"        ID: "<<neighborsIt->second->id<<"\tdistance: "<<neighborsIt->first<<endl;
 				}
+				os<<endl;
 			}
-			else
-				if(this->algorithmType == Properties::CLASSIFICATION){
 				
-					vector<pair<Point, Point*>>::iterator it;
-					vector<pair<Point, Point*>>::iterator end = this->classificationDataset.end();
-
-					for(it = this->classificationDataset.begin(); it != end; it++){
-				
-						os<<"Classification point ID         : "<<it->first.id<<endl;
-						os<<"Equivalent point ID             : "<<it->second->id<<endl;
-						os<<"    eps          : "<<((KNeighborhoodPoint*)(it->second))->eps<<endl;
-						os<<"    neighbors nr : "<<((KNeighborhoodPoint*)(it->second))->neighbors.size()<<endl;
-						os<<"    neighbors    : "<<endl;
-
-						neighborsEnd = ((KNeighborhoodPoint*)(it->second))->neighbors.end();
-
-						for(neighborsIt = ((KNeighborhoodPoint*)(it->second))->neighbors.begin(); neighborsIt != neighborsEnd; neighborsIt++){
-
-							os<<"        ID: "<<neighborsIt->second->id<<"\tdistance: "<<neighborsIt->first<<endl;
-						}
-						os<<endl;
-					}
-				}
 		}
 		else
 			if(this->algorithmType == Properties::CLASSIFICATION && (this->algorithmName == Properties::VP_TREE || this->algorithmName == Properties::VPS_TREE)){
@@ -1392,7 +1368,7 @@ vector<KNeighborhoodPoint>::iterator Dataset::getPlacementBinary(const Point& po
 	return datasetKNeighborhoodPoint.begin() + currentIndex;	
 }
 
-vector<vector<KNeighborhoodPoint>::iterator>::iterator Dataset::getPlacementBinary(vector<vector<KNeighborhoodPoint>::iterator>& datasetIndex, const Point& point){
+vector<vector<KNeighborhoodPoint>::iterator>::iterator Dataset::indexGetPlacementBinary(vector<vector<KNeighborhoodPoint>::iterator>& datasetIndex, const Point& point){
 	
 	unsigned long minIndex = 0;
 	unsigned long maxIndex = datasetIndex.size() - 1;
@@ -1422,6 +1398,49 @@ vector<vector<KNeighborhoodPoint>::iterator>::iterator Dataset::getPlacementBina
 		}
 
 		tempValue = (*datasetIndex[currentIndex]).distance[0];
+
+		if(tempValue <= criteriaValue){
+			
+			minIndex = currentIndex;
+		}
+		else{
+			
+			maxIndex = currentIndex -1;
+		}
+	}
+
+	return datasetIndex.begin() + currentIndex;
+}
+vector<KNeighborhoodPoint>::iterator Dataset::getPlacementBinary(vector<KNeighborhoodPoint>& datasetIndex, const Point& point){
+	
+	unsigned long minIndex = 0;
+	unsigned long maxIndex = datasetIndex.size() - 1;
+	unsigned long currentIndex = 0;	
+	unsigned long previousIndex = datasetIndex.size();
+	vector<KNeighborhoodPoint>::iterator result = datasetIndex.begin();
+	double tempValue;
+	
+	/*
+	 * Criteria is the first calculated distance.
+	 */
+	double criteriaValue = point.distance[0];
+	
+	/*
+	 * Find the first point as distant from reference poinnt
+	 * as query point using binary search.
+	 */
+	while(1){
+		
+		previousIndex = currentIndex;
+
+		currentIndex = (unsigned long)ceil(((double)(minIndex + maxIndex)) / 2);
+
+		if(previousIndex == currentIndex){
+			
+			break;
+		}
+
+		tempValue = datasetIndex[currentIndex].distance[0];
 
 		if(tempValue <= criteriaValue){
 			
@@ -1486,7 +1505,7 @@ vector<KNeighborhoodPoint>::iterator Dataset::getPlacementLineary(const Point& p
 	return result;
 }
 
-vector<vector<KNeighborhoodPoint>::iterator>::iterator Dataset::getPlacementLineary(vector<vector<KNeighborhoodPoint>::iterator>& datasetIndex, const Point& point){
+vector<vector<KNeighborhoodPoint>::iterator>::iterator Dataset::indexGetPlacementLineary(vector<vector<KNeighborhoodPoint>::iterator>& datasetIndex, const Point& point){
 	
 	unsigned long minIndex = 0;
 	unsigned long maxIndex = datasetIndex.size() - 1;
@@ -1498,13 +1517,6 @@ vector<vector<KNeighborhoodPoint>::iterator>::iterator Dataset::getPlacementLine
 	double value = DBL_MIN;
 	double diff = DBL_MAX;
 	double currentDiff = DBL_MAX;
-
-	/*
-	 * multimap complexity:
-	 *	insert	O(n),
-	 *	search	O(n).
-	 */
-	multimap<double, vector<vector<KNeighborhoodPoint>::iterator>::iterator, DistanceComparator> candidates;
 	
 	/*
 	 * Criteria is the first distance.
@@ -1520,6 +1532,48 @@ vector<vector<KNeighborhoodPoint>::iterator>::iterator Dataset::getPlacementLine
 	for(it = datasetIndex.begin(); it != end; it++){
 	
 		currentDiff = abs((*it)->distance[0] - criteriaValue);
+
+		if(diff >= currentDiff){
+		
+			diff = currentDiff;
+		}
+		else{
+			
+			break;
+		}
+
+		result = it;
+	}
+
+	return result;
+}
+vector<KNeighborhoodPoint>::iterator Dataset::getPlacementLineary(vector<KNeighborhoodPoint>& datasetIndex, const Point& point){
+	
+	unsigned long minIndex = 0;
+	unsigned long maxIndex = datasetIndex.size() - 1;
+	unsigned long currentIndex = 0;
+	unsigned long previousIndex = datasetIndex.size();
+	vector<KNeighborhoodPoint>::iterator it;
+	vector<KNeighborhoodPoint>::iterator end = datasetIndex.end();
+	vector<KNeighborhoodPoint>::iterator result;
+	double value = DBL_MIN;
+	double diff = DBL_MAX;
+	double currentDiff = DBL_MAX;
+	
+	/*
+	 * Criteria is the first distance.
+	 */
+	double criteriaValue = point.distance[0];
+	
+	result = it;
+
+	/*
+	 * Find the first point as distant from reference poinnt
+	 * as query point using lineary search.
+	 */
+	for(it = datasetIndex.begin(); it != end; it++){
+	
+		currentDiff = abs(it->distance[0] - criteriaValue);
 
 		if(diff >= currentDiff){
 		

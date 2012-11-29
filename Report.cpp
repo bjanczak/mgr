@@ -63,6 +63,7 @@ Report::Report(){
 	this->indexBuildingExecutionTime		= DBL_MIN;
 	this->datafileReadingTime				= DBL_MIN;
 	this->calculatingReferencePointsTime	= DBL_MIN;
+	this->isUseDatasetIndexAcess            = false;
 }
 
 Report::Report(const Report& object){
@@ -108,6 +109,7 @@ Report::Report(const Report& object){
 	this->indexBuildingExecutionTime		= object.indexBuildingExecutionTime;
 	this->datafileReadingTime				= object.datafileReadingTime;
 	this->calculatingReferencePointsTime	= object.calculatingReferencePointsTime;
+	this->isUseDatasetIndexAcess            = object.isUseDatasetIndexAcess;
 }
 
 Report::Report(const Properties& properties, const TimeReport& timeReport, const string reportFileName){
@@ -180,6 +182,7 @@ void Report::printHeader(ofstream& os){
 	os<<"Projection Source Sequence"<<columnSeparator;
 	os<<"Classification Subset Factor"<<columnSeparator;
 	os<<"Placement Method"<<columnSeparator;
+	os<<"Use Dataset Index Access"<<columnSeparator;
 	os<<"K"<<columnSeparator;
 	os<<"Eps"<<columnSeparator;
 	os<<"minEps"<<columnSeparator;
@@ -342,6 +345,14 @@ void Report::print(ofstream& os){
 	else{
 	
 		os<<"N/A"<<columnSeparator;
+	}
+	if(this->isUseDatasetIndexAcess){
+		
+		os<<"true"<<columnSeparator;
+	}
+	else{
+		
+		os<<"false"<<columnSeparator;
 	}
 	if(this->k != 0){
 		
