@@ -41,26 +41,6 @@ public:
 protected:
 
 	/**
-	 * Runs algorithm using index access to dataset.
-	 *
-	 * @properties      Application properties.
-	 * @dataset         Dataset of elements.
-	 *
-	 * @return          Execution times report as TimeReport object.
-	 */
-	TimeReport runDatasetIndexAccess(const Properties& properties, Dataset& dataset);
-
-	/**
-	 * Runs algorithm using direct access to dataset.
-	 *
-	 * @properties      Application properties.
-	 * @dataset         Dataset of elements.
-	 *
-	 * @return          Execution times report as TimeReport object.
-	 */
-	TimeReport runDatasetDirectAccess(const Properties& properties, Dataset& dataset);
-
-	/**
 	 * Generates the Ti-Neighborhood of point in setOfPoints.
 	 *
 	 * @setOfPoints     Set of poits taken into consideration while
@@ -75,10 +55,6 @@ protected:
 	static list<list<vector<DbscanPoint>::iterator>::iterator> indexTiNeighborhood(
 		list<vector<DbscanPoint>::iterator>& setOfPoints
 		, list<vector<DbscanPoint>::iterator>::iterator pointIt
-		, const double eps);
-	static list<list<DbscanPoint>::iterator> tiNeighborhood(
-		list<DbscanPoint>& setOfPoints
-		, list<DbscanPoint>::iterator pointIt
 		, const double eps);
 
 	/**
@@ -97,10 +73,6 @@ protected:
 		list<vector<DbscanPoint>::iterator>& setOfPoints
 		, list<vector<DbscanPoint>::iterator>::iterator pointIt
 		, const double eps);
-	static list<list<DbscanPoint>::iterator> tiForwardNeighborhood(
-		list<DbscanPoint>& setOfPoints
-		, list<DbscanPoint>::iterator pointIt
-		, const double eps);
 
 	/**
 	 * Generates the backward Ti-Neighborhood of point in setOfPoints.
@@ -117,10 +89,6 @@ protected:
 	static list<list<vector<DbscanPoint>::iterator>::iterator> indexTiBackwardNeighborhood(
 		list<vector<DbscanPoint>::iterator>& setOfPoints
 		, list<vector<DbscanPoint>::iterator>::iterator pointIt
-		, const double eps);
-	static list<list<DbscanPoint>::iterator> tiBackwardNeighborhood(
-		list<DbscanPoint>& setOfPoints
-		, list<DbscanPoint>::iterator pointIt
 		, const double eps);
 
 	/**
@@ -140,10 +108,6 @@ protected:
 	static bool indexIsCandidateNeighborByAdditionalReferencePoints(
 		list<vector<DbscanPoint>::iterator>::iterator pointIt
 		, list<vector<DbscanPoint>::iterator>::iterator queryPointIt
-		, double eps);
-	static bool isCandidateNeighborByAdditionalReferencePoints(
-		list<DbscanPoint>::iterator pointIt
-		, list<DbscanPoint>::iterator queryPointIt
 		, double eps);
 };
 

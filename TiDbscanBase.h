@@ -30,10 +30,6 @@ typedef list<list<vector<DbscanPoint>::iterator>::iterator> indexNeighborhoodFun
 	list<vector<DbscanPoint>::iterator>& setOfPoints
 	, list<vector<DbscanPoint>::iterator>::iterator pointIt
 	, const double eps);
-typedef list<list<DbscanPoint>::iterator> neighborhoodFunction (
-	list<DbscanPoint>& setOfPoints
-	, list<DbscanPoint>::iterator pointIt
-	, const double eps);
 
 /**
  * Basic class for TI-DBSCAN algorithm implementation.
@@ -47,24 +43,6 @@ public:
 	TiDbscanBase();
 
 	TiDbscanBase(const TiDbscanBase& object);
-
-	/**
-	 * Rewrites given vector to list memory efficient.
-	 *
-	 * @dataset         vector of poits.
-	 *
-	 * @return          Generated list.
-	 */
-	static list<DbscanPoint> vectorToList(vector<DbscanPoint>& dataset);
-
-	/**
-	 * Rewrites given list to list vector efficient.
-	 *
-	 * @dataset         list of poits.
-	 *
-	 * @return          Generated list.
-	 */
-	static vector<DbscanPoint> listToVector(list<DbscanPoint>& dataset);
 
 protected:
 
@@ -86,10 +64,5 @@ protected:
 		, list<vector<DbscanPoint>::iterator>::iterator& pointIt
 		, unsigned int clusterId
 		, indexNeighborhoodFunction *neighborhood);
-	bool expandCluster(
-		list<DbscanPoint>& dataset
-		, list<DbscanPoint>::iterator& pointIt
-		, unsigned int clusterId
-		, neighborhoodFunction *neighborhood);
 };
 #endif /* _TI_DBSCAN_BASE_H_ */

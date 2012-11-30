@@ -54,14 +54,6 @@ TimeReport TiDbscanRefProjection::run(const Properties& properties, Dataset& dat
 	this->minPts = properties.minPts;
 
 	/*
-	 * Build working index.
-	 */
-	for(it = tempDataset->begin(); it != end; it++){
-	
-		datasetIterators.push_back(it);
-	}
-
-	/*
 	 * Distance to reference points or dimensions value calculation.
 	 * Distance is either distance to one of reference points or
 	 * vaule of dimension given as projection dimension.
@@ -88,14 +80,44 @@ TimeReport TiDbscanRefProjection::run(const Properties& properties, Dataset& dat
 
 	distanceCalculationFinish = clock();
 
-	/*
-	 * Sorting points by distance to reference point.
-	 */
-	sortingStart = clock();
+	if(properties.isUseDatasetIndexAcess){
+		
+		/*
+		* Build working index.
+		*/
+		for(it = tempDataset->begin(); it != end; it++){
+	
+			datasetIterators.push_back(it);
+		}
+		
+		/*
+		* Sorting points by distance to reference point.
+		*/
+		sortingStart = clock();
 
-	datasetIterators.sort(DbscanPoint::distanceComparatorIterator);
+		datasetIterators.sort(DbscanPoint::distanceComparatorIterator);
 
-	sortingFinish = clock();
+		sortingFinish = clock();
+	}
+	else{
+	
+		/*
+		* Sorting points by distance to reference point.
+		*/
+		sortingStart = clock();
+
+		sort(tempDataset->begin(), tempDataset->end(), DbscanPoint::distanceComparator);
+
+		sortingFinish = clock();
+
+		/*
+		* Build working index.
+		*/
+		for(it = tempDataset->begin(); it != end; it++){
+	
+			datasetIterators.push_back(it);
+		}
+	}
 
 	/*
 	 * Clustering.
@@ -106,7 +128,7 @@ TimeReport TiDbscanRefProjection::run(const Properties& properties, Dataset& dat
 
 		datasetIteratorsIt = datasetIterators.begin();
 
-		if(expandCluster(datasetIterators, datasetIteratorsIt, clusterId, TiDbscanRef::tiNeighborhood)){
+		if(indexExpandCluster(datasetIterators, datasetIteratorsIt, clusterId, TiDbscanRef::indexTiNeighborhood)){
 		
 			clusterId++;
 		}
