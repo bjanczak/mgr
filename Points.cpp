@@ -346,7 +346,7 @@ DbscanPoint::DbscanPoint(const DbscanPoint& object):Point(object){
 	this->isAnalyzed = object.isAnalyzed;
 	this->neighborsNr = object.neighborsNr;
 	this->clusterId = object.clusterId;
-	this->borderPoints = list<vector<DbscanPoint>::iterator>(object.borderPoints);
+	this->borderPoints = list<DbscanPoint*>(object.borderPoints);
 }
 
 DbscanPoint::DbscanPoint(const Point& object):Point(object){
@@ -356,22 +356,6 @@ DbscanPoint::DbscanPoint(const Point& object):Point(object){
 	this->clusterId = DbscanPoint::UNCLASSIFIED;
 	this->borderPoints;
 }
-
-/*DbscanPoint::DbscanPoint(const unsigned long id, const vector<double>& denseFormatPoint):Point(id, denseFormatPoint){
-	
-	this->isAnalyzed = false;
-	this->neighborsNr = 0;
-	this->clusterId = DbscanPoint::UNCLASSIFIED;
-	this->borderPoints;
-}
-
-DbscanPoint::DbscanPoint(const unsigned long id, const vector<SparsePoint>& sparseFormatPoint):Point(id, sparseFormatPoint){
-	
-	this->isAnalyzed = false;
-	this->neighborsNr = 0;
-	this->clusterId = DbscanPoint::UNCLASSIFIED;
-	this->borderPoints;
-}*/
 
 bool DbscanPoint::clusterIdComparator(DbscanPoint& a, DbscanPoint& b){
 	

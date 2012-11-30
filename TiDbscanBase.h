@@ -26,9 +26,13 @@
  *
  * @return          neighborhood of the point given as list of DbscanPoint*.
  */
-typedef list<list<vector<DbscanPoint>::iterator>::iterator> neighborhoodFunction (
+typedef list<list<vector<DbscanPoint>::iterator>::iterator> indexNeighborhoodFunction (
 	list<vector<DbscanPoint>::iterator>& setOfPoints
 	, list<vector<DbscanPoint>::iterator>::iterator pointIt
+	, const double eps);
+typedef list<list<DbscanPoint>::iterator> neighborhoodFunction (
+	list<DbscanPoint>& setOfPoints
+	, list<DbscanPoint>::iterator pointIt
 	, const double eps);
 
 /**
@@ -43,6 +47,24 @@ public:
 	TiDbscanBase();
 
 	TiDbscanBase(const TiDbscanBase& object);
+
+	/**
+	 * Rewrites given vector to list memory efficient.
+	 *
+	 * @dataset         vector of poits.
+	 *
+	 * @return          Generated list.
+	 */
+	static list<DbscanPoint> vectorToList(vector<DbscanPoint>& dataset);
+
+	/**
+	 * Rewrites given list to list vector efficient.
+	 *
+	 * @dataset         list of poits.
+	 *
+	 * @return          Generated list.
+	 */
+	static vector<DbscanPoint> listToVector(list<DbscanPoint>& dataset);
 
 protected:
 
@@ -59,9 +81,14 @@ protected:
 	 * @return          false if point belongs to NOICE, otherwise
 	 *                  returns true.
 	 */
-	bool expandCluster(
+	bool indexExpandCluster(
 		list<vector<DbscanPoint>::iterator>& dataset
 		, list<vector<DbscanPoint>::iterator>::iterator& pointIt
+		, unsigned int clusterId
+		, indexNeighborhoodFunction *neighborhood);
+	bool expandCluster(
+		list<DbscanPoint>& dataset
+		, list<DbscanPoint>::iterator& pointIt
 		, unsigned int clusterId
 		, neighborhoodFunction *neighborhood);
 };

@@ -152,7 +152,7 @@ public:
 	unsigned long clusterId;
 	bool isAnalyzed;
 	unsigned long neighborsNr;
-	list<vector<DbscanPoint>::iterator> borderPoints;
+	list<DbscanPoint*> borderPoints;
 
 	~DbscanPoint();
 	
@@ -161,22 +161,6 @@ public:
 	DbscanPoint(const DbscanPoint& object);
 
 	DbscanPoint(const Point& object);
-
-	/**
-	 * Dense DBSCAN point constructor.
-	 *
-	 * @id                Point identifier.
-	 * @denseFormatPoint  Point definition in dense format.
-	 */
-	//DbscanPoint(const unsigned long id, const vector<double>& denseFormatPoint);
-
-	/**
-	 * Sparse DBSCAN point constructor.
-	 *
-	 * @id                Point identifier.
-	 * @sparseFormatPoint Point definition in sparse format.
-	 */
-	//DbscanPoint(const unsigned long id, const vector<SparsePoint>& sparseFormatPoint);
 
 	/**
 	 * Compares points a and b by means of clusterId.
