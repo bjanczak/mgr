@@ -1,0 +1,2 @@
+alfa=1000
+testRepeats=3

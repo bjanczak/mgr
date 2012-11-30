@@ -48,6 +48,10 @@ private:
 
 	static const string LOGS_DIRECTORY_PATH;
 	static const string PARAMETERS_DIRECTORY_PATH;
+	static const string ALGORITHM_ENGINE_PARAMETERS_DIRECTORY_PATH;
+
+	static const string ALFA_PARAMETER_NAME;
+	static const string TEST_REPEATS_PARAMETER_NAME;
 
 	/**
 	 * Report output file.
@@ -79,9 +83,24 @@ private:
 	 */
 	TimeReport timeReport;
 
+	/**
+	 * Alfa value to calculate cosinus distance.
+	 */
+	double alfa;
+
+	/**
+	 * Number of repeats for each algorithm run.
+	 */
+	unsigned int testRepeats;
+
 	vector<Report> ultimateReport;
 
 	AlgorithmsEngine();
+
+	/**
+	 * Read algorithms engine properties
+	 */
+	void readAlgorithmsEngineProperties();
 
 	/**
 	 * Read parameters file names from

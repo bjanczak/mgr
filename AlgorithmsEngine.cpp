@@ -28,18 +28,24 @@
 #include <time.h>
 #include <tchar.h>
 #include <stdio.h>
+#include <fstream>
 #include <iostream>
-
-#define TEST_REPEAT 3
+#include <string.h>
 
 const string AlgorithmsEngine::LOGS_DIRECTORY_PATH = "logs";
 const string AlgorithmsEngine::PARAMETERS_DIRECTORY_PATH = "properties/";
+const string AlgorithmsEngine::ALGORITHM_ENGINE_PARAMETERS_DIRECTORY_PATH = "algorithms_engine_properties/algorithms_engine_properties.txt";
+
+const string AlgorithmsEngine::ALFA_PARAMETER_NAME = "alfa";
+const string AlgorithmsEngine::TEST_REPEATS_PARAMETER_NAME = "test_repeats";
 
 AlgorithmsEngine::AlgorithmsEngine(){
 
-	dataset = &Dataset::getInstance();
-	properties = &Properties::getInstance();
-	reportFile = new ofstream();
+	this->dataset = &Dataset::getInstance();
+	this->properties = &Properties::getInstance();
+	this->reportFile = new ofstream();
+	this->testRepeats = 0;
+	this->alfa = 0;
 }
 
 AlgorithmsEngine::~AlgorithmsEngine(){
@@ -57,6 +63,47 @@ void AlgorithmsEngine::clear(){
 	
 		reportFile->close();
 	}
+}
+
+void AlgorithmsEngine::readAlgorithmsEngineProperties(){
+
+	string bufor;
+	string parameterName;
+	string parameterValue;
+	size_t found;
+
+	ifstream inputFileStream (ALGORITHM_ENGINE_PARAMETERS_DIRECTORY_PATH.c_str());
+
+	if (!inputFileStream){
+		cerr<<"Error: properties file: "<<ALGORITHM_ENGINE_PARAMETERS_DIRECTORY_PATH<<" could not be opened"<<endl;
+	}
+	else		
+		if(inputFileStream.is_open()){
+	
+			while(inputFileStream.good()){
+		
+				getline(inputFileStream,bufor);
+				
+				found = bufor.find('=');
+			
+				if(found!=string::npos){
+					parameterName = bufor.substr(0,found);
+					parameterValue = bufor.substr(found+1,bufor.size());
+
+					if(parameterName == AlgorithmsEngine::ALFA_PARAMETER_NAME){
+					
+						this->alfa = atof(parameterValue.c_str());
+					}
+					else
+						if(parameterName == AlgorithmsEngine::ALGORITHM_ENGINE_PARAMETERS_DIRECTORY_PATH){
+					
+							this->testRepeats = atoi(parameterValue.c_str());
+					}
+				}
+			}
+
+			inputFileStream.close();
+		}
 }
 
 void AlgorithmsEngine::readParametersFilesNames(){
@@ -288,6 +335,8 @@ void AlgorithmsEngine::run(){
 	unsigned long size;
 	unsigned long testRepeatCounter = 1;
 
+	readAlgorithmsEngineProperties();
+
 	/*
 	 * Read files names from properties/ directory.
 	 */
@@ -343,7 +392,7 @@ void AlgorithmsEngine::run(){
 		/*
 		 * Erase first parameter file name from collection.
 		 */
-		if(testRepeatCounter == TEST_REPEAT){
+		if(testRepeatCounter == this->testRepeats){
 		
 			parametersFilesNames.erase(parametersFilesNames.begin());
 			testRepeatCounter = 1;
