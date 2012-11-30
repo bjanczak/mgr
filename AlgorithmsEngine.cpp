@@ -12,6 +12,7 @@
 #include "AlgorithmsEngine.h"
 #include "Dataset.h"
 #include "Dbscan.h"
+#include "DbscanPointsElimination.h"
 #include "KNeighborhood.h"
 #include "TiDbscan.h"
 #include "TiDbscanRef.h"
@@ -262,35 +263,38 @@ void AlgorithmsEngine::readData(){
 Algorithm* AlgorithmsEngine::getAlgorithm(){
 
 	switch(properties->algorithmNameId){
-	
+
 		case 1:		
 			return new Dbscan();
 		
-		case 2:
-			return new TiDbscan();
+		case 2:		
+			return new DbscanPointsElimination();
 		
 		case 3:
-			return new TiDbscanRef();
+			return new TiDbscan();
 		
 		case 4:
-			return new TiDbscanRefProjection();
+			return new TiDbscanRef();
 		
 		case 5:
-			return new KNeighborhood();
+			return new TiDbscanRefProjection();
 		
 		case 6:
+			return new KNeighborhood();
+		
+		case 7:
 			return new TiKNeighborhood();
 
-		case 7:		
+		case 8:		
 			return new TiKNeighborhoodRef();
 		
-		case 8:
+		case 9:
 			return new TiKNeighborhoodRefProjection();
 		
-		case 9:
+		case 10:
 			return new VpTree();
 		
-		case 10:
+		case 11:
 			return new VpsTree();
 		
 		default:

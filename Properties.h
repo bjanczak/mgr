@@ -258,6 +258,8 @@ public:
 
 	static const string DBSCAN;
 
+	static const string DBSCAN_POINTS_ELIMINATION;
+
 	static const string TI_DBSCAN;
 
 	static const string TI_DBSCAN_REF;
@@ -277,6 +279,8 @@ public:
 	static const string VPS_TREE;
 
 	static const unsigned long DBSCAN_ID;
+
+	static const unsigned long DBSCAN_POINTS_ELIMINATION_ID;
 
 	static const unsigned long TI_DBSCAN_ID;
 

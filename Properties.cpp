@@ -44,6 +44,7 @@ const string Properties::IS_USE_DATASET_USE_INDEX = "use_dataset_index_access";
  * Algorithms names.
  */
 const string Properties::DBSCAN = "dbscan";
+const string Properties::DBSCAN_POINTS_ELIMINATION = "dbscan_points_elimination";
 const string Properties::TI_DBSCAN = "ti_dbscan";
 const string Properties::TI_DBSCAN_REF = "ti_dbscan_ref";
 const string Properties::TI_DBSCAN_REF_PROJECTION = "ti_dbscan_ref_projection";
@@ -58,16 +59,17 @@ const string Properties::VPS_TREE = "vps_tree";
  * Algorithms and groups IDs.
  */
 const unsigned long Properties::DBSCAN_ID = 1;
-const unsigned long Properties::TI_DBSCAN_ID = 2;
-const unsigned long Properties::TI_DBSCAN_REF_ID = 3;
-const unsigned long Properties::TI_DBSCAN_REF_PROJECTION_ID = 4;
-const unsigned long Properties::K_NEIGHBORHOOD_ID = 5;
-const unsigned long Properties::TI_K_NEIGHBORHOOD_ID = 6;
-const unsigned long Properties::TI_K_NEIGHBORHOOD_REF_ID = 7;
-const unsigned long Properties::TI_K_NEIGHBORHOOD_REF_PROJECTION_ID = 8;
-const unsigned long Properties::VP_TREE_ID = 9;
-const unsigned long Properties::VPS_TREE_ID = 10;
-const unsigned long Properties::OTHER_ID = 11;
+const unsigned long Properties::DBSCAN_POINTS_ELIMINATION_ID = 2;
+const unsigned long Properties::TI_DBSCAN_ID = 3;
+const unsigned long Properties::TI_DBSCAN_REF_ID = 4;
+const unsigned long Properties::TI_DBSCAN_REF_PROJECTION_ID = 5;
+const unsigned long Properties::K_NEIGHBORHOOD_ID = 6;
+const unsigned long Properties::TI_K_NEIGHBORHOOD_ID = 7;
+const unsigned long Properties::TI_K_NEIGHBORHOOD_REF_ID = 8;
+const unsigned long Properties::TI_K_NEIGHBORHOOD_REF_PROJECTION_ID = 9;
+const unsigned long Properties::VP_TREE_ID = 10;
+const unsigned long Properties::VPS_TREE_ID = 11;
+const unsigned long Properties::OTHER_ID = 12;
 
 /*
  * Constants.
@@ -155,53 +157,58 @@ string Properties::getAlgorithmGroupName(string algorithmName){
 
 	if(algorithmName == Properties::DBSCAN){
 
-			result = Properties::DBSCAN;
-		}
-		else
-			if(algorithmName == Properties::TI_DBSCAN){
+		result = Properties::DBSCAN;
+	}
+	else
+	if(algorithmName == Properties::DBSCAN_POINTS_ELIMINATION){
 
-					result = Properties::DBSCAN;
-			}
-			else
-				if(algorithmName == Properties::TI_DBSCAN_REF){
+		result = Properties::DBSCAN_POINTS_ELIMINATION;
+	}
+	else
+	if(algorithmName == Properties::TI_DBSCAN){
+
+		result = Properties::DBSCAN;
+	}
+	else
+	if(algorithmName == Properties::TI_DBSCAN_REF){
 						
-					result = Properties::DBSCAN;
-				}
-				else
-					if(algorithmName == Properties::TI_DBSCAN_REF_PROJECTION){
+		result = Properties::DBSCAN;
+	}
+	else
+	if(algorithmName == Properties::TI_DBSCAN_REF_PROJECTION){
 
-						result = Properties::DBSCAN;
-					}
-					else
-						if(algorithmName == Properties::K_NEIGHBORHOOD){
+		result = Properties::DBSCAN;
+	}
+	else
+	if(algorithmName == Properties::K_NEIGHBORHOOD){
 
-							result = Properties::K_NEIGHBORHOOD;
-						}
-						else
-							if(algorithmName == Properties::TI_K_NEIGHBORHOOD){
+		result = Properties::K_NEIGHBORHOOD;
+	}
+	else
+	if(algorithmName == Properties::TI_K_NEIGHBORHOOD){
 	
-								result = Properties::K_NEIGHBORHOOD;
-							}
-							else
-								if(algorithmName == Properties::TI_K_NEIGHBORHOOD_REF){
+		result = Properties::K_NEIGHBORHOOD;
+	}
+	else
+	if(algorithmName == Properties::TI_K_NEIGHBORHOOD_REF){
 	
-									result = Properties::K_NEIGHBORHOOD;
-								}
-								else
-									if(algorithmName == Properties::TI_K_NEIGHBORHOOD_REF_PROJECTION){
+		result = Properties::K_NEIGHBORHOOD;
+	}
+	else
+	if(algorithmName == Properties::TI_K_NEIGHBORHOOD_REF_PROJECTION){
 	
-										result = Properties::K_NEIGHBORHOOD;
-									}
-									else
-										if(algorithmName == Properties::VP_TREE){
+		result = Properties::K_NEIGHBORHOOD;
+	}
+	else
+	if(algorithmName == Properties::VP_TREE){
 	
-											result = Properties::OTHER;
-										}
-										else
-											if(algorithmName == Properties::VPS_TREE){
+		result = Properties::OTHER;
+	}
+	else
+	if(algorithmName == Properties::VPS_TREE){
 	
-												result = Properties::OTHER;
-											}
+		result = Properties::OTHER;
+	}
 
 	return result;
 }
@@ -211,6 +218,7 @@ string Properties::getAlgorithmType(string algorithmName){
 	string result;
 
 	if(algorithmName == Properties::DBSCAN
+		|| algorithmName == Properties::DBSCAN_POINTS_ELIMINATION
 		|| algorithmName == Properties::TI_DBSCAN
 		|| algorithmName == Properties::TI_DBSCAN_REF
 		|| algorithmName == Properties::TI_DBSCAN_REF_PROJECTION){
@@ -237,53 +245,58 @@ unsigned long Properties::getAlgorithmNameId(string algorithmName){
 	
 	if(algorithmName == Properties::DBSCAN){
 
-			result = Properties::DBSCAN_ID;
-		}
-		else
-			if(algorithmName == Properties::TI_DBSCAN){
+		result = Properties::DBSCAN_ID;
+	}
+	else
+	if(algorithmName == Properties::DBSCAN_POINTS_ELIMINATION){
 
-					result = Properties::TI_DBSCAN_ID;
-			}
-			else
-				if(algorithmName == Properties::TI_DBSCAN_REF){
+		result = Properties::DBSCAN_POINTS_ELIMINATION_ID;
+	}
+	else
+	if(algorithmName == Properties::TI_DBSCAN){
+		
+		result = Properties::TI_DBSCAN_ID;
+	}
+	else
+	if(algorithmName == Properties::TI_DBSCAN_REF){
 						
-					result = Properties::TI_DBSCAN_REF_ID;
-				}
-				else
-					if(algorithmName == Properties::TI_DBSCAN_REF_PROJECTION){
+		result = Properties::TI_DBSCAN_REF_ID;
+	}
+	else
+	if(algorithmName == Properties::TI_DBSCAN_REF_PROJECTION){
 
-						result = Properties::TI_DBSCAN_REF_PROJECTION_ID;
-					}
-					else
-						if(algorithmName == Properties::K_NEIGHBORHOOD){
+		result = Properties::TI_DBSCAN_REF_PROJECTION_ID;
+	}
+	else
+	if(algorithmName == Properties::K_NEIGHBORHOOD){
 
-							result = Properties::K_NEIGHBORHOOD_ID;
-						}
-						else
-							if(algorithmName == Properties::TI_K_NEIGHBORHOOD){
+		result = Properties::K_NEIGHBORHOOD_ID;
+	}
+	else
+	if(algorithmName == Properties::TI_K_NEIGHBORHOOD){
 	
-								result = Properties::TI_K_NEIGHBORHOOD_ID;
-							}
-							else
-								if(algorithmName == Properties::TI_K_NEIGHBORHOOD_REF){
+		result = Properties::TI_K_NEIGHBORHOOD_ID;
+	}
+	else
+	if(algorithmName == Properties::TI_K_NEIGHBORHOOD_REF){
 	
-									result = Properties::TI_K_NEIGHBORHOOD_REF_ID;
-								}
-								else
-									if(algorithmName == Properties::TI_K_NEIGHBORHOOD_REF_PROJECTION){
+		result = Properties::TI_K_NEIGHBORHOOD_REF_ID;
+	}
+	else
+	if(algorithmName == Properties::TI_K_NEIGHBORHOOD_REF_PROJECTION){
 	
-										result = Properties::TI_K_NEIGHBORHOOD_REF_PROJECTION_ID;
-									}
-									else
-										if(algorithmName == Properties::VP_TREE){
+		result = Properties::TI_K_NEIGHBORHOOD_REF_PROJECTION_ID;
+	}
+	else
+	if(algorithmName == Properties::VP_TREE){
 	
-											result = Properties::VP_TREE_ID;
-										}
-										else
-											if(algorithmName == Properties::VPS_TREE){
+		result = Properties::VP_TREE_ID;
+	}
+	else
+	if(algorithmName == Properties::VPS_TREE){
 	
-												result = Properties::VPS_TREE_ID;
-											}
+		result = Properties::VPS_TREE_ID;
+	}
 	
 	return result;
 }
@@ -616,16 +629,15 @@ void Properties::print(ofstream& os){
 	
 	switch(this->algorithmNameId){
 	
-		case 1:	//DBSCAN	
+	case Properties::DBSCAN_ID:
+	case Properties::DBSCAN_POINTS_ELIMINATION_ID:
 			
 			os<<"/*Neighborhood settings*/"<<endl;
 			os<<"eps                               = "<<this->eps<< endl;
 			os<<"min_pts                           = "<<this->minPts<< endl;
 			break;
-		
-		case 2:	//TI-DBSCAN
-			
-		case 3:	//TI-DBSCAN-REF
+	case Properties::TI_DBSCAN_ID:			
+	case Properties::TI_DBSCAN_REF_ID:
 
 			os<<"/*Neighborhood settings*/"<<endl;
 			os<<"eps                               = "<<this->eps<< endl;
@@ -641,7 +653,7 @@ void Properties::print(ofstream& os){
 			os<<endl;
 			printReferencePoint(os);
 			break;
-		case 4:	//TI-DBSCAN-REF-PROJECTION
+	case Properties::TI_DBSCAN_REF_PROJECTION_ID:
 
 			os<<"/*Neighborhood settings*/"<<endl;
 			os<<"eps                               = "<<this->eps<< endl;
@@ -662,7 +674,7 @@ void Properties::print(ofstream& os){
 			os<<endl;
 			printReferencePoint(os);
 			break;
-		case 5:	//K-NEIGHBORHOOD
+	case Properties::K_NEIGHBORHOOD_ID:
 			
 			os<<"/*Classification*/"<<endl;
 			os<<"classification_subset_factor      = "<<this->classificationSubsetFactor<<endl;
@@ -672,9 +684,8 @@ void Properties::print(ofstream& os){
 			os<<"/*Neighborhood settings*/"<<endl;
 			os<<"k                                 = "<<this->k<< endl;
 			break;		
-		case 6:	//TI-K-NEIGHBORHOOD
-	
-		case 7:	//TI-K-NEIGHBORHOOD-REF
+	case Properties::TI_K_NEIGHBORHOOD_ID:
+	case Properties::TI_K_NEIGHBORHOOD_REF_ID:
 			
 			os<<"/*Classification*/"<<endl;
 			os<<"classification_subset_factor      = "<<this->classificationSubsetFactor<<endl;
@@ -694,7 +705,7 @@ void Properties::print(ofstream& os){
 			os<<endl;
 			printReferencePoint(os);
 			break;	
-		case 8:	//TI-K-NEIGHBORHOOD-REF-PROJECTION
+	case Properties::TI_K_NEIGHBORHOOD_REF_PROJECTION_ID:
 			
 			os<<"/*Classification*/"<<endl;
 			os<<"classification_subset_factor      = "<<this->classificationSubsetFactor<<endl;
@@ -719,7 +730,7 @@ void Properties::print(ofstream& os){
 			os<<endl;
 			printReferencePoint(os);
 			break;	
-		case 9: //VP-TREE
+	case Properties::VPS_TREE_ID:
 
 			if(this->algorithmType == Properties::CLASSIFICATION){
 			
