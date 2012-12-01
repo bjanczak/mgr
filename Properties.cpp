@@ -614,12 +614,12 @@ void Properties::print(ofstream& os){
 			os<<"use_dataset_index_access          = "<<useDatasetIndexAccess<< endl;
 			os<<endl;
 			os<<endl;
-			os<<"/*Reference point settings*/"<<endl;
+			os<<"/*Reference points settings*/"<<endl;
 			os<<"reference_point_format            = "<<datasetReferencePointFormatValue<< endl;
 			os<<"reference_point                   = "<<this->referencePointsString<< endl;			
 			os<<endl;
 			os<<endl;
-			os<<"/*Reference point value*/"<<endl;
+			os<<"/*Reference points values*/"<<endl;
 			os<<endl;
 			printReferencePoint(os);
 			break;
@@ -639,12 +639,12 @@ void Properties::print(ofstream& os){
 			os<<"use_dataset_index_access          = "<<useDatasetIndexAccess<< endl;
 			os<<endl;
 			os<<endl;
-			os<<"/*Reference point settings*/"<<endl;
+			os<<"/*Reference points settings*/"<<endl;
 			os<<"reference_point_format            = "<<datasetReferencePointFormatValue<< endl;
 			os<<"reference_point                   = "<<this->referencePointsString<< endl;
 			os<<endl;
 			os<<endl;
-			os<<"/*Reference point value*/"<<endl;
+			os<<"/*Reference points values*/"<<endl;
 			os<<endl;
 			printReferencePoint(os);
 			break;
@@ -674,12 +674,12 @@ void Properties::print(ofstream& os){
 			os<<"use_dataset_index_access          = "<<useDatasetIndexAccess<< endl;
 			os<<endl;
 			os<<endl;
-			os<<"/*Reference point settings*/"<<endl;
+			os<<"/*Reference points settings*/"<<endl;
 			os<<"reference_point_format            = "<<datasetReferencePointFormatValue<< endl;
 			os<<"reference_point                   = "<<this->referencePointsString<< endl;
 			os<<endl;
 			os<<endl;
-			os<<"/*Reference point value*/"<<endl;
+			os<<"/*Reference points values*/"<<endl;
 			os<<endl;
 			printReferencePoint(os);
 			break;	
@@ -703,12 +703,12 @@ void Properties::print(ofstream& os){
 			os<<"projection_source_sequence        = "<<projectionSortingCriteriaString<<endl;			
 			os<<endl;
 			os<<endl;
-			os<<"/*Reference point settings*/"<<endl;
+			os<<"/*Reference points settings*/"<<endl;
 			os<<"reference_point_format            = "<<datasetReferencePointFormatValue<< endl;
 			os<<"reference_point                   = "<<this->referencePointsString<< endl;
 			os<<endl;
 			os<<endl;
-			os<<"/*Reference point value*/"<<endl;
+			os<<"/*Reference points values*/"<<endl;
 			os<<endl;
 			printReferencePoint(os);
 			break;	
@@ -752,7 +752,7 @@ void Properties::printPoint(Point& point, ofstream& os){
 	vector<SparsePoint>::iterator end;
 
 	os<<"\tid\t\t= "<<point.id<<endl;
-	os<<"\t\tsparse point definition\t=\t";
+	os<<"\t\tsparse point definition\t =\t";
 	
 	if(point.isDense){
 	
@@ -781,7 +781,7 @@ void Properties::printPoint(Point& point, ofstream& os){
 
 	os<<endl;
 
-	os<<"\t\tdense point definition\t=\t";
+	os<<"\t\tdense point definition\t =\t";
 
 	if(point.isDense){
 	
