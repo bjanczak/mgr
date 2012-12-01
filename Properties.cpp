@@ -562,7 +562,7 @@ void Properties::print(ofstream& os){
 	string datasetInternalFormatValue = this->isDatasetInternalFormatDense ? "dense" : "sparse";
 	string datasetReferencePointFormatValue = this->isReferencePointFormatDense ? "dense" : "sparse";
 	string useBinaryPlacementValue = this->useBinaryPlacement ? "true" : "false";
-
+	string useDatasetIndexAccess = this->isUseDatasetIndexAcess ? "true" : "false";
 
 	os<<"********************************************"<<endl;
 	os<<"               Properties"<<endl;
@@ -610,9 +610,13 @@ void Properties::print(ofstream& os){
 			os<<"min_pts                           = "<<this->minPts<< endl;
 			os<<endl;
 			os<<endl;
+			os<<"/*Dataset access settings*/"<<endl;
+			os<<"use_dataset_index_access          = "<<useDatasetIndexAccess<< endl;
+			os<<endl;
+			os<<endl;
 			os<<"/*Reference point settings*/"<<endl;
 			os<<"reference_point_format            = "<<datasetReferencePointFormatValue<< endl;
-			os<<"reference_point                   = "<<this->referencePointsString<< endl;
+			os<<"reference_point                   = "<<this->referencePointsString<< endl;			
 			os<<endl;
 			os<<endl;
 			os<<"/*Reference point value*/"<<endl;
@@ -629,6 +633,10 @@ void Properties::print(ofstream& os){
 			os<<"/*Projection settings*/"<<endl;
 			os<<"projection_dimensions             = "<<projectionDimensionsString<<endl;
 			os<<"projection_source_sequence        = "<<projectionSortingCriteriaString<<endl;
+			os<<endl;
+			os<<endl;
+			os<<"/*Dataset access settings*/"<<endl;
+			os<<"use_dataset_index_access          = "<<useDatasetIndexAccess<< endl;
 			os<<endl;
 			os<<endl;
 			os<<"/*Reference point settings*/"<<endl;
@@ -662,6 +670,10 @@ void Properties::print(ofstream& os){
 			os<<"k                                 = "<<this->k<< endl;
 			os<<endl;
 			os<<endl;
+			os<<"/*Dataset access settings*/"<<endl;
+			os<<"use_dataset_index_access          = "<<useDatasetIndexAccess<< endl;
+			os<<endl;
+			os<<endl;
 			os<<"/*Reference point settings*/"<<endl;
 			os<<"reference_point_format            = "<<datasetReferencePointFormatValue<< endl;
 			os<<"reference_point                   = "<<this->referencePointsString<< endl;
@@ -680,6 +692,10 @@ void Properties::print(ofstream& os){
 			os<<endl;
 			os<<"/*Neighborhood settings*/"<<endl;
 			os<<"k                                 = "<<this->k<< endl;
+			os<<endl;
+			os<<endl;
+			os<<"/*Dataset access settings*/"<<endl;
+			os<<"use_dataset_index_access          = "<<useDatasetIndexAccess<< endl;
 			os<<endl;
 			os<<endl;
 			os<<"/*Projection settings*/"<<endl;

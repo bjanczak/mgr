@@ -209,6 +209,16 @@ public:
 	 * Calculates aggregation values for K-NEIGHBORHOOD algorithms results eps, stores them in internal values as well as in parameters.
 	 */
 	void calculateKNeighborhoodEps(double& minEps, double& avgEps, double& maxEps);
+	
+	/**
+	 * Generates Point object that has zero value for each
+	 * dimension.
+	 *
+	 * @dataset         Dataset of elements.
+	 *
+	 * @return          Generated point as Point object.
+	 */
+	static Point getZeroPoint(const Dataset& dataset);
 
 private:
 
@@ -265,16 +275,6 @@ private:
 	 * @return          Vector of instructions as vector of pairs <dimension, value selector>.
 	 */
 	static vector<pair<unsigned long, string>> customPointDefinitionToInstructionVector(const string& definition, bool isDense);
-
-	/**
-	 * Generates Point object that has zero value for each
-	 * dimension.
-	 *
-	 * @dataset         Dataset of elements.
-	 *
-	 * @return          Generated point as Point object.
-	 */
-	static Point getZeroPoint(const Dataset& dataset);
 
 	/**
 	 * Generates unsigned long value from string definition.

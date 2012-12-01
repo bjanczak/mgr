@@ -27,6 +27,8 @@ DbscanPointsElimination::DbscanPointsElimination(const DbscanPointsElimination& 
 TimeReport DbscanPointsElimination::run(const Properties& properties, Dataset& dataset){
 
 	TimeReport timeReport;
+
+	Point referencePoint = Dataset::getZeroPoint(dataset);
 	
 	vector<DbscanPoint> *tempDataset = &dataset.datasetDbscanPoint;
 	vector<DbscanPoint>::iterator it;
@@ -43,12 +45,26 @@ TimeReport DbscanPointsElimination::run(const Properties& properties, Dataset& d
 	this->minPts = properties.minPts;
 
 	/*
+	 * Distance to reference point calculation.
+	 */
+	for(it = tempDataset->begin(); it != end; it++){
+	
+		(*it).distance.push_back(Point::minkowskiDistance(referencePoint, (*it), 2));
+		(*it).neighborsNr = 1;
+	}
+
+	/*
+	* Sorting points by distance to reference point.
+	*/
+	sort(tempDataset->begin(), tempDataset->end(), DbscanPoint::distanceComparator);
+
+	/*
 	 * Build working index.
 	 */
 	for(it = tempDataset->begin(); it != end; it++){
 	
 		datasetIterators.push_back(it);
-	}	
+	}		
 
 	/*
 	 * Clustering.
