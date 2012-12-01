@@ -200,7 +200,7 @@ void AlgorithmsEngine::readData(){
 
 		normalizationStart = clock();
 		
-		dataset->normalize();
+		dataset->normalize(this->alfa);
 		
 		normalizationFinish = clock();
 	}
@@ -228,7 +228,7 @@ void AlgorithmsEngine::readData(){
 
 			Dataset::fillDbscanPointVector(dataset->datasetDbscanPoint, dataset->datasetPoint);
 			break;
-		case 5:
+		case 6:
 
 			Dataset::fillKNeighborhoodPointVector(dataset->datasetKNeighborhoodPoint, dataset->datasetPoint);
 			break;

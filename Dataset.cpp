@@ -1041,59 +1041,14 @@ vector<pair<unsigned long, string>> Dataset::customPointDefinitionToInstructionV
 	return result;
 }
 
-void Dataset::normalize(){
+void Dataset::normalize(double alfa){
 
 	Point zeroPoint = getZeroPoint(*this);
 	double distance;
 	unsigned long datasetSize;
 	unsigned long vectorSize;
 
-	if(this->isDense){
-
-		/*if(this->algorithmGroup == Properties::DBSCAN){
-
-			datasetSize = this->datasetDbscanPoint.size();
-			DbscanPoint *dbscanPoint;
-			vector<double> *dbscanPointVector;
-
-			for(unsigned long i=0; i<datasetSize; i++){
-
-				dbscanPoint = &datasetDbscanPoint[i];
-				dbscanPointVector = &(dbscanPoint->denseFormatPoint);
-				distance = Point::minkowskiDistance(zeroPoint, *dbscanPoint, 2);
-
-				vectorSize = dbscanPointVector->size();
-
-				for(unsigned long j=0; j<vectorSize; j++){
-				
-					dbscanPointVector->at(j)=(dbscanPointVector->at(j))/distance;
-				}
-			}
-		}
-		else
-			if(this->algorithmGroup == Properties::K_NEIGHBORHOOD){
-				
-				datasetSize = this->datasetKNeighborhoodPoint.size();
-				KNeighborhoodPoint *kNeighborhoodPoint;
-				vector<double> *kNeighborhoodPointVector;
-
-				for(unsigned long i=0; i<datasetSize; i++){
-
-					kNeighborhoodPoint = &datasetKNeighborhoodPoint[i];
-					kNeighborhoodPointVector = &(kNeighborhoodPoint->denseFormatPoint);
-					distance = Point::minkowskiDistance(zeroPoint, *kNeighborhoodPoint, 2);
-	
-					vectorSize = kNeighborhoodPointVector->size();
-
-					for(unsigned long j=0; j<vectorSize; j++){
-				
-						kNeighborhoodPointVector->at(j)=(kNeighborhoodPointVector->at(j))/distance;
-					}
-				}
-			}
-			else
-				if(this->algorithmGroup == Properties::OTHER){
-				}*/
+	if(this->isDense){		
 		datasetSize = this->datasetPoint.size();
 		Point *point;
 		vector<double> *pointVector;
@@ -1110,57 +1065,12 @@ void Dataset::normalize(){
 
 				for(unsigned long j=0; j<vectorSize; j++){
 					
-					pointVector->at(j)=(pointVector->at(j))/distance;
+					pointVector->at(j)=(pointVector->at(j))*(alfa/distance);
 				}
 			}
 		}
 	}
 	else{
-
-		/*if(this->algorithmGroup == Properties::DBSCAN){
-
-			datasetSize = this->datasetDbscanPoint.size();
-			DbscanPoint *dbscanPoint;
-			vector<SparsePoint> *dbscanPointVector;
-
-			for(unsigned long i=0; i<datasetSize; i++){
-
-				dbscanPoint = &datasetDbscanPoint[i];
-				dbscanPointVector = &(dbscanPoint->sparseFormatPoint);
-				distance = Point::minkowskiDistance(zeroPoint, *dbscanPoint, 2);
-
-				vectorSize = dbscanPointVector->size();
-
-				for(unsigned long j=0; j<vectorSize; j++){
-				
-					dbscanPointVector->at(j).value=(dbscanPointVector->at(j).value)/distance;
-				}
-			}
-		}
-		else
-			if(this->algorithmGroup == Properties::K_NEIGHBORHOOD){
-				
-				datasetSize = this->datasetKNeighborhoodPoint.size();
-				KNeighborhoodPoint *kNeighborhoodPoint;
-				vector<SparsePoint> *kNeighborhoodPointVector;
-
-				for(unsigned long i=0; i<datasetSize; i++){
-
-					kNeighborhoodPoint = &datasetKNeighborhoodPoint[i];
-					kNeighborhoodPointVector = &(kNeighborhoodPoint->sparseFormatPoint);
-					distance = Point::minkowskiDistance(zeroPoint, *kNeighborhoodPoint, 2);
-
-					vectorSize = kNeighborhoodPointVector->size();
-
-					for(unsigned long j=0; j<vectorSize; j++){
-				
-						kNeighborhoodPointVector->at(j).value=(kNeighborhoodPointVector->at(j).value)/distance;
-					}
-				}
-			}
-			else
-				if(this->algorithmGroup == Properties::OTHER){
-				}*/
 		datasetSize = this->datasetPoint.size();
 		Point *point;
 		vector<SparsePoint> *pointVector;
@@ -1177,7 +1087,7 @@ void Dataset::normalize(){
 
 				for(unsigned long j=0; j<vectorSize; j++){
 				
-					pointVector->at(j).value=(pointVector->at(j).value)/distance;
+					pointVector->at(j).value=(pointVector->at(j).value)*(alfa/distance);
 				}
 			}
 		}
@@ -1187,10 +1097,9 @@ void Dataset::normalize(){
 vector<Point> Dataset::generateSample(const vector<Point>& dataset, const Properties& properties){
 
 	vector<Point> result;
-	unsigned long datasetSize;
-	unsigned long factor = properties.classificationSubsetFactor;
+	unsigned long datasetSize = dataset.size();
+	unsigned long factor = 100 / properties.classificationSubsetFactor;
 	
-	datasetSize = dataset.size();
 
 	for(unsigned long i=0; i< datasetSize; i++){
 		

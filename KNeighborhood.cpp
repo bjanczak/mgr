@@ -53,7 +53,7 @@ TimeReport KNeighborhood::runDatasetIndexAccess(const Properties& properties, Da
 
 	TimeReport timeReport;
 
-	Point referencePoint = properties.referencePoints.front();
+	Point referencePoint = Dataset::getZeroPoint(dataset);
 
 	vector<vector<KNeighborhoodPoint>::iterator>::iterator indexPlacementIt;
 	
@@ -145,6 +145,8 @@ TimeReport KNeighborhood::runDatasetIndexAccess(const Properties& properties, Da
 	 */
 	clusteringStart = clock();
 
+	classificationIndexEquivalentEnd = classificationDatasetIndexEquivalent.end();
+
 	for(classificationIndexEquivalentIt = classificationDatasetIndexEquivalent.begin(); classificationIndexEquivalentIt != classificationIndexEquivalentEnd; classificationIndexEquivalentIt++){
 			
 		(**classificationIndexEquivalentIt->second).neighbors = indexTiKNeighborhood(datasetIterators, classificationIndexEquivalentIt->second);
@@ -155,7 +157,7 @@ TimeReport KNeighborhood::runDatasetIndexAccess(const Properties& properties, Da
 	timeReport.clusteringExecutionTime = ((double)(clusteringFinish - clusteringStart))/CLOCKS_PER_SEC;
 	timeReport.distanceCalculationExecutionTime = ((double)(distanceCalculationFinish - distanceCalculationStart))/CLOCKS_PER_SEC;
 	timeReport.sortingPointsExecutionTime =  ((double)(sortingFinish - sortingStart))/CLOCKS_PER_SEC;
-	timeReport.algorithmExecutionTime = timeReport.clusteringExecutionTime + timeReport.distanceCalculationExecutionTime + timeReport.sortingPointsExecutionTime;	
+	timeReport.algorithmExecutionTime = timeReport.clusteringExecutionTime;	
 	timeReport.positioningExecutionTime = ((double)(positioningFinish - positioningStart))/CLOCKS_PER_SEC;
 
 	return timeReport;
@@ -174,7 +176,7 @@ TimeReport KNeighborhood::runDatasetDirectAccess(const Properties& properties, D
 
 	TimeReport timeReport;
 
-	Point referencePoint = properties.referencePoints.front();
+	Point referencePoint = Dataset::getZeroPoint(dataset);
 
 	vector<KNeighborhoodPoint>::iterator placementIt;
 	
@@ -252,6 +254,8 @@ TimeReport KNeighborhood::runDatasetDirectAccess(const Properties& properties, D
 	 */
 	clusteringStart = clock();
 
+	classificationEquivalentEnd = classificationDatasetEquivalent.end();
+
 	for(classificationEquivalentIt = classificationDatasetEquivalent.begin(); classificationEquivalentIt != classificationEquivalentEnd; classificationEquivalentIt++){
 			
 		(*classificationEquivalentIt->second).neighbors = tiKNeighborhood(*tempDataset, classificationEquivalentIt->second);
@@ -262,7 +266,7 @@ TimeReport KNeighborhood::runDatasetDirectAccess(const Properties& properties, D
 	timeReport.clusteringExecutionTime = ((double)(clusteringFinish - clusteringStart))/CLOCKS_PER_SEC;
 	timeReport.distanceCalculationExecutionTime = ((double)(distanceCalculationFinish - distanceCalculationStart))/CLOCKS_PER_SEC;
 	timeReport.sortingPointsExecutionTime =  ((double)(sortingFinish - sortingStart))/CLOCKS_PER_SEC;
-	timeReport.algorithmExecutionTime = timeReport.clusteringExecutionTime + timeReport.distanceCalculationExecutionTime + timeReport.sortingPointsExecutionTime;	
+	timeReport.algorithmExecutionTime = timeReport.clusteringExecutionTime;	
 	timeReport.positioningExecutionTime = ((double)(positioningFinish - positioningStart))/CLOCKS_PER_SEC;
 
 	return timeReport;
@@ -321,12 +325,18 @@ multimap<double, vector<KNeighborhoodPoint>::iterator, DistanceComparator> KNeig
 	vector<KNeighborhoodPoint>::iterator it;
 	vector<KNeighborhoodPoint>::iterator end = dataset.end();
 	
+	for(unsigned int i = 0; i < 2*this->k; i++){
+		
+		kNeighborhood.insert(pair<double,vector<KNeighborhoodPoint>::iterator>(DBL_MAX, it));
+	}
+
 	/*
 	 * Brute force implementation.
 	 */
 	for(it = dataset.begin(); it != end; it++){
 	
 		if(it != pointIt){		
+			
 			kNeighborhood.insert(pair<double,vector<KNeighborhoodPoint>::iterator>(Point::minkowskiDistance((*pointIt), (*it), 2), it));
 		}
 	}	

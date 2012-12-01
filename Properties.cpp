@@ -657,6 +657,10 @@ void Properties::print(ofstream& os){
 			os<<endl;
 			os<<"/*Neighborhood settings*/"<<endl;
 			os<<"k                                 = "<<this->k<< endl;
+			os<<endl;
+			os<<endl;
+			os<<"/*Dataset access settings*/"<<endl;
+			os<<"use_dataset_index_access          = "<<useDatasetIndexAccess<< endl;
 			break;		
 	case Properties::TI_K_NEIGHBORHOOD_ID:
 	case Properties::TI_K_NEIGHBORHOOD_REF_ID:

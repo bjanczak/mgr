@@ -112,7 +112,7 @@ public:
 	 * Every dimension value becomes a result of division of the value
 	 * by distance of a point from the begining of the scale.
 	 */
-	void normalize();
+	void normalize(double alfa);
 
 	/**
 	 * Prints clustering sum up int given os output stream.

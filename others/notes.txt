@@ -38,3 +38,5 @@ The algorithms complegity is N*logN where N is dataset size.
 The variations in points sorting time was due to copy constructor used why sorting. Size of point has influance on sorting time, therefore dataset characteristic has influance on sorting time.
 In order to get rid of sorting time dependency on dataset, the dataset index build of iterators is created. Instead of dataset the dataset index is sorted. Index element has always the same size so sorting time 
 does not depend on dataset. This way dataset sorting times of different point typeas are comparable.
+
+DBSCAN_POINTS_ELIOMINATION must sort points in distance to some point, otherwise it does not work, why ?
