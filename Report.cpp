@@ -30,8 +30,8 @@ Report::Report(){
 	this->algorithmName						= "";
 	this->algorithmNameId					= 0;
 	this->eps								= DBL_MIN;
-	this->minEps							= DBL_MIN;
-	this->avgEps							= DBL_MIN;
+	this->minEps							= DBL_MAX;
+	this->avgEps							= 0;
 	this->maxEps							= DBL_MIN;
 	this->minPts							= 0;
 	this->k									= 0;
@@ -146,6 +146,7 @@ Report::Report(const Properties& properties, const TimeReport& timeReport, const
 	this->constantVantagePointString		= properties.constantVantagePointString;
 	this->projectionDimensionsString		= properties.projectionDimensionsString;
 	this->projectionSortingCriteriaString	= properties.projectionSortingCriteriaString;
+	this->isUseDatasetIndexAcess            = properties.isUseDatasetIndexAcess;
 	this->algorithmExecutionTime			= timeReport.algorithmExecutionTime;
 	this->clusteringExecutionTime			= timeReport.clusteringExecutionTime;
 	this->distanceCalculationExecutionTime	= timeReport.distanceCalculationExecutionTime;
@@ -154,7 +155,7 @@ Report::Report(const Properties& properties, const TimeReport& timeReport, const
 	this->sortingPointsExecutionTime		= timeReport.sortingPointsExecutionTime;
 	this->indexBuildingExecutionTime		= timeReport.indexBuildingExecutionTime;
 	this->datafileReadingTime				= timeReport.datafileReadingTime;
-	this->calculatingReferencePointsTime	= timeReport.calculatingReferencePointsTime;
+	this->calculatingReferencePointsTime	= timeReport.calculatingReferencePointsTime;	
 }
 
 void Report::printHeader(ofstream& os){
@@ -301,7 +302,8 @@ void Report::print(ofstream& os){
 		os<<"sparse"<<columnSeparator;
 	}
 	
-	if(this->algorithmName == Properties::DBSCAN 
+	if(this->algorithmName == Properties::DBSCAN
+		||this->algorithmName == Properties::DBSCAN_POINTS_ELIMINATION
 		||this->algorithmName == Properties::VP_TREE
 		||this->algorithmName == Properties::K_NEIGHBORHOOD){
 	
@@ -370,7 +372,7 @@ void Report::print(ofstream& os){
 	
 		os<<"N/A"<<columnSeparator;
 	}
-	if(this->minEps != DBL_MIN){
+	if(this->minEps != DBL_MAX){
 	
 		os<<this->minEps<<columnSeparator;	
 	}
@@ -378,7 +380,7 @@ void Report::print(ofstream& os){
 	
 		os<<"N/A"<<columnSeparator;
 	}
-	if(this->avgEps != DBL_MIN){
+	if(this->avgEps != 0){
 	
 		os<<this->avgEps<<columnSeparator;	
 	}

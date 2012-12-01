@@ -101,8 +101,8 @@ void Properties::clear(){
 	algorithmName = "";
 	algorithmNameId = 0;
 	eps = DBL_MIN;
-	minEps = DBL_MIN;
-	avgEps = DBL_MIN;
+	minEps = DBL_MAX;
+	avgEps = 0;
 	maxEps = DBL_MIN;
 	minPts = 0;
 	k = 0;
@@ -155,57 +155,23 @@ string Properties::getAlgorithmGroupName(string algorithmName){
 
 	string result;
 
-	if(algorithmName == Properties::DBSCAN){
+	if(algorithmName == Properties::DBSCAN
+		|| algorithmName == Properties::DBSCAN_POINTS_ELIMINATION
+		|| algorithmName == Properties::TI_DBSCAN
+		|| algorithmName == Properties::TI_DBSCAN_REF
+		|| algorithmName == Properties::TI_DBSCAN_REF_PROJECTION){
 
 		result = Properties::DBSCAN;
 	}
-	else
-	if(algorithmName == Properties::DBSCAN_POINTS_ELIMINATION){
-
-		result = Properties::DBSCAN_POINTS_ELIMINATION;
-	}
-	else
-	if(algorithmName == Properties::TI_DBSCAN){
-
-		result = Properties::DBSCAN;
-	}
-	else
-	if(algorithmName == Properties::TI_DBSCAN_REF){
-						
-		result = Properties::DBSCAN;
-	}
-	else
-	if(algorithmName == Properties::TI_DBSCAN_REF_PROJECTION){
-
-		result = Properties::DBSCAN;
-	}
-	else
-	if(algorithmName == Properties::K_NEIGHBORHOOD){
+	if(algorithmName == Properties::K_NEIGHBORHOOD
+		|| algorithmName == Properties::TI_K_NEIGHBORHOOD
+		|| algorithmName == Properties::TI_K_NEIGHBORHOOD_REF
+		|| algorithmName == Properties::TI_K_NEIGHBORHOOD_REF_PROJECTION){
 
 		result = Properties::K_NEIGHBORHOOD;
 	}
-	else
-	if(algorithmName == Properties::TI_K_NEIGHBORHOOD){
-	
-		result = Properties::K_NEIGHBORHOOD;
-	}
-	else
-	if(algorithmName == Properties::TI_K_NEIGHBORHOOD_REF){
-	
-		result = Properties::K_NEIGHBORHOOD;
-	}
-	else
-	if(algorithmName == Properties::TI_K_NEIGHBORHOOD_REF_PROJECTION){
-	
-		result = Properties::K_NEIGHBORHOOD;
-	}
-	else
-	if(algorithmName == Properties::VP_TREE){
-	
-		result = Properties::OTHER;
-	}
-	else
-	if(algorithmName == Properties::VPS_TREE){
+	if(algorithmName == Properties::VP_TREE
+		|| algorithmName == Properties::VPS_TREE){
 	
 		result = Properties::OTHER;
 	}
@@ -310,8 +276,8 @@ Properties::Properties(){
 	algorithmName = "";
 	algorithmNameId = 0;
 	eps = DBL_MIN;
-	minEps = DBL_MIN;
-	avgEps = DBL_MIN;
+	minEps = DBL_MAX;
+	avgEps = 0;
 	maxEps = DBL_MIN;
 	minPts = 0;
 	k = 0;
@@ -553,12 +519,12 @@ void Properties::readProperties(string propertiesFileName){
 				else
 				if(parameterName==IS_USE_DATASET_USE_INDEX){
 
-					if(parameterValue==DENSE){
+					if(parameterValue==TRUE){
 					
 						isUseDatasetIndexAcess = true;
 					}
 					else
-						if(parameterValue==SPARSE){
+						if(parameterValue==FALSE){
 						
 							isUseDatasetIndexAcess = false;
 					}

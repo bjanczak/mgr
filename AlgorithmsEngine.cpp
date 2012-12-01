@@ -96,7 +96,7 @@ void AlgorithmsEngine::readAlgorithmsEngineProperties(){
 						this->alfa = atof(parameterValue.c_str());
 					}
 					else
-						if(parameterName == AlgorithmsEngine::ALGORITHM_ENGINE_PARAMETERS_DIRECTORY_PATH){
+						if(parameterName == AlgorithmsEngine::TEST_REPEATS_PARAMETER_NAME){
 					
 							this->testRepeats = atoi(parameterValue.c_str());
 					}
@@ -208,7 +208,7 @@ void AlgorithmsEngine::readData(){
 	/*
 	 * Reference points calculation.
 	 */
-	if((properties->algorithmNameId != Properties::DBSCAN_ID) && (properties->algorithmNameId != Properties::VP_TREE_ID)){
+	if((properties->algorithmNameId != Properties::DBSCAN_ID) && (properties->algorithmNameId != Properties::DBSCAN_POINTS_ELIMINATION_ID) && (properties->algorithmNameId != Properties::VP_TREE_ID)){
 	
 		calculateReferencePointsStart = clock();
 
@@ -306,7 +306,10 @@ void AlgorithmsEngine::printReport(){
 
 	if(reportFile->is_open()){
 		
-		dataset->calculateKNeighborhoodEps(properties->minEps, properties->avgEps, properties->maxEps);
+		if(properties->algorithmGroup == Properties::K_NEIGHBORHOOD){
+		
+			dataset->calculateKNeighborhoodEps(properties->minEps, properties->avgEps, properties->maxEps);
+		}
 		properties->print(*reportFile);
 		timeReport.print(*reportFile);
 		dataset->printClusteringSumUp(*reportFile);

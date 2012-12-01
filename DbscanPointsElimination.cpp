@@ -59,7 +59,7 @@ TimeReport DbscanPointsElimination::run(const Properties& properties, Dataset& d
 
 		datasetIteratorsIt = datasetIterators.begin();
 
-		if(indexExpandCluster(datasetIterators, datasetIteratorsIt, clusterId, DbscanPointsElimination::indexTiNeighborhood)){
+		if(indexExpandCluster(datasetIterators, datasetIteratorsIt, clusterId, DbscanPointsElimination::indexNeighborhood)){
 		
 			clusterId++;
 		}
@@ -73,29 +73,96 @@ TimeReport DbscanPointsElimination::run(const Properties& properties, Dataset& d
 	return timeReport;
 }
 
-list<list<vector<DbscanPoint>::iterator>::iterator> DbscanPointsElimination::indexTiNeighborhood(list<vector<DbscanPoint>::iterator>& setOfPoints, list<vector<DbscanPoint>::iterator>::iterator pointIt, const double eps){
+list<list<vector<DbscanPoint>::iterator>::iterator> DbscanPointsElimination::indexNeighborhood(list<vector<DbscanPoint>::iterator>& setOfPoints, list<vector<DbscanPoint>::iterator>::iterator pointIt, const double eps){
 
+	list<list<vector<DbscanPoint>::iterator>::iterator> forwardNeighborhood = DbscanPointsElimination::indexForwardNeighborhood(setOfPoints, pointIt, eps);
+	list<list<vector<DbscanPoint>::iterator>::iterator> backwardNeighborhood = DbscanPointsElimination::indexBackwardNeighborhood(setOfPoints, pointIt, eps);
 	list<list<vector<DbscanPoint>::iterator>::iterator> result;
 	list<list<vector<DbscanPoint>::iterator>::iterator>::iterator it;
 	list<list<vector<DbscanPoint>::iterator>::iterator>::iterator end;
 	list<vector<DbscanPoint>::iterator>::iterator datasetEnd = setOfPoints.end();
 	list<vector<DbscanPoint>::iterator>::iterator datasetIt;	
 
-	multimap<double, vector<DbscanPoint>::iterator, DistanceComparator> kNeighborhood;
-	multimap<double, vector<DbscanPoint>::iterator, DistanceComparator>::iterator mapIt;
-	multimap<double, vector<DbscanPoint>::iterator, DistanceComparator>::iterator mapEnd;
+	end = forwardNeighborhood.end();
 
-	double distance;
+	for(it = forwardNeighborhood.begin(); it != end; it++){
 
-	for(datasetIt = setOfPoints.begin(); datasetIt != datasetEnd; datasetIt++){
-	
-		distance = Point::minkowskiDistance(**pointIt, **datasetIt, 2);
+		result.push_back(*it);
+	}
 
-		if(distance <= eps){
-		
-			result.push_back(datasetIt);
-		}
+	end = backwardNeighborhood.end();
+
+	for(it = backwardNeighborhood.begin(); it != end; it++){
+
+		result.push_back(*it);
 	}
 
 	return result;
+}
+
+list<list<vector<DbscanPoint>::iterator>::iterator> DbscanPointsElimination::indexBackwardNeighborhood(list<vector<DbscanPoint>::iterator>& setOfPoints, list<vector<DbscanPoint>::iterator>::iterator pointIt, const double eps){
+	
+	list<list<vector<DbscanPoint>::iterator>::iterator> result;
+
+	if(pointIt == setOfPoints.begin()){
+
+		return result;
+	}
+	else{
+
+		list<vector<DbscanPoint>::iterator>::iterator it = pointIt;
+		list<vector<DbscanPoint>::iterator>::iterator begin = setOfPoints.begin();
+		it--;
+
+		while(true){
+
+			if(Point::minkowskiDistance(*(*it), *(*pointIt), 2) <= eps){
+		
+				result.push_back(it);
+			}
+
+			if(it == begin){
+
+				break;
+			}
+
+			it--;
+		}
+
+		return result;
+	}
+}
+
+list<list<vector<DbscanPoint>::iterator>::iterator> DbscanPointsElimination::indexForwardNeighborhood(list<vector<DbscanPoint>::iterator>& setOfPoints, list<vector<DbscanPoint>::iterator>::iterator pointIt, const double eps){
+	
+	list<list<vector<DbscanPoint>::iterator>::iterator> result;
+	
+	if(pointIt == setOfPoints.end()){
+
+		return result;
+	}
+	else{
+
+		list<vector<DbscanPoint>::iterator>::iterator it = pointIt;
+		it++;
+
+		if(it == setOfPoints.end()){
+
+			return result;
+		}
+		else{
+			
+			list<vector<DbscanPoint>::iterator>::iterator end = setOfPoints.end();
+			
+			for(it; it != end; it++){
+
+				if(Point::minkowskiDistance(*(*it), *(*pointIt), 2) <= eps){
+		
+					result.push_back(it);
+				}
+			}
+	
+			return result;
+		}
+	}
 }

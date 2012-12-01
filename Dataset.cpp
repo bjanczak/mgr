@@ -44,9 +44,9 @@ Dataset::Dataset(){
 	this->classificationResult;
 	this->filePath = "";
 	this->vpsTree = NULL;
-	this->minEps = DBL_MIN;
+	this->minEps = DBL_MAX;
 	this->maxEps = DBL_MIN;
-	this->avgEps = DBL_MIN;
+	this->avgEps = 0;
 }
 
 void Dataset::clear(){
@@ -59,9 +59,9 @@ void Dataset::clear(){
 	algorithmName = "";
 	filePath = "";
 
-	this->minEps = DBL_MIN;
+	this->minEps = DBL_MAX;
 	this->maxEps = DBL_MIN;
-	this->avgEps = DBL_MIN;
+	this->avgEps = 0;
 
 	this->classificationDataset.clear();
 	this->datasetPoint.clear();

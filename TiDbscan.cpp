@@ -97,9 +97,7 @@ TimeReport TiDbscan::run(const Properties& properties, Dataset& dataset){
 	
 			datasetIterators.push_back(it);
 		}
-	}
-
-	
+	}	
 
 	/*
 	 * Clustering.
