@@ -45,7 +45,7 @@ vector<list<list<VpsPoint>::iterator>::iterator> VpTreeBase::randomSample(list<l
 	
 	unsigned long counter = 0;
 	unsigned long size = candidates.size();
-	unsigned long factor = 100 / sampleLimit;
+	unsigned long factor = sampleLimit;
 	set<unsigned long> index;
 	set<unsigned long>::iterator indexIt;
 	set<unsigned long>::iterator indexEnd;
