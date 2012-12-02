@@ -39,6 +39,7 @@ const string Properties::P_SAMPLE_INDEX_PARAMETER_NAME = "p_sample_index";
 const string Properties::S_SAMPLE_INDEX_PARAMETER_NAME = "s_sample_index";
 const string Properties::SEARCH_METHOD_PARAMETER_NAME = "search_method";
 const string Properties::IS_USE_DATASET_USE_INDEX = "use_dataset_index_access";
+const string Properties::IS_USE_BOUNDARIES = "use_boundaries";
 
 /*
  * Algorithms names.
@@ -126,6 +127,7 @@ void Properties::clear(){
 	projectionSortingCriteriaString = "";
 	projectionDimensionsString = "";
 	isUseDatasetIndexAcess = false;
+	isUseBoundaries = false;
 }
 
 
@@ -301,6 +303,7 @@ Properties::Properties(){
 	projectionSortingCriteriaString = "";
 	projectionDimensionsString = "";
 	isUseDatasetIndexAcess = false;
+	isUseBoundaries = false;
 }
 
 void Properties::readProperties(string propertiesFileName){
@@ -529,6 +532,19 @@ void Properties::readProperties(string propertiesFileName){
 							isUseDatasetIndexAcess = false;
 					}
 				}
+				else
+				if(parameterName==IS_USE_BOUNDARIES){
+
+					if(parameterValue==TRUE){
+					
+						isUseBoundaries = true;
+					}
+					else
+						if(parameterValue==FALSE){
+						
+							isUseBoundaries = false;
+					}
+				}
 			}
 		}
 
@@ -563,6 +579,7 @@ void Properties::print(ofstream& os){
 	string datasetReferencePointFormatValue = this->isReferencePointFormatDense ? "dense" : "sparse";
 	string useBinaryPlacementValue = this->useBinaryPlacement ? "true" : "false";
 	string useDatasetIndexAccess = this->isUseDatasetIndexAcess ? "true" : "false";
+	string useBoundaries = this->isUseBoundaries ? "true" : "false";
 
 	os<<"********************************************"<<endl;
 	os<<"               Properties"<<endl;
@@ -728,6 +745,11 @@ void Properties::print(ofstream& os){
 				os<<"k                                 = "<<this->k<< endl;
 				os<<endl;
 				os<<endl;
+				os<<"/*VP-Tree settings*/"<<endl;
+				os<<"p_sample_index                    = "<<this->pSampleIndex<<endl;
+				os<<"s_sample_index                    = "<<this->sSampleIndex<<endl;
+				os<<"search_method                     = "<<this->searchMethod<<endl;
+				os<<"use_boundaries                    = "<<useBoundaries<<endl;
 			}
 			else{
 			
@@ -735,10 +757,11 @@ void Properties::print(ofstream& os){
 				os<<"eps                               = "<<this->eps<< endl;
 				os<<endl;
 				os<<endl;
-				os<<"/*VPS-Tree settings*/"<<endl;
+				os<<"/*VP-Tree settings*/"<<endl;
 				os<<"p_sample_index                    = "<<this->pSampleIndex<<endl;
 				os<<"s_sample_index                    = "<<this->sSampleIndex<<endl;
 				os<<"search_method                     = "<<this->searchMethod<<endl;
+				os<<"use_boundaries                    = "<<useBoundaries<<endl;
 			}
 			break;
 		

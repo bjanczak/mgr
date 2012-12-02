@@ -64,6 +64,7 @@ Report::Report(){
 	this->datafileReadingTime				= DBL_MIN;
 	this->calculatingReferencePointsTime	= DBL_MIN;
 	this->isUseDatasetIndexAcess            = false;
+	this->isUseBoundaries                   = false;
 }
 
 Report::Report(const Report& object){
@@ -110,6 +111,7 @@ Report::Report(const Report& object){
 	this->datafileReadingTime				= object.datafileReadingTime;
 	this->calculatingReferencePointsTime	= object.calculatingReferencePointsTime;
 	this->isUseDatasetIndexAcess            = object.isUseDatasetIndexAcess;
+	this->isUseBoundaries                   = object.isUseBoundaries;
 }
 
 Report::Report(const Properties& properties, const TimeReport& timeReport, const string reportFileName){
@@ -147,6 +149,7 @@ Report::Report(const Properties& properties, const TimeReport& timeReport, const
 	this->projectionDimensionsString		= properties.projectionDimensionsString;
 	this->projectionSortingCriteriaString	= properties.projectionSortingCriteriaString;
 	this->isUseDatasetIndexAcess            = properties.isUseDatasetIndexAcess;
+	this->isUseBoundaries                   = properties.isUseBoundaries;
 	this->algorithmExecutionTime			= timeReport.algorithmExecutionTime;
 	this->clusteringExecutionTime			= timeReport.clusteringExecutionTime;
 	this->distanceCalculationExecutionTime	= timeReport.distanceCalculationExecutionTime;
@@ -191,7 +194,8 @@ void Report::printHeader(ofstream& os){
 	os<<"maxEps"<<columnSeparator;
 	os<<"MinPts"<<columnSeparator;
 	os<<"P Sample Index"<<columnSeparator;	
-	os<<"S Sample Index"<<columnSeparator;	
+	os<<"S Sample Index"<<columnSeparator;
+	os<<"Use Boundaries"<<columnSeparator;	
 	os<<"Properties File Path"<<columnSeparator;	
 	os<<"Report File Path";	
 	os<<endl;
@@ -408,9 +412,18 @@ void Report::print(ofstream& os){
 	
 		os<<this->pSampleIndex<<columnSeparator;
 		os<<this->sSampleIndex<<columnSeparator;
+		if(this->isUseBoundaries){
+
+			os<<"true"<<columnSeparator;
+		}
+		else{
+
+			os<<"false"<<columnSeparator;
+		}
 	}
 	else{
 		
+		os<<"N/A"<<columnSeparator;
 		os<<"N/A"<<columnSeparator;
 		os<<"N/A"<<columnSeparator;
 	}		

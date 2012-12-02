@@ -55,6 +55,10 @@ public:
 		Point* query
 		, VpsPoint* point
 		, multimap<double, Point*, DistanceComparator>& neighbors);
+	virtual void boundariesKNeighborhoodSearch(
+		Point* query
+		, VpsPoint* point
+		, multimap<double, Point*, DistanceComparator>& neighbors);
 
 	/**
 	 * Searches neighbors in tau neighborhood of query point in vantage
@@ -66,6 +70,11 @@ public:
 	 * @neighbors       Map of pointers to found neighbors.
 	 */
 	virtual void rangeSearch(
+		Point* query
+		, double& tau
+		, VpsPoint* point
+		, multimap<double, Point*, DistanceComparator>& neighbors);
+	virtual void boundariesRangeSearch(
 		Point* query
 		, double& tau
 		, VpsPoint* point

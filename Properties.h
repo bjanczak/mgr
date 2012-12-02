@@ -250,6 +250,11 @@ public:
 	bool isUseDatasetIndexAcess;
 
 	/**
+	 * Flag indicating whether to use boundaries while VP_TREE searching.
+	 */
+	bool isUseBoundaries;
+
+	/**
 	 * Public constants.
 	 */
 	static const string GROUPING;
@@ -429,6 +434,8 @@ private:
 	static const string SPARSE;
 
 	static const string IS_USE_DATASET_USE_INDEX;
+
+	static const string IS_USE_BOUNDARIES;
 };
 
 #endif /* _PROPERTIES_H_ */

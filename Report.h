@@ -261,6 +261,11 @@ private:
 	 */
 	bool isUseDatasetIndexAcess;
 
+	/**
+	 * Flag indicating whether to use boundaries while VP_TREE searching.
+	 */
+	bool isUseBoundaries;
+
 	/*
 	 * Algorithm execution time.
 	 */

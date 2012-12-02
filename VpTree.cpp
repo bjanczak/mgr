@@ -99,12 +99,25 @@ TimeReport VpTree::run(const Properties& properties, Dataset& dataset){
 		
 		counter = 0;
 		
-		for(; classificationIt != classificationEnd; classificationIt++){
+		if(properties.isUseBoundaries){
+			
+			for(; classificationIt != classificationEnd; classificationIt++){
 		
-			eps = properties.eps;
+				eps = properties.eps;
 
-			rangeSearch(&classificationIt->first, eps, dataset.vpsTree, tempKNeighbors[counter]);
-			counter++;
+				boundariesRangeSearch(&classificationIt->first, eps, dataset.vpsTree, tempKNeighbors[counter]);
+				counter++;
+			}
+		}
+		else{
+		
+			for(; classificationIt != classificationEnd; classificationIt++){
+		
+				eps = properties.eps;
+
+				rangeSearch(&classificationIt->first, eps, dataset.vpsTree, tempKNeighbors[counter]);
+				counter++;
+			}
 		}
 	}
 	else
@@ -112,10 +125,21 @@ TimeReport VpTree::run(const Properties& properties, Dataset& dataset){
 			
 			counter = 0;
 
-			for(; classificationIt != classificationEnd; classificationIt++){
+			if(properties.isUseBoundaries){
+
+				for(; classificationIt != classificationEnd; classificationIt++){
 		
-				kNeighborhoodSearch(&classificationIt->first, dataset.vpsTree, tempKNeighbors[counter]);
-				counter++;
+					boundariesKNeighborhoodSearch(&classificationIt->first, dataset.vpsTree, tempKNeighbors[counter]);
+					counter++;
+				}
+			}
+			else{
+
+				for(; classificationIt != classificationEnd; classificationIt++){
+		
+					kNeighborhoodSearch(&classificationIt->first, dataset.vpsTree, tempKNeighbors[counter]);
+					counter++;
+				}
 			}
 		}
 
@@ -163,6 +187,34 @@ void VpTree::kNeighborhoodSearch(Point* query, VpsPoint* point, multimap<double,
 	double distance = Point::minkowskiDistance(*query, *point, 2);
 	double leftBoundary = distance - tau;
 	double rightBoundary = distance + tau;
+
+	if(distance <= tau){
+	
+		neighbors.erase(it);
+		neighbors.insert(pair<double, Point*>(distance, point));
+	}
+
+	if(rightBoundary >= point->median){
+	
+		kNeighborhoodSearch(query, point->right, neighbors);
+	}
+	if(leftBoundary <= point->median){
+	
+		kNeighborhoodSearch(query, point->left, neighbors);
+	}
+}
+void VpTree::boundariesKNeighborhoodSearch(Point* query, VpsPoint* point, multimap<double, Point*, DistanceComparator>& neighbors){
+
+	if(point == NULL){
+	
+		return;
+	}
+	multimap<double, Point*, DistanceComparator>::iterator it = neighbors.end();
+	it--;
+	double tau = it->first;
+	double distance = Point::minkowskiDistance(*query, *point, 2);
+	double leftBoundary = distance - tau;
+	double rightBoundary = distance + tau;
 	double leftBuffer;
 	double rightBuffer;
 
@@ -171,15 +223,6 @@ void VpTree::kNeighborhoodSearch(Point* query, VpsPoint* point, multimap<double,
 		neighbors.erase(it);
 		neighbors.insert(pair<double, Point*>(distance, point));
 	}
-
-	/*if(rightBoundary >= point->median){
-	
-		kNeighborhoodSearch(query, point->right, neighbors);
-	}
-	if(leftBoundary <= point->median){
-	
-		kNeighborhoodSearch(query, point->left, neighbors);
-	}*/
 	
 	if(leftBoundary <= point->leftBoundHigh){
 	
@@ -214,6 +257,32 @@ void VpTree::kNeighborhoodSearch(Point* query, VpsPoint* point, multimap<double,
 }
 
 void VpTree::rangeSearch( Point* query, double& tau, VpsPoint* point, multimap<double, Point*, DistanceComparator>& neighbors){
+	
+	if(point == NULL){
+	
+		return;
+	}
+
+	double distance = Point::minkowskiDistance(*query, *point, 2);
+	double leftBoundary = distance - tau;
+	double rightBoundary = distance + tau;
+
+	if(distance <= tau){
+	
+		neighbors.insert(pair<double, Point*>(distance, point));
+	}
+
+	if(rightBoundary >= point->median){
+	
+		rangeSearch(query, tau, point->right, neighbors);
+	}
+	if(leftBoundary <= point->median){
+	
+		rangeSearch(query, tau, point->left, neighbors);
+	}
+}
+
+void VpTree::boundariesRangeSearch( Point* query, double& tau, VpsPoint* point, multimap<double, Point*, DistanceComparator>& neighbors){
 	
 	if(point == NULL){
 	
