@@ -1222,7 +1222,7 @@ void Dataset::printClusteringSumUp(ofstream& os){
 					
 					while(listIt != listEnd){
 						
-						os<<"        ID: "<<(*listIt)->id<<endl;
+						os<<"        ID: "<<(*listIt)->id<<"\tdistance: "<<Point::minkowskiDistance(*it->first, *(*listIt), 2) <<endl;
 						listIt++;
 					}
 

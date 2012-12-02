@@ -12,6 +12,7 @@
 #include "VpTree.h"
 #include "Utils.h"
 
+#include <algorithm>
 #include <set>
 #include <time.h>
 
@@ -171,6 +172,15 @@ void VpTree::kNeighborhoodSearch(Point* query, VpsPoint* point, multimap<double,
 		neighbors.insert(pair<double, Point*>(distance, point));
 	}
 
+	/*if(rightBoundary >= point->median){
+	
+		kNeighborhoodSearch(query, point->right, neighbors);
+	}
+	if(leftBoundary <= point->median){
+	
+		kNeighborhoodSearch(query, point->left, neighbors);
+	}*/
+	
 	if(leftBoundary <= point->leftBoundHigh){
 	
 		if(rightBoundary >= point->rightBoundLow){
@@ -181,17 +191,11 @@ void VpTree::kNeighborhoodSearch(Point* query, VpsPoint* point, multimap<double,
 			if(leftBuffer < rightBuffer){
 				
 				kNeighborhoodSearch(query, point->left, neighbors);
-				it = neighbors.end();
-				it--;
-				tau = it->first;
 				kNeighborhoodSearch(query, point->right, neighbors);
 			}
 			else{
 				
 				kNeighborhoodSearch(query, point->right, neighbors);
-				it = neighbors.end();
-				it--;
-				tau = it->first;
 				kNeighborhoodSearch(query, point->left, neighbors);
 			}
 		}
@@ -262,6 +266,7 @@ void VpTree::rangeSearch( Point* query, double& tau, VpsPoint* point, multimap<d
 VpsPoint* VpTree::makeVpTree(list<list<VpsPoint>::iterator>& candidates, list<VpsPoint>& dataset){
 
 	VpsPoint* result = NULL;
+	list<VpsPoint>::iterator vantagePointIt;
 	
 	switch(candidates.size()){
 	
@@ -272,7 +277,10 @@ VpsPoint* VpTree::makeVpTree(list<list<VpsPoint>::iterator>& candidates, list<Vp
 	
 		case 1:
 		
-			result = new VpsPoint(*(*(candidates.begin())));
+			vantagePointIt = *candidates.begin();
+			result = new VpsPoint(*vantagePointIt);
+			dataset.erase(vantagePointIt);
+			candidates.clear();
 			result->median = 0;
 			result->leftBoundHigh = 0;
 			result->rightBoundLow = 0;
@@ -284,71 +292,87 @@ VpsPoint* VpTree::makeVpTree(list<list<VpsPoint>::iterator>& candidates, list<Vp
 
 			list<list<VpsPoint>::iterator> leftCandidates;
 			list<list<VpsPoint>::iterator> rightCandidates;
+
 			list<list<VpsPoint>::iterator>::iterator it;
-			list<list<VpsPoint>::iterator>::iterator itToErase;
 			list<list<VpsPoint>::iterator>::iterator end;
-			list<VpsPoint>::iterator vantagePointIt;
-			vector<double> distances;
-			unsigned long counter = 0;
+			
+			vector<pair<double, list<VpsPoint>::iterator>> distances;
+			vector<pair<double, list<VpsPoint>::iterator>>::iterator distancesIt;
+			vector<pair<double, list<VpsPoint>::iterator>>::iterator distancesEnd;
+			vector<pair<double, list<VpsPoint>::iterator>>::iterator distancesItToErase;
+			
 			double median;
+			double distance;
+			unsigned long counter = 0;			
 			vector<double> medianWithNeighbors;
 
 			vantagePointIt = selectVp(candidates);
 			end = candidates.end();
-
+			distances.reserve(candidates.size());
+			
 			/*
 			 * Calculate distances to vantage point.
 			 */
-			for(it = candidates.begin(); it != end; it++){
-	
-				if(*it != vantagePointIt){
-		
-					distances.push_back(Point::minkowskiDistance(*(*it), *vantagePointIt, 2));
-				}
-				else{
-			
-					itToErase = it;
-				}
+			for(it = candidates.begin(); it != end; ){				
+
+				distance = Point::minkowskiDistance(*(*it), *vantagePointIt, 2);
+				distances.push_back(pair<double, list<VpsPoint>::iterator>(distance, *it));
+				
+				it++;
+				candidates.pop_front();
 			}
 
 			/*
-			 * Delete choosen vantage point from candidates.
+			 * Sorting distances.
 			 */
-			candidates.erase(itToErase);
+			sort(distances.begin(), distances.end(), Utils::myComparator);
+
+			/*
+			 * Find vantage point distance after sorting.
+			 */
+			distancesEnd = distances.end();
+
+			for(distancesIt = distances.begin(); distancesIt != distancesEnd; distancesIt++){
+			
+				if(distancesIt->second == vantagePointIt){
+					
+					distancesItToErase = distancesIt;
+				}
+			}
 
 			/*
 			 * Calculate median and it's neighbors.
 			 */
-			medianWithNeighbors = Utils::medianWithNeighbors(distances);
+			medianWithNeighbors = Utils::medianWithNeighbors(distances);			
+
+			/*
+			 * Delete choosen vantage point from candidates and distances.
+			 */
+			distances.erase(distancesItToErase);
 
 			median = medianWithNeighbors[0];
 
-			end = candidates.end();
+			distancesEnd = distances.end();
 
 			/*
 			 * Divide ponits in two groups.
 			 */
-			for(it = candidates.begin(); it != end;){
-	
-				if(distances[counter] < median){
-		
-					leftCandidates.push_back(*it);
+			for(distancesIt = distances.begin(); distancesIt != distancesEnd; distancesIt++){
+
+				if(distancesIt->first < median){
+					
+					leftCandidates.push_back(distancesIt->second);
 				}
 				else{
 
-					rightCandidates.push_back(*it);
+					rightCandidates.push_back(distancesIt->second);
 				}
-
-				counter++;
-				it++;
-
-				candidates.pop_front();
 			}
 
-			result = new VpsPoint(*vantagePointIt);
-	
-			dataset.erase(vantagePointIt);
+			distances.clear();
 
+			result = new VpsPoint(*vantagePointIt);	
+			dataset.erase(vantagePointIt);
 			result->median = medianWithNeighbors[0];
 			result->leftBoundHigh = medianWithNeighbors[1];
 			result->rightBoundLow = medianWithNeighbors[2];

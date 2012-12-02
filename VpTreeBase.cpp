@@ -12,6 +12,7 @@
 #include "VpTreeBase.h"
 #include "Utils.h"
 
+#include <algorithm>
 #include <set>
 #include <time.h>
 
@@ -44,14 +45,17 @@ vector<list<list<VpsPoint>::iterator>::iterator> VpTreeBase::randomSample(list<l
 	
 	unsigned long counter = 0;
 	unsigned long size = candidates.size();
+	unsigned long factor = 100 / sampleLimit;
 	set<unsigned long> index;
 	set<unsigned long>::iterator indexIt;
 	set<unsigned long>::iterator indexEnd;
 	vector<list<list<VpsPoint>::iterator>::iterator> result;
 	list<list<VpsPoint>::iterator>::iterator it = candidates.begin();
 	list<list<VpsPoint>::iterator>::iterator end = candidates.end();
-	
-	for(unsigned long i = 0; i < sampleLimit; i++){
+
+	factor = factor < 10 ? 10 : factor;
+
+	for(unsigned long i = 0; i < factor; i++){
 	
 		index.insert(rand() % size);
 	}
@@ -113,6 +117,8 @@ list<VpsPoint>::iterator VpTreeBase::selectVp(list<list<VpsPoint>::iterator>& ca
 
 				distances.push_back(Point::minkowskiDistance(*(*(*itP)), *(*(*itD)), 2));
 			}
+
+			sort(distances.begin(), distances.end());
 
 			median = Utils::median(distances);
 			spread = Utils::variance(distances, median);

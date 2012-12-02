@@ -12,8 +12,11 @@
 #ifndef _UTILS_H_
 #define _UTILS_H_
 
+#include "Points.h"
+
 #include <string>
 #include <vector>
+#include <list>
 
 using namespace std;
 
@@ -54,7 +57,7 @@ public:
 	 *
 	 * @return          Median calculated for given values.
 	 */
-	static double median(const vector<double> values);
+	static double median(const vector<double>& values);
 
 	/**
 	 * Calculates median for given vector of values as well as, medians 
@@ -67,7 +70,7 @@ public:
 	 *                      second element is median lesser neighbor,
 	 *                      third element is median greater neighbor.
 	 */
-	static vector<double> medianWithNeighbors(const vector<double> values);
+	static vector<double> medianWithNeighbors(const vector<pair<double, list<VpsPoint>::iterator>>& values);
 
 	/**
 	 * Calculates variance for given vector of values and median.
@@ -79,6 +82,9 @@ public:
 	 * @return          Variance calculated for given values and
 	 *                  median.
 	 */
-	static double variance(const vector<double> values,const double median);
+	static double variance(const vector<double>& values,const double median);
+
+
+	static bool myComparator(const pair<double, list<VpsPoint>::iterator>& a, const pair<double, list<VpsPoint>::iterator>& b);
 };
 #endif /* _UTILS_H_ */

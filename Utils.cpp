@@ -61,7 +61,7 @@ string Utils::ultimateReportNameGenerator(){
 	return base+ss.str()+".csv";
 }
 
-double Utils::median(const vector<double> values){
+double Utils::median(const vector<double>& values){
 
 	double median;
 	unsigned long size = values.size();
@@ -85,7 +85,7 @@ double Utils::median(const vector<double> values){
 	return median;
 }
 
-vector<double> Utils::medianWithNeighbors(const vector<double> values){
+vector<double> Utils::medianWithNeighbors(const vector<pair<double, list<VpsPoint>::iterator>>& values){
 	
 	unsigned long size = values.size();
 	bool isEven = (size%2) == 0;
@@ -101,15 +101,15 @@ vector<double> Utils::medianWithNeighbors(const vector<double> values){
 			/*
 			* Median.
 			*/
-			result.push_back((values[firstIndex] + values[secondIndex])/2);
+			result.push_back((values[firstIndex].first + values[secondIndex].first)/2);
 			/*
 			* Median lesser neighbor.
 			*/
-			result.push_back(values[secondIndex]);
+			result.push_back(values[secondIndex].first);
 			/*
 			* Median greater neighbor.
 			*/
-			result.push_back(values[firstIndex]);
+			result.push_back(values[firstIndex].first);
 
 		}
 		else{
@@ -119,15 +119,15 @@ vector<double> Utils::medianWithNeighbors(const vector<double> values){
 			/*
 			* Median.
 			*/
-			result.push_back(values[index]);
+			result.push_back(values[index].first);
 			/*
 			* Median lesser neighbor.
 			*/
-			result.push_back(values[index - 1]);
+			result.push_back(values[index - 1].first);
 			/*
 			* Median greater neighbor.
 			*/
-			result.push_back(values[index + 1]);
+			result.push_back(values[index + 1].first);
 		}
 	}
 	else{
@@ -135,7 +135,7 @@ vector<double> Utils::medianWithNeighbors(const vector<double> values){
 			/*
 			* Median.
 			*/
-			result.push_back(values[0]);
+			result.push_back(values[0].first);
 			/*
 			* Median lesser neighbor.
 			*/
@@ -143,13 +143,13 @@ vector<double> Utils::medianWithNeighbors(const vector<double> values){
 			/*
 			* Median greater neighbor.
 			*/
-			result.push_back(values[0]);
+			result.push_back(DBL_MAX);
 	}
 
 	return result;
 }
 
-double Utils::variance(const vector<double> values,const double median){
+double Utils::variance(const vector<double>& values,const double median){
 
 	vector<double>::const_iterator it;
 	vector<double>::const_iterator end = values.end();
@@ -166,4 +166,9 @@ double Utils::variance(const vector<double> values,const double median){
 	result = sqrt(result/size);
 
 	return result;
+}
+
+bool Utils::myComparator(const pair<double, list<VpsPoint>::iterator>& a, const pair<double, list<VpsPoint>::iterator>& b){
+
+	return a.first < b.first;
 }
