@@ -65,7 +65,7 @@ public:
 	/**
 	 * Classification result.
 	 */
-	vector<pair<Point*, list<Point*>>> classificationResult;
+	vector<pair<pair<Point*, double>, list<Point*>>> classificationResult;
 
 	/**
 	 * Vps-tree index.
@@ -209,6 +209,11 @@ public:
 	 * Calculates aggregation values for K-NEIGHBORHOOD algorithms results eps, stores them in internal values as well as in parameters.
 	 */
 	void calculateKNeighborhoodEps(double& minEps, double& avgEps, double& maxEps);
+
+	/**
+	 * Calculates aggregation values for VP_TREE algorithms results eps, stores them in internal values as well as in parameters.
+	 */
+	void calculateClassificationResultEps(double& minEps, double& avgEps, double& maxEps);
 	
 	/**
 	 * Generates Point object that has zero value for each

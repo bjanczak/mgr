@@ -34,7 +34,7 @@ TimeReport VpTree::run(const Properties& properties, Dataset& dataset){
 	list<VpsPoint>::iterator it;
 	list<VpsPoint>::iterator end;
 
-	vector<pair<Point*, list<Point*>>>* classificationResult = &dataset.classificationResult;
+	vector<pair<pair<Point*, double>, list<Point*>>>* classificationResult = &dataset.classificationResult;
 
 	vector<pair<Point, Point*>>* classificationDataset = &dataset.classificationDataset;
 	vector<pair<Point, Point*>>::iterator classificationIt = classificationDataset->begin();
@@ -162,8 +162,8 @@ TimeReport VpTree::run(const Properties& properties, Dataset& dataset){
 			kNeighbors.push_back(multimapIt->second);
 			multimapIt++;
 		}
-		
-		classificationResult->push_back(pair<Point*, list<Point*>>(&(classificationIt->first), kNeighbors));
+		multimapEnd--;
+		classificationResult->push_back(pair<pair<Point*, double>, list<Point*>>(pair<Point*, double>(&(classificationIt->first), multimapEnd->first), kNeighbors));
 		counter++;
 		classificationIt++;
 	}

@@ -310,6 +310,10 @@ void AlgorithmsEngine::printReport(){
 		
 			dataset->calculateKNeighborhoodEps(properties->minEps, properties->avgEps, properties->maxEps);
 		}
+		if(properties->algorithmGroup == Properties::OTHER){
+		
+			dataset->calculateClassificationResultEps(properties->minEps, properties->avgEps, properties->maxEps);
+		}
 		properties->print(*reportFile);
 		timeReport.print(*reportFile);
 		dataset->printClusteringSumUp(*reportFile);

@@ -1177,9 +1177,10 @@ void Dataset::printClusteringSumUp(ofstream& os){
 			multimap<double, vector<KNeighborhoodPoint>::iterator, DistanceComparator>::iterator neighborsIt;
 			multimap<double, vector<KNeighborhoodPoint>::iterator, DistanceComparator>::iterator neighborsEnd;
 
-			os<<"\tminEps\t\t:\t"<<this->minEps<<endl;
-			os<<"\tavgEps\t\t:\t"<<this->avgEps<<endl;
-			os<<"\tmaxEps\t\t:\t"<<this->maxEps<<endl;
+			os<<"Classification Eps Statistics   :"<<endl;
+			os<<"    minEps\t\t:\t"<<this->minEps<<endl;
+			os<<"    avgEps\t\t:\t"<<this->avgEps<<endl;
+			os<<"    maxEps\t\t:\t"<<this->maxEps<<endl;
 			os<<endl;
 			os<<endl;
 
@@ -1207,14 +1208,22 @@ void Dataset::printClusteringSumUp(ofstream& os){
 		else
 			if(this->algorithmType == Properties::CLASSIFICATION && (this->algorithmName == Properties::VP_TREE || this->algorithmName == Properties::VPS_TREE)){
 				
-				vector<pair<Point*, list<Point*>>>::iterator it = this->classificationResult.begin();
-				vector<pair<Point*, list<Point*>>>::iterator end = this->classificationResult.end();
+				vector<pair<pair<Point*, double>, list<Point*>>>::iterator it = this->classificationResult.begin();
+				vector<pair<pair<Point*, double>, list<Point*>>>::iterator end = this->classificationResult.end();
 				list<Point*>::iterator listIt;
 				list<Point*>::iterator listEnd;
 
+				os<<"Classification Eps Statistics   :"<<endl;
+				os<<"    minEps\t\t:\t"<<this->minEps<<endl;
+				os<<"    avgEps\t\t:\t"<<this->avgEps<<endl;
+				os<<"    maxEps\t\t:\t"<<this->maxEps<<endl;
+				os<<endl;
+				os<<endl;
+
 				while(it != end){
 				
-					os<<"Classification point ID         : "<<it->first->id<<endl;
+					os<<"Classification point ID         : "<<it->first.first->id<<endl;
+					os<<"    eps          : "<<it->first.second<<endl;
 					os<<"    neighbors nr : "<<it->second.size()<<endl;
 					os<<"    neighbors    : "<<endl;
 					listIt = it->second.begin();
@@ -1222,7 +1231,7 @@ void Dataset::printClusteringSumUp(ofstream& os){
 					
 					while(listIt != listEnd){
 						
-						os<<"        ID: "<<(*listIt)->id<<"\tdistance: "<<Point::minkowskiDistance(*it->first, *(*listIt), 2) <<endl;
+						os<<"        ID: "<<(*listIt)->id<<"\tdistance: "<<Point::minkowskiDistance(*it->first.first, *(*listIt), 2) <<endl;
 						listIt++;
 					}
 
@@ -1588,6 +1597,53 @@ void Dataset::calculateKNeighborhoodEps(double& minEpsP, double& avgEpsP, double
 		if(it->neighbors.size() > 0){
 		
 			tempEps = it->eps;
+
+			avgEps = avgEps + tempEps;
+
+			if(tempEps < minEps && tempEps != 0){
+		
+				minEps = tempEps;
+			}
+
+			if(tempEps > maxEps){
+		
+				maxEps = tempEps;
+			}
+
+			counter ++;
+		}
+	}
+
+	avgEps = avgEps / counter;
+
+	this->minEps = minEps;
+	this->avgEps = avgEps;	
+	this->maxEps = maxEps;
+	
+	minEpsP = minEps;
+	avgEpsP = avgEps;
+	maxEpsP = maxEps;
+}
+
+void Dataset::calculateClassificationResultEps(double& minEpsP, double& avgEpsP, double& maxEpsP){
+
+	vector<pair<pair<Point*, double>, list<Point*>>> dataset = this->classificationResult;
+	vector<pair<pair<Point*, double>, list<Point*>>>::iterator it;
+	vector<pair<pair<Point*, double>, list<Point*>>>::iterator end = dataset.end();
+
+	double minEps = DBL_MAX;
+	double maxEps = DBL_MIN;
+	double avgEps = 0;
+	
+	double tempEps;
+
+	unsigned long counter = 0;
+
+	for(it = dataset.begin(); it != end; it++){
+	
+		if(it->second.size() > 0){
+		
+			tempEps = it->first.second;
 
 			avgEps = avgEps + tempEps;
 
