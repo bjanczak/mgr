@@ -50,6 +50,8 @@ TimeReport KNeighborhood::runDatasetIndexAccess(const Properties& properties, Da
 	clock_t clusteringFinish;
 	clock_t positioningStart;
 	clock_t positioningFinish;
+	clock_t indexBuildingStart;
+	clock_t indexBuildingFinish;
 
 	TimeReport timeReport;
 
@@ -78,10 +80,14 @@ TimeReport KNeighborhood::runDatasetIndexAccess(const Properties& properties, Da
 	/*
 	 * Build working index.
 	 */
+	indexBuildingStart = clock();
+
 	for(it = tempDataset->begin(); it != end; it++){
 	
 		datasetIterators.push_back(it);
 	}
+
+	indexBuildingFinish = clock();
 
 	datasetIteratorsEnd = datasetIterators.end();
 
@@ -159,6 +165,7 @@ TimeReport KNeighborhood::runDatasetIndexAccess(const Properties& properties, Da
 	timeReport.sortingPointsExecutionTime =  ((double)(sortingFinish - sortingStart))/CLOCKS_PER_SEC;
 	timeReport.algorithmExecutionTime = timeReport.clusteringExecutionTime;	
 	timeReport.positioningExecutionTime = ((double)(positioningFinish - positioningStart))/CLOCKS_PER_SEC;
+	timeReport.indexBuildingExecutionTime = ((double)(indexBuildingFinish - indexBuildingStart))/CLOCKS_PER_SEC;
 
 	return timeReport;
 }

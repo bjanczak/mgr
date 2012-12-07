@@ -1178,9 +1178,9 @@ void Dataset::printClusteringSumUp(ofstream& os){
 			multimap<double, vector<KNeighborhoodPoint>::iterator, DistanceComparator>::iterator neighborsEnd;
 
 			os<<"Classification Eps Statistics   :"<<endl;
-			os<<"    minEps\t\t:\t"<<this->minEps<<endl;
-			os<<"    avgEps\t\t:\t"<<this->avgEps<<endl;
-			os<<"    maxEps\t\t:\t"<<this->maxEps<<endl;
+			os<<"    minEps\t\t :\t"<<this->minEps<<endl;
+			os<<"    avgEps\t\t :\t"<<this->avgEps<<endl;
+			os<<"    maxEps\t\t :\t"<<this->maxEps<<endl;
 			os<<endl;
 			os<<endl;
 
@@ -1214,9 +1214,9 @@ void Dataset::printClusteringSumUp(ofstream& os){
 				list<Point*>::iterator listEnd;
 
 				os<<"Classification Eps Statistics   :"<<endl;
-				os<<"    minEps\t\t:\t"<<this->minEps<<endl;
-				os<<"    avgEps\t\t:\t"<<this->avgEps<<endl;
-				os<<"    maxEps\t\t:\t"<<this->maxEps<<endl;
+				os<<"    minEps\t\t :\t"<<this->minEps<<endl;
+				os<<"    avgEps\t\t :\t"<<this->avgEps<<endl;
+				os<<"    maxEps\t\t :\t"<<this->maxEps<<endl;
 				os<<endl;
 				os<<endl;
 

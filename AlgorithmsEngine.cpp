@@ -167,7 +167,7 @@ void AlgorithmsEngine::readData(){
 			if(it != it_2){
 				tempValue = Point::minkowskiDistance(*it, *it_2, 2);
 				
-				avg = avg + tempValue;
+				//avg = avg + tempValue;
 
 				if(tempValue > max){
 				
@@ -179,14 +179,14 @@ void AlgorithmsEngine::readData(){
 					min = tempValue;
 				}
 
-				counter++;
+				//counter++;
 			}
 		}
 	}
 
-	avg = avg / counter;	
+	//avg = avg / counter;	
 	cout<<"min = "<<min;
-	cout<<"avg = "<<avg;
+	//cout<<"avg = "<<avg;
 	cout<<"max = "<<max;*/
 
 	//

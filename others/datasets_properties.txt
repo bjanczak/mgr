@@ -63,35 +63,144 @@ dense_d56_r100000_cup98.txt
 	minEps = 2.83
 	avgEps = 1279.20
 	maxEps = 8505.76
+	1/20   = 425.288
 	
 	/*10 000*/
 	minEps = 2.83
 	avgEps = 1286.93
 	maxEps = 8505.76
+	1/20   = 425.288
 	
 	/*30 000*/
 	minEps = 2
 	avgEps = 1272.58
 	maxEps = 8534.87
+	1/20   = 426.744
+	
+	/*50 000*/
+	minEps = 2
+	maxEps = 8534.87
+	1/20   = 426.744
 	
 	/*60 000*/
 	minEps = 1
 	avgEps = 1262.47
 	maxEps = 8534.87
+	1/20   = 426.744
+	
+	/*70 000*/
+	minEps = 1
+	maxEps = 8534.87
+	1/20   = 426.744
 	
 	/*100 000*/
-	minEps = 1
+	minEps = 1.000
 	avgEps = 1265.69
 	maxEps = 8534.87
+	1/20   = 426.744
+	
+dense_d54_r581012_covtype.txt
+
+	/*10 000*/
+	minEps = 9.747
+	avgEps = 2182.174
+	maxEps = 8610.946
+	1/20   = 430.547
+	
+	/*50 000*/
+	minEps = 7.280
+	avgEps = 3541.555
+	maxEps = 8818.167
+	1/20   = 440.908
+	
+	/*100 000*/
+	minEps = 7.280
+	avgEps = 3202.690
+	maxEps = 8818.170
+	1/20   = 440.908
+	
+	/*300 000*/
+	minEps = 2.828
+	maxEps = 8833.162
+	1/20   = 441.658
+	
+	/*500 000*/
+	minEps = 2.828
+	maxEps = 8833.162
+	1/20   = 441.658
 	
 sparse_d126373_r8580_karypis_sport.txt
 
+	/*1 000*/
+	minEps = 1.000
+	avgEps = 29.992
+	maxEps = 126.123
+	1/20   = 6.306
+	
+	/*2 000*/
+	minEps = 1.000
+	avgEps = 29.335
+	maxEps = 140.229
+	1/20   = 7.011
+	
+	/*4 000*/
+	minEps = 1.000
+	avgEps = 30.293
+	maxEps = 181.549
+	1/20   = 9.077
+	
 	/*5 000*/
-	minEps = 1
+	minEps = 1.000
 	avgEps = 30.76
 	maxEps = 181.55
+	1/20   = 9.077
+	
+	/*6 000*/
+	minEps = 1.000
+	avgEps = 31.173
+	maxEps = 181.549
+	1/20   = 9.077
+	
+	/*8 000*/
+	minEps = 1.000
+	avgEps = 31.774
+	maxEps = 283.157
+	1/20   = 11.907
 	
 	/*8 580*/
-	minEps = 1
-	avgEps = 31.73
-	maxEps = 283.16
+	minEps = 1.000
+	avgEps = 31.730
+	maxEps = 283.160
+	1/20   = 11.907
+	
+sparse_d126373_r4069_karypis_reviews.txt
+
+	/*500*/
+	minEps = 3.742
+	avgEps = 44.828
+	maxEps = 117.252
+	1/20   = 5.862
+	
+	/*1 000*/
+	minEps = 1.414
+	avgEps = 45.448
+	maxEps = 244.561
+	1/20   = 12.228
+	
+	/*2 000*/
+	minEps = 1.414
+	avgEps = 41.612
+	maxEps = 280.573
+	1/20   = 14.028
+	
+	/*3 000*/
+	minEps = 1.000
+	avgEps = 39.485
+	maxEps = 280.573
+	1/20   = 14.028
+	
+	/*4 000*/
+	minEps = 1.000
+	avgEps = 38.996
+	maxEps = 280.573
+	1/20   = 14.028

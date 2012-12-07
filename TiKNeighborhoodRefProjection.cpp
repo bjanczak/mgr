@@ -78,16 +78,22 @@ TimeReport TiKNeighborhoodRefProjection::runDatasetIndexAccess(const Properties&
 	clock_t clusteringFinish;
 	clock_t positioningStart;
 	clock_t positioningFinish;
+	clock_t indexBuildingStart;
+	clock_t indexBuildingFinish;
 
 	this->k = properties.k;
 
 	/*
 	 * Build working index.
 	 */
+	indexBuildingStart = clock();
+
 	for(it = tempDataset->begin(); it != end; it++){
 	
 		datasetIterators.push_back(it);
 	}
+
+	indexBuildingFinish = clock();
 
 	/*
 	 * Distance to reference points or dimensions value calculation.
@@ -182,7 +188,8 @@ TimeReport TiKNeighborhoodRefProjection::runDatasetIndexAccess(const Properties&
 	timeReport.clusteringExecutionTime = ((double)(clusteringFinish - clusteringStart))/CLOCKS_PER_SEC;
 	timeReport.distanceCalculationExecutionTime = ((double)(distanceCalculationFinish - distanceCalculationStart))/CLOCKS_PER_SEC;
 	timeReport.sortingPointsExecutionTime =  ((double)(sortingFinish - sortingStart))/CLOCKS_PER_SEC;
-	timeReport.algorithmExecutionTime = timeReport.clusteringExecutionTime + timeReport.distanceCalculationExecutionTime + timeReport.sortingPointsExecutionTime;
+	timeReport.indexBuildingExecutionTime = ((double)(indexBuildingFinish - indexBuildingStart))/CLOCKS_PER_SEC;
+	timeReport.algorithmExecutionTime = timeReport.clusteringExecutionTime + timeReport.distanceCalculationExecutionTime + timeReport.sortingPointsExecutionTime + timeReport.indexBuildingExecutionTime;
 	timeReport.positioningExecutionTime = ((double)(positioningFinish - positioningStart))/CLOCKS_PER_SEC;
 
 	return timeReport;	
