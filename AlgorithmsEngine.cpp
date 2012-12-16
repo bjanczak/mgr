@@ -355,71 +355,76 @@ void AlgorithmsEngine::run(){
 	 */
 	readParametersFilesNames();
 
-	while(parametersFilesNames.size()>0){
+	try {
+
+		while(parametersFilesNames.size()>0){
 		
-		/*
-		 * Generate report name.
-		 */
-		reportName = Utils::reportNameGenerator();
+			/*
+			 * Generate report name.
+			 */
+			reportName = Utils::reportNameGenerator();
 
-		/*
-		 * Create and open report file.
-		 */
-		reportFile->open(reportName);
+			/*
+			 * Create and open report file.
+			 */
+			reportFile->open(reportName);
 
-		/*
-		 * Get next parameter file name.
-		 */
-		parameterFilePath = parametersFilesNames[0];
+			/*
+			 * Get next parameter file name.
+			 */
+			parameterFilePath = parametersFilesNames[0];
 		
-		/*
-		 * Read parameter file to properties object.
-		 */
-		readProperties(parameterFilePath);
+			/*
+			 * Read parameter file to properties object.
+			 */
+			readProperties(parameterFilePath);
+				
+			/*
+			 * Read dataset.
+			 */
+			 readData();
+
+			/*
+		 	 * Run algorithm.
+			 */		
+			runAlgorithm();
 		
-		/*
-		 * Read dataset.
-		 */
-		readData();
+			/*
+			 * Print run report.
+			 */
+			printReport();
 
-		/*
-		 * Run algorithm.
-		 */
-		runAlgorithm();
+			/*
+			 * Save report.
+			 */
+			ultimateReport.push_back(Report(*properties, timeReport, reportName));
 
-		/*
-		 * Print run report.
-		 */
-		printReport();
-
-		/*
-		 * Save report.
-		 */
-		ultimateReport.push_back(Report(*properties, timeReport, reportName));
-
-		/*
-		 * Clear engine variabples before next algorithm run.
-		 */
-		clear();
+			/*
+			 * Clear engine variabples before next algorithm run.
+			 */
+			clear();
 		
-		/*
-		 * Erase first parameter file name from collection.
-		 */
-		if(testRepeatCounter == this->testRepeats){
-		
-			parametersFilesNames.erase(parametersFilesNames.begin());
-			testRepeatCounter = 1;
+			/*
+			 * Erase first parameter file name from collection.
+			 */
+			if(testRepeatCounter == this->testRepeats) {		
+				parametersFilesNames.erase(parametersFilesNames.begin());
+				testRepeatCounter = 1;
+			} else {
+				testRepeatCounter++;
+			}
+
+			/*
+			 * Lets sleep for a second, for good report file name generation.
+			 */
+			Sleep(5000);
 		}
-		else{
 
-			testRepeatCounter++;
-		}
-
-		/*
-		 * Lets sleep for a second, for good report file name generation.
-		 */
-		Sleep(10000);
-	}
+	} catch (const std::exception &e) {
+		printUltimateReport();
+		printCleanedUltimateReport();
+		throw e;
+	} 
 
 	/*
 	 * Print ultimate report.
@@ -435,6 +440,11 @@ void AlgorithmsEngine::run(){
 void AlgorithmsEngine::printUltimateReport(){
 	string ultimateReportName = Utils::ultimateReportNameGenerator();
 	unsigned long size = ultimateReport.size();
+	
+	if(reportFile->is_open()){
+		reportFile->close();
+	}
+
 	reportFile->open(ultimateReportName);
 
 	Report::printHeader(*reportFile);
@@ -450,6 +460,11 @@ void AlgorithmsEngine::printUltimateReport(){
 void AlgorithmsEngine::printCleanedUltimateReport(){
 	unsigned long size = ultimateReport.size();
 	string cleanedUltimateReportName = Utils::ultimateCleanedReportNameGenerator();	
+	
+	if(reportFile->is_open()){
+		reportFile->close();
+	}
+	
 	reportFile->open(cleanedUltimateReportName);
 
 	Report::printHeader(*reportFile);
