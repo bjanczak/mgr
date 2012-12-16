@@ -47,11 +47,15 @@ AlgorithmsEngine::AlgorithmsEngine(){
 	this->reportFile = new ofstream();
 	this->testRepeats = 0;
 	this->alfa = 0;
+	this->ultimateReport;
+	this->cleanedUltimateReport;
 }
 
 AlgorithmsEngine::~AlgorithmsEngine(){
 
-	parametersFilesNames.clear();
+	this->parametersFilesNames.clear();
+	this->ultimateReport.clear();
+	this->cleanedUltimateReport.clear();
 }
 
 void AlgorithmsEngine::clear(){
@@ -342,8 +346,6 @@ void AlgorithmsEngine::run(){
 	
 	string parameterFilePath;
 	string reportName;
-	string ultimateReportName;
-	unsigned long size;
 	unsigned long testRepeatCounter = 1;
 
 	readAlgorithmsEngineProperties();
@@ -422,8 +424,17 @@ void AlgorithmsEngine::run(){
 	/*
 	 * Print ultimate report.
 	 */
-	ultimateReportName = Utils::ultimateReportNameGenerator();
-	size = ultimateReport.size();
+	printUltimateReport();
+
+	/*
+	 * Print cleaned ultimate report.
+	 */
+	printCleanedUltimateReport();
+}
+
+void AlgorithmsEngine::printUltimateReport(){
+	string ultimateReportName = Utils::ultimateReportNameGenerator();
+	unsigned long size = ultimateReport.size();
 	reportFile->open(ultimateReportName);
 
 	Report::printHeader(*reportFile);
@@ -431,6 +442,76 @@ void AlgorithmsEngine::run(){
 	for(unsigned long i = 0; i <size; i++){
 		
 		ultimateReport[i].print(*reportFile);
+	}
+
+	reportFile->close();
+}
+
+void AlgorithmsEngine::printCleanedUltimateReport(){
+	unsigned long size = ultimateReport.size();
+	string cleanedUltimateReportName = Utils::ultimateCleanedReportNameGenerator();	
+	reportFile->open(cleanedUltimateReportName);
+
+	Report::printHeader(*reportFile);
+
+	unsigned int counter = 0;
+	unsigned long index;
+	vector<double> algorithmExecutionTime;
+	vector<double> clusteringExecutionTime;
+	vector<double> indexBuildingExecutionTime;
+	vector<double> distanceCalculationExecutionTime;
+	vector<double> sortingPointsExecutionTime;
+	vector<double> positioningExecutionTime;
+	vector<double> normalizingDatasetExecutionTime;
+	vector<double> datafileReadingTime;
+	vector<double> calculatingReferencePointsTime;
+	Report report;
+	while (counter < size){
+	
+		for(unsigned long i = 0; i <this->testRepeats; i++){
+			index = counter + i;
+			algorithmExecutionTime.push_back(ultimateReport[index].algorithmExecutionTime);
+			clusteringExecutionTime.push_back(ultimateReport[index].clusteringExecutionTime);
+			indexBuildingExecutionTime.push_back(ultimateReport[index].indexBuildingExecutionTime);
+			distanceCalculationExecutionTime.push_back(ultimateReport[index].distanceCalculationExecutionTime);
+			sortingPointsExecutionTime.push_back(ultimateReport[index].sortingPointsExecutionTime);
+			positioningExecutionTime.push_back(ultimateReport[index].positioningExecutionTime);
+			normalizingDatasetExecutionTime.push_back(ultimateReport[index].normalizingDatasetExecutionTime);
+			datafileReadingTime.push_back(ultimateReport[index].datafileReadingTime);
+			calculatingReferencePointsTime.push_back(ultimateReport[index].calculatingReferencePointsTime);
+			report = ultimateReport[index];	
+		}
+
+		counter = counter + this->testRepeats;
+
+		report.algorithmExecutionTime = Utils::getCleanValue(algorithmExecutionTime);
+		report.clusteringExecutionTime = Utils::getCleanValue(clusteringExecutionTime);
+		report.indexBuildingExecutionTime = Utils::getCleanValue(indexBuildingExecutionTime);
+		report.distanceCalculationExecutionTime = Utils::getCleanValue(distanceCalculationExecutionTime);
+		report.sortingPointsExecutionTime = Utils::getCleanValue(sortingPointsExecutionTime);
+		report.positioningExecutionTime = Utils::getCleanValue(positioningExecutionTime);
+		report.normalizingDatasetExecutionTime = Utils::getCleanValue(normalizingDatasetExecutionTime);
+		report.datafileReadingTime = Utils::getCleanValue(datafileReadingTime);
+		report.calculatingReferencePointsTime = Utils::getCleanValue(calculatingReferencePointsTime);
+
+		cleanedUltimateReport.push_back(report);
+
+		algorithmExecutionTime.clear();
+		clusteringExecutionTime.clear();
+		indexBuildingExecutionTime.clear();
+		distanceCalculationExecutionTime.clear();
+		sortingPointsExecutionTime.clear();
+		positioningExecutionTime.clear();
+		normalizingDatasetExecutionTime.clear();
+		datafileReadingTime.clear();
+		calculatingReferencePointsTime.clear();
+	}
+
+	size = cleanedUltimateReport.size();
+
+	for(unsigned long i = 0; i <size; i++){
+		
+		cleanedUltimateReport[i].print(*reportFile);
 	}
 
 	reportFile->close();

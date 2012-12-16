@@ -51,6 +51,13 @@ public:
 	static string ultimateReportNameGenerator();
 
 	/**
+	 * Generates ultimate report name based on current date and time.
+	 *
+	 * @return          report name as string.
+	 */
+	static string ultimateCleanedReportNameGenerator();
+
+	/**
 	 * Calculates median for given vector of values.
 	 *
 	 * @values          Vector of values for which median is calculated.
@@ -86,5 +93,18 @@ public:
 
 
 	static bool myComparator(const pair<double, list<VpsPoint>::iterator>& a, const pair<double, list<VpsPoint>::iterator>& b);
+
+	static double minValue(vector<double>& v);
+
+	static double maxValue(vector<double>& v);
+
+	static double avgValue(vector<double>& v);
+
+	/**
+	 * Calculates average value of values given in vector after deleting maximal and minimal value.
+	 *
+	 * @v               Vecotor of values.
+	 */
+	static double getCleanValue(vector<double>& v);
 };
 #endif /* _UTILS_H_ */

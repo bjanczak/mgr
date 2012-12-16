@@ -49,8 +49,6 @@ public:
 	 *                                   - @os Output stream.
 	 */
 	static void printHeader(ofstream& os);
-
-private:
 	
 	/**
 	 * Column separator.

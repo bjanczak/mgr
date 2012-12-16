@@ -61,6 +61,26 @@ string Utils::ultimateReportNameGenerator(){
 	return base+ss.str()+".csv";
 }
 
+string Utils::ultimateCleanedReportNameGenerator(){
+	
+	string base = "logs/cleaned_ultimate_run_report_";
+	string rest;
+
+	ostringstream ss;
+	time_t t = time(0);
+    struct tm * now = localtime( & t );
+	
+	ss << (now->tm_year + 1900)<<"_";
+	ss << (now->tm_mon + 1)<<"_";
+	ss << (now->tm_mday)<<"_";
+	ss << (now->tm_hour)<<"_";
+	ss << (now->tm_min)<<"_";
+	ss << (now->tm_sec);
+
+
+	return base+ss.str()+".csv";
+}
+
 double Utils::median(const vector<double>& values){
 
 	double median;
@@ -171,4 +191,69 @@ double Utils::variance(const vector<double>& values,const double median){
 bool Utils::myComparator(const pair<double, list<VpsPoint>::iterator>& a, const pair<double, list<VpsPoint>::iterator>& b){
 
 	return a.first < b.first;
+}
+
+double Utils::minValue(vector<double>& v){
+	unsigned long size = v.size();
+	double minValue = DBL_MAX;
+
+	for(unsigned long i = 0; i < size; i++){
+	
+		if (v[i] <= minValue) {		
+			minValue = v[i];
+		}
+	}
+	return minValue;
+}
+
+double Utils::maxValue(vector<double>& v){
+	unsigned long size = v.size();
+	double maxValue = DBL_MIN;
+
+	for(unsigned long i = 0; i < size; i++){
+	
+		if (v[i] >= maxValue) {		
+			maxValue = v[i];
+		}
+	}
+	return maxValue;
+}
+
+double Utils::avgValue(vector<double>& v){
+	int size = v.size();
+	double sum = 0;
+
+	for(int i = 0; i < size; i++){
+		sum = sum + v[i];
+	}
+
+	return sum/(double)size;
+}
+
+double Utils::getCleanValue(vector<double>& v){
+	unsigned long size = v.size();
+	unsigned long minValueIndex;
+	unsigned long maxValueIndex;
+	double minValue = Utils::minValue(v);
+	double maxValue = Utils::maxValue(v);
+	vector<double> vToAverage;
+
+	for(unsigned long i = 0; i< size; i++){
+		if (v[i] == minValue) {
+			minValueIndex = i;
+			continue;
+		}
+		if (v[i] == maxValue) {
+			maxValueIndex = i;
+			continue;
+		}
+	}
+	
+	for(unsigned long i = 0; i< size; i++){	
+		if ((i != minValueIndex) && (i != maxValueIndex)) {
+			vToAverage.push_back(v[i]);
+		}
+	}
+
+	return Utils::avgValue(vToAverage);
 }

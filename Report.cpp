@@ -168,7 +168,6 @@ void Report::printHeader(ofstream& os){
 	os<<"Index Building [s]"<<columnSeparator;
 	os<<"Distance Calculation [s]"<<columnSeparator;
 	os<<"Points Sorting [s]"<<columnSeparator;
-	os<<"Positioning [s]"<<columnSeparator;	
 	os<<"Normalization [s]"<<columnSeparator;
 	os<<"Datafile Reading [s]"<<columnSeparator;
 	os<<"Reference Points Calculation [s]"<<columnSeparator;
@@ -238,14 +237,6 @@ void Report::print(ofstream& os){
 	if(this->sortingPointsExecutionTime != DBL_MIN){
 	
 		os<<this->sortingPointsExecutionTime<<columnSeparator;
-	}
-	else{
-		
-		os<<"N/A"<<columnSeparator;
-	}
-	if(this->positioningExecutionTime != DBL_MIN){
-	
-		os<<this->positioningExecutionTime<<columnSeparator;
 	}
 	else{
 		

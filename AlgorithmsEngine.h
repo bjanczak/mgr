@@ -95,6 +95,8 @@ private:
 
 	vector<Report> ultimateReport;
 
+	vector<Report> cleanedUltimateReport;
+
 	AlgorithmsEngine();
 
 	/**
@@ -154,6 +156,11 @@ private:
 	 * Clears data.
 	 */
 	void clear();
+
+	/**
+	 * Prints cleaned ultimate report into a *.csv file in  logs directory.
+	 */
+	void printCleanedUltimateReport();
 };
 
 #endif /* _ALGORITHMS_ENGINE_H_ */
