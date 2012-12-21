@@ -231,6 +231,8 @@ double Utils::avgValue(vector<double>& v){
 }
 
 double Utils::getCleanValue(vector<double>& v){
+	bool minValueNotSet = true;
+	bool maxValueNotSet = true;
 	unsigned long size = v.size();
 	unsigned long minValueIndex;
 	unsigned long maxValueIndex;
@@ -239,12 +241,14 @@ double Utils::getCleanValue(vector<double>& v){
 	vector<double> vToAverage;
 
 	for(unsigned long i = 0; i< size; i++){
-		if (v[i] == minValue) {
+		if (minValueNotSet && (v[i] == minValue)) {
 			minValueIndex = i;
+			minValueNotSet = false;
 			continue;
 		}
-		if (v[i] == maxValue) {
+		if (maxValueNotSet && (v[i] == maxValue)) {
 			maxValueIndex = i;
+			maxValueNotSet = false;
 			continue;
 		}
 	}

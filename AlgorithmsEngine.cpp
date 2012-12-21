@@ -45,6 +45,8 @@ AlgorithmsEngine::AlgorithmsEngine(){
 	this->dataset = &Dataset::getInstance();
 	this->properties = &Properties::getInstance();
 	this->reportFile = new ofstream();
+	this->ultimateReportFile = new ofstream();
+	this->cleanedUltimateReportFile = new ofstream();
 	this->testRepeats = 0;
 	this->alfa = 0;
 	this->ultimateReport;
@@ -67,6 +69,16 @@ void AlgorithmsEngine::clear(){
 	if(reportFile->is_open()){
 	
 		reportFile->close();
+	}
+
+	if(ultimateReportFile->is_open()){
+	
+		ultimateReportFile->close();
+	}
+
+	if(cleanedUltimateReportFile->is_open()){
+	
+		cleanedUltimateReportFile->close();
 	}
 }
 
@@ -346,7 +358,10 @@ void AlgorithmsEngine::run(){
 	
 	string parameterFilePath;
 	string reportName;
+	string ultimateReportName = Utils::ultimateReportNameGenerator();
+	string cleanedUltimateReportName = Utils::ultimateCleanedReportNameGenerator();	
 	unsigned long testRepeatCounter = 1;
+	Report report;
 
 	readAlgorithmsEngineProperties();
 
@@ -354,6 +369,15 @@ void AlgorithmsEngine::run(){
 	 * Read files names from properties/ directory.
 	 */
 	readParametersFilesNames();
+
+	ultimateReportFile->open(ultimateReportName, ios_base::app);	
+	cleanedUltimateReportFile->open(cleanedUltimateReportName, ios_base::app);
+	
+	Report::printHeader(*ultimateReportFile);
+	Report::printHeader(*cleanedUltimateReportFile);
+
+	ultimateReportFile->close();
+	cleanedUltimateReportFile->close();
 
 	try {
 
@@ -393,11 +417,16 @@ void AlgorithmsEngine::run(){
 			 * Print run report.
 			 */
 			printReport();
+			//print ultimate report
 
 			/*
 			 * Save report.
 			 */
-			ultimateReport.push_back(Report(*properties, timeReport, reportName));
+			ultimateReportFile->open(ultimateReportName, ios_base::app);	
+			
+			report = Report(*properties, timeReport, reportName);
+			report.print(*ultimateReportFile);
+			ultimateReport.push_back(report);
 
 			/*
 			 * Clear engine variabples before next algorithm run.
@@ -410,10 +439,18 @@ void AlgorithmsEngine::run(){
 			if(testRepeatCounter == this->testRepeats) {		
 				parametersFilesNames.erase(parametersFilesNames.begin());
 				testRepeatCounter = 1;
+				cleanedUltimateReportFile->open(cleanedUltimateReportName, ios_base::app);
+				printCleanedUltimateReport();
+				cleanedUltimateReportFile->flush();
+				cleanedUltimateReportFile->close();		
+				ultimateReport.clear();
 			} else {
 				testRepeatCounter++;
 			}
-
+			
+			ultimateReportFile->flush();			
+			ultimateReportFile->close();
+			
 			/*
 			 * Lets sleep for a second, for good report file name generation.
 			 */
@@ -421,54 +458,20 @@ void AlgorithmsEngine::run(){
 		}
 
 	} catch (const std::exception &e) {
-		printUltimateReport();
-		printCleanedUltimateReport();
+		
+		reportFile->close();
+		ultimateReportFile->close();
+		cleanedUltimateReportFile->close();		
 		throw e;
 	} 
 
-	/*
-	 * Print ultimate report.
-	 */
-	printUltimateReport();
-
-	/*
-	 * Print cleaned ultimate report.
-	 */
-	printCleanedUltimateReport();
-}
-
-void AlgorithmsEngine::printUltimateReport(){
-	string ultimateReportName = Utils::ultimateReportNameGenerator();
-	unsigned long size = ultimateReport.size();
-	
-	if(reportFile->is_open()){
-		reportFile->close();
-	}
-
-	reportFile->open(ultimateReportName);
-
-	Report::printHeader(*reportFile);
-
-	for(unsigned long i = 0; i <size; i++){
-		
-		ultimateReport[i].print(*reportFile);
-	}
-
 	reportFile->close();
+	ultimateReportFile->close();
+	cleanedUltimateReportFile->close();		
 }
 
 void AlgorithmsEngine::printCleanedUltimateReport(){
-	unsigned long size = ultimateReport.size();
-	string cleanedUltimateReportName = Utils::ultimateCleanedReportNameGenerator();	
-	
-	if(reportFile->is_open()){
-		reportFile->close();
-	}
-	
-	reportFile->open(cleanedUltimateReportName);
-
-	Report::printHeader(*reportFile);
-
+	unsigned long size = ultimateReport.size();	
 	unsigned int counter = 0;
 	unsigned long index;
 	vector<double> algorithmExecutionTime;
@@ -481,53 +484,30 @@ void AlgorithmsEngine::printCleanedUltimateReport(){
 	vector<double> datafileReadingTime;
 	vector<double> calculatingReferencePointsTime;
 	Report report;
-	while (counter < size){
-	
-		for(unsigned long i = 0; i <this->testRepeats; i++){
-			index = counter + i;
-			algorithmExecutionTime.push_back(ultimateReport[index].algorithmExecutionTime);
-			clusteringExecutionTime.push_back(ultimateReport[index].clusteringExecutionTime);
-			indexBuildingExecutionTime.push_back(ultimateReport[index].indexBuildingExecutionTime);
-			distanceCalculationExecutionTime.push_back(ultimateReport[index].distanceCalculationExecutionTime);
-			sortingPointsExecutionTime.push_back(ultimateReport[index].sortingPointsExecutionTime);
-			positioningExecutionTime.push_back(ultimateReport[index].positioningExecutionTime);
-			normalizingDatasetExecutionTime.push_back(ultimateReport[index].normalizingDatasetExecutionTime);
-			datafileReadingTime.push_back(ultimateReport[index].datafileReadingTime);
-			calculatingReferencePointsTime.push_back(ultimateReport[index].calculatingReferencePointsTime);
-			report = ultimateReport[index];	
-		}
 
-		counter = counter + this->testRepeats;
-
-		report.algorithmExecutionTime = Utils::getCleanValue(algorithmExecutionTime);
-		report.clusteringExecutionTime = Utils::getCleanValue(clusteringExecutionTime);
-		report.indexBuildingExecutionTime = Utils::getCleanValue(indexBuildingExecutionTime);
-		report.distanceCalculationExecutionTime = Utils::getCleanValue(distanceCalculationExecutionTime);
-		report.sortingPointsExecutionTime = Utils::getCleanValue(sortingPointsExecutionTime);
-		report.positioningExecutionTime = Utils::getCleanValue(positioningExecutionTime);
-		report.normalizingDatasetExecutionTime = Utils::getCleanValue(normalizingDatasetExecutionTime);
-		report.datafileReadingTime = Utils::getCleanValue(datafileReadingTime);
-		report.calculatingReferencePointsTime = Utils::getCleanValue(calculatingReferencePointsTime);
-
-		cleanedUltimateReport.push_back(report);
-
-		algorithmExecutionTime.clear();
-		clusteringExecutionTime.clear();
-		indexBuildingExecutionTime.clear();
-		distanceCalculationExecutionTime.clear();
-		sortingPointsExecutionTime.clear();
-		positioningExecutionTime.clear();
-		normalizingDatasetExecutionTime.clear();
-		datafileReadingTime.clear();
-		calculatingReferencePointsTime.clear();
+	for(unsigned long i = 0; i <this->testRepeats; i++){
+		index = i;
+		algorithmExecutionTime.push_back(ultimateReport[index].algorithmExecutionTime);
+		clusteringExecutionTime.push_back(ultimateReport[index].clusteringExecutionTime);
+		indexBuildingExecutionTime.push_back(ultimateReport[index].indexBuildingExecutionTime);
+		distanceCalculationExecutionTime.push_back(ultimateReport[index].distanceCalculationExecutionTime);
+		sortingPointsExecutionTime.push_back(ultimateReport[index].sortingPointsExecutionTime);
+		positioningExecutionTime.push_back(ultimateReport[index].positioningExecutionTime);
+		normalizingDatasetExecutionTime.push_back(ultimateReport[index].normalizingDatasetExecutionTime);
+		datafileReadingTime.push_back(ultimateReport[index].datafileReadingTime);
+		calculatingReferencePointsTime.push_back(ultimateReport[index].calculatingReferencePointsTime);
+		report = ultimateReport[index];	
 	}
 
-	size = cleanedUltimateReport.size();
+	report.algorithmExecutionTime = Utils::getCleanValue(algorithmExecutionTime);
+	report.clusteringExecutionTime = Utils::getCleanValue(clusteringExecutionTime);
+	report.indexBuildingExecutionTime = Utils::getCleanValue(indexBuildingExecutionTime);
+	report.distanceCalculationExecutionTime = Utils::getCleanValue(distanceCalculationExecutionTime);
+	report.sortingPointsExecutionTime = Utils::getCleanValue(sortingPointsExecutionTime);
+	report.positioningExecutionTime = Utils::getCleanValue(positioningExecutionTime);
+	report.normalizingDatasetExecutionTime = Utils::getCleanValue(normalizingDatasetExecutionTime);
+	report.datafileReadingTime = Utils::getCleanValue(datafileReadingTime);
+	report.calculatingReferencePointsTime = Utils::getCleanValue(calculatingReferencePointsTime);
 
-	for(unsigned long i = 0; i <size; i++){
-		
-		cleanedUltimateReport[i].print(*reportFile);
-	}
-
-	reportFile->close();
+	report.print(*cleanedUltimateReportFile);	
 }

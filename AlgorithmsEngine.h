@@ -57,6 +57,9 @@ private:
 	 * Report output file.
 	 */
 	ofstream* reportFile;
+	ofstream* ultimateReportFile;
+	ofstream* cleanedUltimateReportFile;
+
 
 	/**
 	 * Parameters file names.
@@ -146,11 +149,6 @@ private:
 	 * Prints report into a *.txt file in logs directory.
 	 */
 	void printReport();
-
-	/**
-	 * Prints ultimate report into a *.csv file in  logs directory.
-	 */
-	void printUltimateReport();
 
 	/**
 	 * Clears data.
