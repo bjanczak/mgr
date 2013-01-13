@@ -1,0 +1,39 @@
+\begin{thebibliography}{1}
+
+\bibitem{cup98}
+Parsa I. The UCI~KDD Archive.:
+\newblock Kdd cup 1998 data.
+\newblock Luty 1999.
+
+\bibitem{bk:bo1}
+Ozsoyoglu~M., Bozkaya~T.:
+\newblock Distance-based indexing for high-dimensional metric spaces.
+\newblock Raport instytutowy, Case Western Reserve University.
+
+\bibitem{karypis}
+Karypis G.:
+\newblock The various datasets used in evaluating the performance of cluto's clustering algorithms.
+\newblock Sierpień 2002.
+
+\bibitem{bk:kl1}
+Kryszkiewicz~M., Lasek~P.:
+\newblock TI-DBSCAN: Clustering with DBSCAN by means of the triangular inequality.
+\newblock Raport Instytutu Informatyki 3/2010, Warsaw, Kwiecień 2010.
+
+\bibitem{bk:kl2}
+Kryszkiewicz~M., Lasek~P.:
+\newblock A Neighborhood-Based Clustering by Means of the Triangle Inequality.
+\newblock IDEAL 2010: 284-291
+
+\bibitem{bk:zzgh}
+Zhou, S., Zhao, Y., Guan, J., Huang, J.Z.:
+\newblock A Neighborhood-Based Clustering Algorithm.
+\newblock In: Proc. of PAKDD (2005) 361-371
+
+\bibitem{bk:y1}
+P.~N. Yianilos.
+\newblock Data structures and algorithms for nearest neighbor search in general
+  metrics spaces.
+\newblock Raport instytutowy, The NEC Research Institute.
+
+\end{thebibliography}

@@ -1,0 +1,331 @@
+\chapter{Użyte algorytmy}
+
+Istnieje wiele rozwiązań problemu grupowania danych czyli wyznaczania zbiorów obiektów podobnych przy zachowaniu właściwości maksymalizacji podobieństwa obiektów należących do tych samych grup i~minimalizacji podobieństwa obiektów z~różnych grup. Popularnym przykładem miary podobieństwa jest odległość Euklidesowa klasyfikująca obiekty leżące blisko siebie jako podobne, jendak większość algorytmów jest niezależna od przyjętej miary podobieństwa. Liczność zastosowań grupowania częstokroć o~odmiennych wymaganiach co do rezultatu oraz specyficznych danych wejściowych (np. o różnej liczności, rozkładzie bądź liczbie atrybutów) prowadzi do dużej liczby wyspecjalizowanych algorytmów. W każdym z~nich można doszukać się wad oraz zalet, jednakże nie znaleziono dotychczas uniwersalnego algorytmu. Często trudno porównywać algorytmy grupowania danych ponieważ ze względu na charakterystyczne podejście do rozwiązywanego problemu różnią się one nie tylko sposobem grupowania ale także definicją grupy.
+
+Najpopularniejsza klasyfikacja algorytmów grupowania dzieli je na algorytmy oparte na podziale i~algorytmy hierarchiczne. W przypadku pierwszej klasy kluczowym elementem jest znalezienie najlepszego podziału zbioru na z~góry zadaną liczbę możliwie najbardziej jednorodnych grup. Poczatkowy podział odpowiednio ze zdeterminowaną strategią optymalizowany jest w~kolejnych iteracjach zgodnie z~przyjętą funkcją celu. Przykładami metod podziału są algorytmy k-średnich i~k-medoidów. Wynikiem drugiej klasy jest dendrogram\footnote{Dendrogram to diagram stosowany do prezentacji związków między elementami lub grupami elementów w~kształcie przypominający drzewo.} - drzewo, które iteracyjnie dzieli zbiór danych na coraz to mniejsze podzbiory dopuki każdy podzbiór składa sie z~jednego obiektu. W takiej hierarhii każdy węzeł drzewa reprezentuje klaster zbioru danych. Relacja między węzłami a~ich przodkami w~dendrogramie odpowiada relacji między podgrupami a~grupami. Dendrogramy mogą być tworzone od liści w górę do korzenia (\emph{podejście aglomeracyjne}) lub od korzenia w dół do liści (\emph{podejście podziału}) poprzez scalanie lub podział klastrów z~każdym krokiem algorytmu. Obie klasy algorytmów grupowania posiadają pewne wady. W~przeciwieństwie do algorytmów opartych na podziale algorytmy hierarhiczne nie oczekują arbitralnie zadanej liczby klastrów, jednakże wymagają zdefiniowania \emph{warunku zakończenia} wskazującego kiedy proces podzialu lub scalania powinien się zakończyć.
+
+Wyniki wyżej wymienionych metod rzadko odpowiadają oczekiwaniom. Taki stan rzeczy można tłumaczyć nienaturalnym dla człowieka mechanizmem grupowania. Gdyby zadać człowiekowi zadanie pogrupowania punktów dwuwymiarowej przestrzeni okazałoby się, że nie dzieliłby on zbioru hierarchicznie na kolejne podzbiory czy też nie próbowałby podzielić go na zgóry określoną liczbę podzbiorów. Ludzie z łatwością rozpoznają klastry o~dowolnych kształtach oraz szum. Głównym powodem, dla którego rozpoznajemy klastry jest fakt iż, wewnątrz każdego z klastrów można wyszczególnić pewną gęstość punktów znacznie wyższą niż poza klastrem. Zatem do grupy należą punkty leżące w~obszarze o~gęstości wyraźnie większej niż w~obszarze otaczającym ją. Tak zdefiniowanemu pojeciu metody grupowania najbliżej jest algorytmom gęstościowym, których przykładem jest DBSCAN opisany w kolejnym podrozdziale.
+
+\section[DBSCAN][DBSCAN]{DBSCAN}
+
+DBSCAN czyli Density-Based Spatial Clustering of Applications with Noise jest jednym z najpopularniejszych algorytmow gęstościowego grupowania danych. Zaproponowany w~1996 roku wciąż jest sztandarowym algorytmem gęstościowym będącym punktem odniesienia w~wielu pracach naukowych dotyczących tematyki grupowania oraz prezentujących nowe rozwiązania lub algorytmy.
+
+Oprócz grup, czyli zbioru punktów o~dużej gęstości punktów DBSCAN rozpoznaje również szum, do którego należą punkty leżące w~obszarze o~małej gęstości. Algorytm wymaga podania jedynie dwoch parametrów wejściowych, które opisują najmniejszy klaster będący obiektem zainteresowania. Jest to promień (\emph{Eps}) wokół danego punktu, wewnątrz którego musi się znajdować minimalna liczba (\emph{MinPts}) punktów. Para parametrów \emph{Eps} i~\emph{MinPts} stanowi intuicyjną definicję najmniejszej gęstości tym samym definiując minimalną liczność wykrywanych grup.
+
+Podstawowym pojęciem używanym w~kontekście algorytmu DBSCAN jest \emph{otoczenie epsilonowe} oznaczane przez $N_{Eps}(p)$ i~definiowane jako zbiór takich punktów zbioru D, które są różne od \emph{p} i~nie bardziej odległe od \emph{p} niż \emph{Eps}, czyli:
+\begin{displaymath}
+N_{Eps} \left( p \right) = \lbrace q \in D \mid q \neq p \wedge distance \left( p,q \right) \leq Eps \rbrace.
+\end{displaymath}
+W DBSCAN wyróżnia się dwa rodzaje punktów należących do klastra: punkty wewnątrz klastra zwane \emph{punktami rdzeniowymi} oraz punkty leżące na obrzeżach klastra zwane \emph{punktami brzegowymi}. 
+
+\emph{Punktem rdzeniowym} nazywamy taki punkt \emph{p}, którego otoczenie epsilonowe zawiera wymaganą liczbę punktów, czyli:
+\begin{displaymath}
+\vert N_{Eps}(p)\vert \geq MinPts
+\end{displaymath} 
+
+Mówimy, że punkt \emph{q} jest \emph{bezpośrednio gęstościowo osiągalny} z~punktu \emph{p}~względem \emph{Eps} i~\emph{MinPts}, jeżeli \emph{q} należy do otoczenia epsilonowego \emph{p} i~\emph{q} jest punktem rdzeniowym:
+\begin{displaymath}
+q \in N_{Eps}(p) \wedge \vert N_{Eps}(q)\vert \geq MinPts
+\end{displaymath}
+Relacja \emph{bezpośredniej gęstościowej osiągalności} jest symetryczna tylko dla punktów rdzeniowych. Na rysunku~\ref{rys:1} przedstawiono  klaster, w którym zaznaczono pewien punkt brzegowy \emph{p}, punkt rdzeniowy \emph{q}, okręgami wyznaczono \emph{Eps} a \emph{MinPts} wynosi 5. Rysunek prezentuje asymetryczny przypadek ponieważ \emph{p} jest bespośrednio gęstościowo osiągalny z \emph{q}, natomiast \emph{q} nie jest bezpośrednio gęstościowo osiągalny z \emph{p}.
+\begin{figure}[!h]
+\begin{center}
+\begin{tikzpicture}[scale=0.4]
+\filldraw [black]
+%zbiór lewy
+(1,4)      circle (3pt) 
+(2,2)      circle (3pt)
+(2.5,4)    circle (3pt) 
+(3,3)      circle (3pt)
+(4,4)      circle (3pt) 
+(3,5)      circle (3pt)
+(3.5,2)    circle (3pt) 
+(4.5,2)    circle (3pt)
+(5,1)      circle (3pt)  
+(6,1.5)    circle (3pt) 
+(5.5,2.5)  circle (3pt) 
+(5,4)      circle (3pt) node[anchor=south] {$q$}
+(6,3.5)    circle (3pt) 
+(7,2)      circle (3pt)
+(7,3)      circle (3pt)
+(7,4)      circle (3pt)
+(8,3)      circle (3pt)
+(8,5)      circle (3pt)
+(8.5,4)    circle (3pt)
+(4,1)      circle (3pt)
+(5.5,6)    circle (3pt) node[anchor=south] {$p$}
+%zbiór prawy
+(14,4)     circle (3pt) 
+(15,2)     circle (3pt)
+(15.5,4)   circle (3pt) 
+(16,3)     circle (3pt)
+(17,4)     circle (3pt) 
+(16,5)     circle (3pt)
+(16.5,2)   circle (3pt) 
+(17.5,2)   circle (3pt)
+(18,1)     circle (3pt)  
+(19,1.5)   circle (3pt) 
+(18.5,2.5) circle (3pt) 
+(18,4)     circle (3pt) node[anchor=south] {$q$}
+(19,3.5)   circle (3pt) 
+(20,2)     circle (3pt)
+(20,3)     circle (3pt)
+(20,4)     circle (3pt)
+(21,3)     circle (3pt)
+(21,5)     circle (3pt)
+(21.5,4)   circle (3pt)
+(17,1)     circle (3pt)
+(18.5,6)   circle (3pt) node[anchor=south] {$p$};
+%okręgi zbioru drugiego
+\draw[color=black]
+(18.5,6)   circle (2.2) node[anchor=south] {$p$}
+(18,4)     circle (2.2) node[anchor=south] {$q$};
+\end{tikzpicture}
+\end{center}
+\caption{Przykład ilustrujący punkty rdzeniowe i brzegowe\label{rys:1}}
+\end{figure}
+\newpage
+Mówimy, że punkt \emph{p} jest \emph{gęstościowo osiągalny} z~punktu \emph{q}~względem \emph{Eps} i~\emph{MinPts}, jeżeli istnieje sekwencja punktów $p_{1}, \ldots, p_{n},$ $p_{1}=p, p_{n}=q$ takich, że $p_{i+1}$ jest \emph{bezpośrednio gęstościowo osiągalny} z $p_{i}$. Relacja ta to kanoniczne rozszerzenie relacji bezpośredniej gęstościowej osiągalności, jest tranzytywna lecz nie jest symetryczna. Z tego powodu została wprowadzona symetryczna relacja gęstościowego połączenia.
+
+Mówimy, że punkt \emph{p} jest \emph{gęstościowo połączony} z~punktem \emph{q}~względem \emph{Eps} i~\emph{MinPts}, jeżeli istnieje punkt \emph{o} taki, że \emph{p} i \emph{q} są \emph{gęstościowo osiągalne} z~\emph{o}~względem \emph{Eps} i~\emph{MinPts}.
+
+Na rysunku~\ref{rys:2} przedstawiono  klaster, w którym zaznaczono pewien punkt brzegowy \emph{p}, punkt rdzeniowy \emph{q}, okręgami wyznaczono otoczenie epsilonowe pewnych punktów a \emph{MinPts} wynosi 5. Z rysunku widać, że punkt \emph{p} jest  gęstościowo osiągalny z \emph{q}, natomiast \emph{q} nie jest gęstościowo osiągalny z \emph{p}.
+\begin{figure}[!h]
+\begin{center}
+\begin{tikzpicture}[scale=0.4]
+\filldraw [black]
+(1,4)     circle (3pt) 
+(2,2)     circle (3pt)
+(2.5,4)   circle (3pt) 
+(3,3)     circle (3pt)
+(4,4)     circle (3pt) 
+(3,5)     circle (3pt)
+(3.5,2)   circle (3pt) 
+(4.5,2)   circle (3pt)
+(5,1)     circle (3pt)  
+(6,1.5)   circle (3pt) 
+(5.5,2.5) circle (3pt) 
+(5,4)     circle (3pt)
+(6,3.5)   circle (3pt) 
+(7,2)     circle (3pt)
+(7,3)     circle (3pt)
+(7,4)     circle (3pt)
+(8,3)     circle (3pt)
+(8,5)     circle (3pt)
+(8.5,4)   circle (3pt)
+(4,1)     circle (3pt)
+(5.5,6)   circle (3pt);
+%okręgi zbioru drugiego
+\draw[color=black]
+(5.5,6)   circle (2.2) node[anchor=south] {$p$}
+(5,4)     circle (2.2)
+(6,3.5)   circle (2.2) node[anchor=west] {$q$};
+\draw[->, very thick] (6,3.5) -- (5,4);
+\draw[->, very thick] (5,4) -- (5.5,6);
+\end{tikzpicture}
+\end{center}
+\caption{Przykład ilustrujący relację gęstościowej osiągalności\label{rys:2}}
+\end{figure}
+
+Na rysunku~\ref{rys:3} przedstawiono  klaster, w~którym zaznaczono punkty brzegowe \emph{p} i~\emph{q} oraz punkt \emph{o}. Okręgami wyznaczono otoczenie epsilonowe punktów, a~\emph{MinPts} wynosi 5. Z~rysunku widać, że punkty \emph{p} i~\emph{q} są gęstościowo osiągalne z~\emph{o}, czyli punkty \emph{p} i~\emph{q} są \emph{gęstościowo połączone}.
+\begin{figure}[!h]
+\begin{center}
+\begin{tikzpicture}[scale=0.4]
+\filldraw [black]
+(1,4)     circle (3pt) 
+(2,2)     circle (3pt)
+(2.5,4)   circle (3pt) 
+(3,3)     circle (3pt)
+(4,4)     circle (3pt) 
+(3,5)     circle (3pt)
+(3.5,2)   circle (3pt) 
+(4.5,2)   circle (3pt)
+(5,1)     circle (3pt)  
+(6,1.5)   circle (3pt) 
+(5.5,2.5) circle (3pt) 
+(5,4)     circle (3pt)
+(6,3.5)   circle (3pt) 
+(7,2)     circle (3pt)
+(7,3)     circle (3pt)
+(7,4)     circle (3pt)
+(8,3)     circle (3pt)
+(8,5)     circle (3pt)
+(8.5,4)   circle (3pt)
+(4,1)     circle (3pt)
+(5.5,6)   circle (3pt);
+%okręgi zbioru drugiego
+\draw[color=black]
+(5.5,6)   circle (2.2) node[anchor=south] {$p$}
+(6,3.5)   circle (2.2) node[anchor=north] {$o$}
+(7,3)     circle (2.2)
+(5,4)     circle (2.2)
+(7,2)   circle (2.2) node[anchor=west] {$q$};
+\draw[->, very thick] (6,3.5) -- (5,4);
+\draw[->, very thick] (5,4) -- (5.5,6);
+\draw[->, very thick] (6,3.5) -- (7,3);
+\draw[->, very thick] (7,3) -- (7,2);
+\end{tikzpicture}
+\end{center}
+\caption{Przykład ilustrujący relację gęstościowej łączności\label{rys:3}}
+\end{figure}
+
+Wprowadzono już wszystkie terminy pozwalające na zdefiniowanie gęstościowego pojęcia grupy. 
+
+Niech $D$ będzie zbiorem punktów. \emph{Grupą} G względem \emph{Eps} i~\emph{MinPts} nazywamy niepusty podzbiór $D$ spełniający następujące warunki:
+\begin{enumerate}
+\item[    1)]$\forall p,q:$ jeśli $p \in G$ i~\emph{q} jest gęstościowo osiągalne z~\emph{p} względem \emph{Eps} i~\emph{MinPts}, wtedy $q \in G$.
+\item[    2)]$\forall p,q \in G:$ \emph{p} jest gęstościowo połączone z \emph{q} względem \emph{Eps} i~\emph{MinPts}.
+\end{enumerate}
+
+Niech $C_{1}, \ldots, C_{k}$ będą grupami zbioru punktów $D$ względem $Eps_{i}$ i~$MinPts_{i}$, $i=1, \ldots, k$. \emph{Szumem} nazywamy podzbiór punktów ziobru $D$ nie należących do żadnej z grup $C_{i}$ czyli:
+\begin{displaymath}
+szum = \lbrace p \in D \vert \forall i:p \notin C_{i}\rbrace
+\end{displaymath}
+
+Algorytm DBSCAN interuje wejściowy zbiór punktów i uruchmania procedurę wyznaczania nowej grupy \emph{ExpandCluster} dla każdego punktu, który nie został jeszcze przypisany do którejś z grup lub zidentyfikowany jako szum. \emph{ExpandCluster} w pierwszej kolejności wyznacza otoczenie epsilonowe danego punktu i buduje nową grupę jeśli ów punkt jest punktem rdzeniowym, w przeciwnym przypadku oznacza go jako szum. Proces tworzenia nowej grupy rozpoczyna się od dodania do niej punktów należących do otoczenia epsilonowego danego punktu. Następnie wszystkie punkty epsilonowego sąsiedztwa\footnote{Epsilonowe sąsiedztwo jest epsilonowym otoczeniem danego punktu bez niego samego.} dodawane są do zbioru ziaren \emph{seeds} zawierającego punkty, które potencjalnie mogą rozszerzyć budowaną grupę. Algorytm iteruje zbiór \emph{seeds} wyznaczając epsilonowe otoczenie dla każdego jego punktu. Jeżeli dany punkt jest punktem rdzeniowym, to wszystkie punkty należące do jego otoczenia epsilonowego, które nie maja przypisanej żadnej grupy również dodawane są do nowotworzonej grupy. Te z nich, które nie są oznaczone jako szum dodawane są do zbioru \emph{seeds}, ponieważ mogą rozszerzyć tworzoną grupę. Na wydruku \ref{wyd:1} wyżej opisany algorytm został zapisany w formie pseudokodu.
+
+\begin{lstlisting}[style=outcode,caption=DBSCAN pseudokod]
+DBSCAN(SetOfPoints, Eps, MinPts)
+	// SetOfPoints is UNCLASSIFIED
+	ClusterId := nextId(NOISE);
+	FOR i FROM 1 TO SetOfPoints.size DO
+		Point := SetOfPoints.get(i);
+		IF Point.ClId = UNCLASSIFIED THEN
+			IF ExpandCluster(SetOfPoints, Point, ClusterId, Eps, MinPts) THEN
+				ClusterId := nextId(ClusterId);
+			END IF;
+		END IF;
+	END FOR;
+END; // DBSCAN
+
+ExpandCluster(SetOfPoints, Point, ClId, Eps, MinPts) : Boolean
+	seeds := SetOfPoints.regionQuery(Point, Eps);
+	IF seeds.size < MinPts THEN	// no core point
+		SetOfPoints.changeClId(Point, NOISE);
+		RETURN false;
+	ELSE	// all points in seeds are density-reachable
+			// from Point
+		SetOfPoints.changeClId(seeds, ClId);
+		seeds.delete(Point);
+		WHILE seeds <> Empty DO
+			currentP := seeds.first();
+			result := SetOfPoints.regionQuery(currentP, Eps);
+			IF result.size >= MinPts THEN
+				FOR i FROM 1 TO result.size DO
+					resultP := result.get(i);
+					IF resultP.ClId IN {UNCLASSIFIED, NOISE} THEN
+						IF resultP.ClId = UNCLASSIFIED THEN
+							seeds.append(resultP);
+						END IF;
+						SetOfPoints.changeClId(resultP, ClId);
+					END IF;
+				END FOR;
+			END IF;
+			seeds.delete(currentP);
+		END WHILE;
+		RETURN true;
+	END IF;
+END; // ExpandCluster
+\end{lstlisting}\label{wyd:1}
+
+Po dokładnej analizie kodu można zauważyć, że algorytm DBSCAN jest deterministyczny tylko z dokładnościa do punktów brzegowych. Nie bierze on pod uwagę, że punkty brzegowe znajdujące się pomiedzy leżącymi blisko siebie grupami mogą należeć do więcej niż jednej z grup. Taka sytuacja przedstawiona została na rysunku~\ref{rys:4}.
+\begin{figure}[!h]
+\begin{center}
+\begin{tikzpicture}[scale=0.5]
+%punkty
+\filldraw [blue]
+(2.5,3.5)  circle (3pt) 
+(3,3)      circle (3pt) 
+(3,4)      circle (3pt)
+(3.5,2.5)  circle (3pt) 
+(3.5,3.5)  circle (3pt)
+(3.5,4.5)  circle (3pt) 
+(4,2)      circle (3pt)
+(4,3)      circle (3pt) 
+(4,4)      circle (3pt)
+(4,5)      circle (3pt)  
+(4.5,2.5)  circle (3pt) 
+(4.5,3.5)  circle (3pt) 
+(4.5,4.5)  circle (3pt)
+(5,3)      circle (3pt) 
+(5,4)      circle (3pt)
+(5.5,3.5)  circle (3pt);
+\filldraw [yellow]
+(8.5,3.5)  circle (3pt)
+(9,3)      circle (3pt)
+(9,4)      circle (3pt)
+(9.5,2.5)  circle (3pt)
+(9.5,3.5)  circle (3pt)
+(9.5,4.5)  circle (3pt)
+(10,2)     circle (3pt)
+(10,3)     circle (3pt)
+(10,4)     circle (3pt)
+(10,5)     circle (3pt)
+(10.5,2.5) circle (3pt)
+(10.5,3.5) circle (3pt)
+(10.5,4.5) circle (3pt)
+(11,3)     circle (3pt)
+(11,4)     circle (3pt)
+(11.5,3.5) circle (3pt);
+\filldraw [gray]
+(6.5,6.5)  circle (3pt)
+(7,7)      circle (3pt)
+(7.5,6.5)  circle (3pt)
+(13,2)     circle (3pt)
+(13,2.5)   circle (3pt)
+(13.5,2)   circle (3pt);
+%okręgi
+\draw [blue]
+(2.5,3.5)  circle (1.7) 
+(3,3)      circle (1.7) 
+(3,4)      circle (1.7)
+(3.5,2.5)  circle (1.7) 
+(3.5,3.5)  circle (1.7)
+(3.5,4.5)  circle (1.7) 
+(4,2)      circle (1.7)
+(4,3)      circle (1.7) 
+(4,4)      circle (1.7)
+(4,5)      circle (1.7)  
+(4.5,2.5)  circle (1.7) 
+(4.5,3.5)  circle (1.7) 
+(4.5,4.5)  circle (1.7)
+(5,3)      circle (1.7) 
+(5,4)      circle (1.7)
+(5.5,3.5)  circle (1.7);
+\draw [yellow]
+(8.5,3.5)  circle (1.7)
+(9,3)      circle (1.7)
+(9,4)      circle (1.7)
+(9.5,2.5)  circle (1.7)
+(9.5,3.5)  circle (1.7)
+(9.5,4.5)  circle (1.7)
+(10,2)     circle (1.7)
+(10,3)     circle (1.7)
+(10,4)     circle (1.7)
+(10,5)     circle (1.7)
+(10.5,2.5) circle (1.7)
+(10.5,3.5) circle (1.7)
+(10.5,4.5) circle (1.7)
+(11,3)     circle (1.7)
+(11,4)     circle (1.7)
+(11.5,3.5) circle (1.7);
+\draw [gray]
+(6.5,6.5)  circle (1.7)
+(7,7)      circle (1.7)
+(7.5,6.5)  circle (1.7)
+(13,2)     circle (1.7)
+(13,2.5)   circle (1.7)
+(13.5,2)   circle (1.7);
+\draw [black]
+(7,3.5)    circle (1.7);
+\filldraw [black]
+(7,3.5)    circle (3pt) node[anchor=west] {$b$};
+\end{tikzpicture}
+\end{center}
+\caption{Przykład ilustrujący przypadek, w którym prznależność do jednej z grup (niebieskiej bądź żółtej) punktu brzegowego \emph{b} zależu od kolejności w jakiej DBSCAN będzie badał punkty.\label{rys:4}}
+\end{figure}
+
+Wynik wykonania DBSCAN zależy od kolejności przeglądania punktów ponieważ punkt brzegowy przypisany do pewnej grupy, w rezultacie rozbudowy kolejnych grup, może zostać przypisany do innych grup. Problem ten może zostać rozwiązany poprzez przchowywanie w każdym punkcie zamiast jednego identyfikatora \emph{clusterId} zbioru identyfikatorów. Jednakże podobnie do autorów algorytmu, problem ten uznaję za pomijalny.
+
+\section[k-Neighborhood-Index][k-Neighborhood-Index]{k-Neighborhood-Index}
+Inne niż w DBSCAN podejście do gęstościowego grupowania danych przedstawili autorzy algorytmu Neighbourhood-Based Clustering Algorithm, w skrócie NBC. W przeciwieństwie do DBSCAN, który polega na wykorzystaniu absolutnej gęstości globalnej, NBC oparty jest na relatywnej gęstości lokalnej. Odmiennie niż DBSCAN NBC przyjmuje tylko jeden parametr \emph{k}, który definiuje liczbę sąsiadów danego punktu.

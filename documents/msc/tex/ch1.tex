@@ -1,0 +1,24 @@
+\chapter{Wprowadzenie}
+
+Współczesne systemy komputerowe agregują i~generują ogromną ilość danych, która rośnie szybciej niż przewidywano jeszcze kilka lat temu. Ich gromadzenie i~przechowywanie na nośnikach pamięci masowej nie stanowi problemu dla współczesnych systemów, natomiast działanie na takiej ilości danych, pomimo stale wzrastającej mocy obliczeniowej komputerów, wciąż jest wyzwaniem dla dzisiejszej informatyki. Zbiory danych same~w sobie nie stanowią wilekiej wartości, jednakże rozsądnie wykorzystane mogą stać się cennym źródłem szczególnej wiedzy. Jej odkrywaniem zajmuje się dziedzina informatyki zwana eksploracją danych, której ideą jest wykorzystanie komputera do znajdowania ukrytych dla człowieka prawidłowości~w danych zgromadzonych~w repozytoriach. Eksploracja danych jest czwartym etapem procesu odkrywania wiedzy, na który również składają się operacje selekcji, czyszczenia~i transformacji danych~a także analiza~i interpretacja wyników.
+
+Jednymi~z najpopularniejszych metod eksploracji danych są grupowanie, klasyfikacja oraz odkrywanie asocjacji~i sekwencji. Każda~z metod odkrywa różnego rodzaju korelacje pomiędzy danymi,~z czego wynika ich odmienne zastosowanie. W~tym artykule skoncentrowano sie na zagadnieniu grupowania danych. Grupowanie danych określane jest jako wyznaczanie zbiorów obiektów podobnych przy zachowaniu właściwości maksymalizacji podobieństwa obiektów należących do tych samych grup~i minimalizacji podobieństwa obiektów należących do innych grup.
+
+\section[Przegląd literatury][Przegląd literatury]{Przegląd literatury}
+
+Grupowanie danych jest popularną metodą o~wielu zastosowaniach, dlatego łatwo o~jej opis w~literaturze. W~przypadku algorytmów, na których skupiłem się w~niniejszej pracy, wyjątkowo przydane okazują się artykuły naukowe.
+
+Prawdopodobnie najpopularniejszym algorytmem gęstościowego grupowania danych jest DBSCAN ?? stanowiący często punkt odniesienia dla porównań z~innymi algorytmami gęstościowych grupowań. [TODO]
+
+Nową koncepcją zwiększenia wydajności wyżej wymienionych algorytmów jest wykorzystanie nierówności trójkąta do redukcji liczby kosztownych operacji wyznaczania podobieństwa obiektów. Na przykładnie algorytmu k-środków przedstawiane już były próby wykorzystania nierówności trójkąta w algorytmach grupowania danych. Natomiast po raz pierwszy została ona użyta w~celu porządkowania dostępu do danych w algorytmach gęstościowego grupowania TI-DBSCAN ??, I-NBC ?? i PreDeCon ??. W pracach naukowych można również znaleźć wpływ liczby punktów referencyjnych i~stretegii ich wyboru na efektywność algorytmów ??. [TODO]
+
+\section[Motywacja i cel pracy][Motywacja i cel pracy]{Motywacja i cel pracy}
+
+Grupowanie danych to proces powszechnie stosowany w~porządkowaniu produktów, segmentacji klientów, organizacji obiektów czy rozpoznawaniu i~analizie obrazów. Procesy te wymieniane są pośród kluczowych elementów, na których bazuje szeroko rozumiana sztuczna inteligencja. We współczesnym świecie algorytmy grupowania danych znajdują coraz szersze zastosowanie. Ich popularność rozpala zainteresowanie naukowców, którzy opracowują coraz sprawniejsze algorytmy lub modyfikują istniejące, które dotychczas wydawały się optymalne. Nierzadko zdarza się, że usprawnienia po wielokroć zwiększają wydajność dotychczasowych rozwiązań, to z kolei umożliwia przetwarzanie zboirów danych z większą liczbą obiektów lub atrybutów. Niekiedy może to oznaczać sposobność użycia tych algorytmów w nieosiągalnych dotychczas obszarach.
+
+Jednym z najnowszych pomysłów na zwiększenie wydajności algorytmów grupowania i klasyfikacji danych jest zastosowanie nierówności trójkąta.[TODO]
+
+Celem pracy jest ... [TODO]
+
+\section[Układ pracy][Układ pracy]{Układ pracy}
+Po wprowadzeniu w~zagadnienia grupowania i klasyfikacji danych, gruntownie przedstawiłem algorytm DBSCAN. Opisy cech charakterystycznych algorytmu oraz specyficznej taksonomii zostały uzupełnione o pseudokody, do których odwołuję się w kolejnych rozdziałach, co pozwala spójnie i precyzyjnie przedstawić zmiany, które wprowadzane są w algorytmie w związku z wykorzystaniem nierówności trójkąta. Teoretyczne podstawy wprowadzanych modyfikacji przedstawiłem na początku rozdziału trzeciego. [TODO]
