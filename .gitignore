@@ -1,0 +1,8 @@
+logs_repository/stash(0)/
+properties_repository/stash(0)
+Debug/
+Release/
+x64/
+properties/
+logs/
+*vcxproj*
