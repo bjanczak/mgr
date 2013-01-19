@@ -628,6 +628,52 @@ Point Dataset::getMaxPoint(){
 	}
 }
 
+Point Dataset::getMaxMinPoint(){
+
+	unsigned long id = 0;
+	double tempValue;
+	vector<double> tempPoint;
+	vector<SparsePoint> tempSparsePoint;
+	const unsigned long &size = this->dimension;
+	bool isEven=false;
+
+	if(this->isDense){
+
+		for(unsigned long i = 0; i<size; i++){
+		
+			if(isEven) {
+				tempPoint.push_back(minDimensionValue(i));
+			} else {
+				tempPoint.push_back(maxDimensionValue(i));
+			}
+
+			isEven = !isEven;
+		}
+
+		return Point(id, tempPoint);		
+	}
+	else{
+	
+		for(unsigned long i = 1; i<=size; i++){
+		
+			if(isEven) {
+				tempValue = minDimensionValue(i);
+			} else {
+				tempValue = maxDimensionValue(i);
+			}
+
+			if(tempValue>0){
+			
+				tempSparsePoint.push_back(SparsePoint(i, tempValue));
+			}			
+
+			isEven = !isEven;
+		}
+
+		return Point(id, tempSparsePoint);
+	}
+}
+
 Point Dataset::getMinPoint(){
 
 	unsigned long id = 0;
@@ -906,24 +952,29 @@ vector<Point> Dataset::getReferencePoints(const Properties& properties){
 					result.push_back(getMinPoint());
 				}
 				else
-					if(tempPointDefinition == "[rand]"){
-					
-						result.push_back(getRandomPoint());
+					if(tempPointDefinition == "[max_min]"){
+				
+						result.push_back(getMaxMinPoint());
 					}
 					else
-						if(tempPointDefinition == "[0]"){
+						if(tempPointDefinition == "[rand]"){
 					
-							result.push_back(getZeroPoint(*this));
+							result.push_back(getRandomPoint());
 						}
 						else
-							/*
-							* Fill in n definition, like [98].
-							*/
-							{
-								n = generateNFromDefinition(tempPointDefinition);
+							if(tempPointDefinition == "[0]"){
+					
+								result.push_back(getZeroPoint(*this));
+							}
+							else
+								/*
+								* Fill in n definition, like [98].
+								*/
+								{
+									n = generateNFromDefinition(tempPointDefinition);
 
-								result.push_back(getNPoint(*this, n));
-							}	
+									result.push_back(getNPoint(*this, n));
+								}	
 		}
 		else{
 		

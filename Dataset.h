@@ -379,6 +379,15 @@ private:
 	 * @return          Generated point as Point object.
 	 */
 	Point getMaxPoint();
+
+	/**
+	 * Generates Point object that has maxium dimension value for each
+	 * odd dimension in dataset and minimum dimension value for each even
+	 * dimension value.
+	 *
+	 * @return          Generated point as Point object.
+	 */
+	Point getMaxMinPoint();
 	
 	/**
 	 * Calculates maximum dimension value for given dimension.
