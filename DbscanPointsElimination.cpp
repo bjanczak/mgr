@@ -40,6 +40,10 @@ TimeReport DbscanPointsElimination::run(const Properties& properties, Dataset& d
 	unsigned long clusterId = 1;
 	clock_t clusteringStart;
 	clock_t clusteringFinish;
+	clock_t distanceCalculationStart;
+	clock_t distanceCalculationFinish;
+	clock_t sortingStart;
+	clock_t sortingFinish;
 
 	this->eps = properties.eps;
 	this->minPts = properties.minPts;
@@ -47,16 +51,20 @@ TimeReport DbscanPointsElimination::run(const Properties& properties, Dataset& d
 	/*
 	 * Distance to reference point calculation.
 	 */
+	distanceCalculationStart = clock();
 	for(it = tempDataset->begin(); it != end; it++){
 	
 		(*it).distance.push_back(Point::minkowskiDistance(referencePoint, (*it), 2));
 		(*it).neighborsNr = 1;
 	}
+	distanceCalculationFinish = clock();
 
 	/*
 	* Sorting points by distance to reference point.
 	*/
+	sortingStart = clock();
 	sort(tempDataset->begin(), tempDataset->end(), DbscanPoint::distanceComparator);
+	sortingFinish = clock();
 
 	/*
 	 * Build working index.
@@ -84,6 +92,8 @@ TimeReport DbscanPointsElimination::run(const Properties& properties, Dataset& d
 	clusteringFinish = clock();
 
 	timeReport.clusteringExecutionTime = ((double)(clusteringFinish - clusteringStart))/CLOCKS_PER_SEC;
+	timeReport.distanceCalculationExecutionTime = ((double)(distanceCalculationFinish - distanceCalculationStart))/CLOCKS_PER_SEC;
+	timeReport.sortingPointsExecutionTime =  ((double)(sortingFinish - sortingStart))/CLOCKS_PER_SEC;
 	timeReport.algorithmExecutionTime = timeReport.clusteringExecutionTime + timeReport.distanceCalculationExecutionTime + timeReport.sortingPointsExecutionTime;
 
 	return timeReport;
