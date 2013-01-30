@@ -1722,3 +1722,109 @@ void Dataset::calculateClassificationResultEps(double& minEpsP, double& avgEpsP,
 	avgEpsP = avgEps;
 	maxEpsP = maxEps;
 }
+
+unsigned long Dataset::getMaxDimension() {
+	vector<Point>::iterator it = this->datasetPoint.begin();
+	vector<Point>::iterator end = this->datasetPoint.end();
+	unsigned long max = 0;
+	unsigned long dimension = 0;
+	if (this->isDense) {					
+		for(;it != end; it++) {
+			unsigned long size = it->denseFormatPoint.size();
+			for(unsigned long i = 0;i < size; i++) {
+				if (it->denseFormatPoint[i] > max) {
+					max = it->denseFormatPoint[i];
+					dimension = i + 1;
+				}
+			}
+		}
+	} else {
+		for(;it != end; it++) {
+			vector<SparsePoint>::iterator it_2 = it->sparseFormatPoint.begin();
+			vector<SparsePoint>::iterator end_2 = it->sparseFormatPoint.end();
+			for(;it_2 != end_2; it_2++) {
+				if (it_2->value > max) {
+					max = it_2->value;
+					dimension = it_2->dimension;
+				}
+			}
+		}
+	}
+
+	return dimension;
+}
+
+unsigned long Dataset::getMinDimension() {
+	vector<Point>::iterator it = this->datasetPoint.begin();
+	vector<Point>::iterator end = this->datasetPoint.end();
+	unsigned long min = LONG_MAX;
+	unsigned long dimension = LONG_MAX;
+	if (this->isDense) {					
+		for(;it != end; it++) {
+			unsigned long size = it->denseFormatPoint.size();
+			for(unsigned long i = 0;i < size; i++) {
+				if (it->denseFormatPoint[i] < min) {
+					min = it->denseFormatPoint[i];
+					dimension = i + 1;
+				}
+			}
+		}
+	} else {
+		for(;it != end; it++) {
+			vector<SparsePoint>::iterator it_2 = it->sparseFormatPoint.begin();
+			vector<SparsePoint>::iterator end_2 = it->sparseFormatPoint.end();
+			for(;it_2 != end_2; it_2++) {
+				if (it_2->value < min) {
+					min = it_2->value;
+					dimension = it_2->dimension;
+				}
+			}
+		}
+	}
+
+	return dimension;
+}
+
+void Dataset::readProjectionDimensions(Properties& properties) {
+	//CaclulateProjection dimension
+	size_t size = properties.projectionDimensionsString.size();
+	size_t begin = 0;
+	size_t end;
+	unsigned long dimension;
+
+	while(1){
+					
+		end = properties.projectionDimensionsString.find(',', begin);
+						
+		if(end==string::npos){
+			string value = properties.projectionDimensionsString.substr(begin,size - begin);						
+			if (value.compare("dmax") == 0) {
+				dimension = getMaxDimension();				
+			} else if (value.compare("dmin") == 0) {
+						dimension = getMinDimension();
+					} else if (value.compare("drand") == 0) {
+							dimension = rand()%properties.datasetDimension;
+						   } else {
+							   dimension = atol(value.substr(1).c_str());
+						   }
+
+			properties.projectionDimensions.push_back(dimension);
+			break;
+		}
+		else{
+			string value = properties.projectionDimensionsString.substr(begin,end - begin);
+			if (value.compare("dmax") == 0) {
+				dimension = getMaxDimension();				
+			} else if (value.compare("dmin") == 0) {
+						dimension = getMinDimension();
+					} else if (value.compare("drand") == 0) {
+							dimension = rand()%properties.datasetDimension;
+						   } else {
+							   dimension = atol(value.substr(1).c_str());
+						   }
+
+			properties.projectionDimensions.push_back(dimension);
+			begin = end + 1;
+		}
+	}
+}

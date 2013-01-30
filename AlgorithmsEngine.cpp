@@ -165,6 +165,8 @@ void AlgorithmsEngine::readData(){
 
 	readingFinish = clock();
 
+	dataset->readProjectionDimensions(*properties);
+
 	// Calculations
 	/*double tempValue;
 	double avg = 0;
@@ -205,6 +207,51 @@ void AlgorithmsEngine::readData(){
 	//cout<<"avg = "<<avg;
 	cout<<"max = "<<max;*/
 
+	//karypis statystyki
+	/*double temp_value;
+	double avg = 0;
+	double min = DBL_MAX;
+	double max = DBL_MIN;
+	vector<Point> datasetPoint = dataset->datasetPoint;
+	vector<Point>::iterator it;
+	vector<SparsePoint>::iterator it_2;
+	vector<SparsePoint>::iterator end_2;
+	vector<Point>::iterator end = datasetPoint.end();
+	double counter = 0;
+	ofstream* tempFile = new ofstream();
+	tempFile->open("logs/karypis_stats.csv", ios_base::app);
+	
+	*tempFile<<"id;dimensions;"<<endl;
+	
+	for( it = datasetPoint.begin(); it != end; it++){
+		*tempFile<<it->id<<";"<<it->sparseFormatPoint.size()<<";"<<endl;
+		it_2 = it->sparseFormatPoint.begin();
+		end_2 = it->sparseFormatPoint.end();
+
+		while(it_2 != end_2) {
+			temp_value = it_2->value;
+			avg = avg + temp_value;
+			
+			if (temp_value < min) {
+				min = temp_value;
+			}
+
+			if (temp_value > max) {
+				max = temp_value;
+			}
+
+			counter++;
+			it_2++;
+		}
+	}
+
+	avg = avg / counter;
+
+	*tempFile<<"min;"<<min<<";"<<endl;
+	*tempFile<<"avg;"<<avg<<";"<<endl;
+	*tempFile<<"max;"<<max<<";"<<endl;
+
+	tempFile->close();*/
 	//
 
 	/*

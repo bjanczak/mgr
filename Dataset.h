@@ -99,6 +99,24 @@ public:
 	void readData(const Properties& properties);
 
 	/**
+	 * Calculates projection dimensions based on properties.
+	 *
+	 * @properties      Application properties.
+	 *
+	 */
+	void readProjectionDimensions(Properties& properties);
+
+	/**
+	 * Returns number of widest dimension in dataset.
+	 */
+	unsigned long getMaxDimension();
+
+	/**
+	 * Returns number of narrowest dimension in dataset.
+	 */
+	unsigned long getMinDimension();
+
+	/**
 	 * Generates vector of reference points defined in given properties.
 	 *
 	 * @properties      Application properties.

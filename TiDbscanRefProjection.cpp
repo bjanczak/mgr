@@ -71,7 +71,7 @@ TimeReport TiDbscanRefProjection::run(const Properties& properties, Dataset& dat
 			else
 				if((*projectionSourceSequenceIt).first == 'd'){
 
-					(*it).distance.push_back((*it).getDimensionValue((*projectionSourceSequenceIt).second));
+					(*it).distance.push_back((*it).getDimensionValue(properties.projectionDimensions.at((*projectionSourceSequenceIt).second -1 )));
 				}
 		}
 

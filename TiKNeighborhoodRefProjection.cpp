@@ -113,7 +113,7 @@ TimeReport TiKNeighborhoodRefProjection::runDatasetIndexAccess(const Properties&
 			else
 				if((*projectionSourceSequenceIt).first == 'd'){
 
-					(*it).distance.push_back((*it).getDimensionValue((*projectionSourceSequenceIt).second));
+					(*it).distance.push_back((*it).getDimensionValue(properties.projectionDimensions.at((*projectionSourceSequenceIt).second -1 )));
 				}
 		}
 	}
@@ -129,7 +129,7 @@ TimeReport TiKNeighborhoodRefProjection::runDatasetIndexAccess(const Properties&
 			else
 				if((*projectionSourceSequenceIt).first == 'd'){
 
-				classificationIt->first.distance.push_back(classificationIt->first.getDimensionValue((*projectionSourceSequenceIt).second));
+				classificationIt->first.distance.push_back(classificationIt->first.getDimensionValue(properties.projectionDimensions.at((*projectionSourceSequenceIt).second -1 )));
 				}
 		}
 	}
@@ -249,7 +249,7 @@ TimeReport TiKNeighborhoodRefProjection::runDatasetDirectAccess(const Properties
 			else
 				if((*projectionSourceSequenceIt).first == 'd'){
 
-					(*it).distance.push_back((*it).getDimensionValue((*projectionSourceSequenceIt).second));
+					(*it).distance.push_back((*it).getDimensionValue(properties.projectionDimensions.at((*projectionSourceSequenceIt).second -1 )));
 				}
 		}
 	}
@@ -265,7 +265,7 @@ TimeReport TiKNeighborhoodRefProjection::runDatasetDirectAccess(const Properties
 			else
 				if((*projectionSourceSequenceIt).first == 'd'){
 
-				classificationIt->first.distance.push_back(classificationIt->first.getDimensionValue((*projectionSourceSequenceIt).second));
+				classificationIt->first.distance.push_back(classificationIt->first.getDimensionValue(properties.projectionDimensions.at((*projectionSourceSequenceIt).second -1 )));
 				}
 		}
 	}

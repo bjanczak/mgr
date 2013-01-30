@@ -444,13 +444,13 @@ void Properties::readProperties(string propertiesFileName){
 				else
 				if(parameterName==PROJECTION_DIMENSIONS_PARAMETER_NAME){
 					
-					size_t size = parameterValue.size();
+					/*size_t size = parameterValue.size();
 					size_t begin = 0;
-					size_t end;
+					size_t end;*/
 
 					projectionDimensionsString = parameterValue;
 
-					while(1){
+					/*while(1){
 					
 						end = parameterValue.find(',', begin);
 						
@@ -462,7 +462,7 @@ void Properties::readProperties(string propertiesFileName){
 							projectionDimensions.push_back(strtol(parameterValue.substr(begin,end - begin).c_str(), NULL, 10));
 							begin = end + 1;
 						}
-					}
+					}*/
 				}
 				else
 				if(parameterName==PROJECTION_SOURCE_SEQUENCE_PARAMETER_NAME){
@@ -477,11 +477,15 @@ void Properties::readProperties(string propertiesFileName){
 						end = parameterValue.find(',', begin);
 						
 						if(end==string::npos){
-							projectionSourceSequence.push_back(pair<char, unsigned long>(parameterValue.at(begin),strtol(parameterValue.substr(begin+1,size - begin).c_str(), NULL, 10)));
+							
+							string value = parameterValue.substr(begin+1,size - begin);
+							projectionSourceSequence.push_back(pair<char, unsigned long>(parameterValue.at(begin),strtol(value.c_str(), NULL, 10)));
 							break;
 						}
 						else{
-							projectionSourceSequence.push_back(pair<char, unsigned long>(parameterValue.at(begin),strtol(parameterValue.substr(begin+1,end - begin).c_str(), NULL, 10)));
+
+							string value = parameterValue.substr(begin+1,end - begin);
+							projectionSourceSequence.push_back(pair<char, unsigned long>(parameterValue.at(begin),strtol(value.c_str(), NULL, 10)));
 							begin = end + 1;
 						}
 					}
