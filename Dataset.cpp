@@ -1792,7 +1792,7 @@ void Dataset::readProjectionDimensions(Properties& properties) {
 	size_t end;
 	unsigned long dimension;
 
-	while(1){
+	while(size > 0){
 					
 		end = properties.projectionDimensionsString.find(',', begin);
 						
