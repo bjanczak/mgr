@@ -1,0 +1,22 @@
+/*Input dataset settings*/
+dataset_file_format=dense
+dataset_file_path=datasets/dense_d56_r96367_cup98.txt
+dataset_dimension=56
+dataset_dimension_value_threshold=0
+dataset_elements_number=10000
+
+/*Internal data representation settings*/
+dataset_internal_format=dense
+
+/*Cosine similarity settings*/
+use_cosine_similarity=false
+
+/*Algorithm settings*/
+algorithm_name=dbscan_points_elimination
+
+/*Neighborhood settings*/
+eps=426.744
+min_pts=5
+
+/*Dataset access settings*/
+use_dataset_index_access=false

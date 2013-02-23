@@ -1,0 +1,29 @@
+/*Input dataset settings*/
+dataset_file_format=dense
+dataset_file_path=datasets/dense_d55_r581012_covtype.txt
+dataset_dimension=55
+dataset_dimension_value_threshold=0
+dataset_elements_number=300000
+
+/*Internal data representation settings*/
+dataset_internal_format=dense
+
+/*Cosine similarity settings*/
+use_cosine_similarity=false
+
+/*Algorithm settings*/
+algorithm_name=ti_k_neighborhood_ref
+
+/*Classification*/
+classification_subset_factor=10
+use_binary_placement=true
+
+/*Neighborhood settings*/
+k=5
+
+/*Dataset access settings*/
+use_dataset_index_access=true
+
+/*Reference point settings*/
+reference_point=[rand][max]
+reference_point_format=sparse

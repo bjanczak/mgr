@@ -1,0 +1,29 @@
+/*Input dataset settings*/
+dataset_file_format=sparse
+dataset_file_path=datasets/sparse_d126373_r4069_karypis_reviews.txt
+dataset_dimension=126373
+dataset_dimension_value_threshold=0
+dataset_elements_number=3000
+
+/*Internal data representation settings*/
+dataset_internal_format=sparse
+
+/*Cosine similarity settings*/
+use_cosine_similarity=true
+
+/*Algorithm settings*/
+algorithm_name=ti_k_neighborhood
+
+/*Classification*/
+classification_subset_factor=10
+use_binary_placement=true
+
+/*Neighborhood settings*/
+k=5
+
+/*Dataset access settings*/
+use_dataset_index_access=false
+
+/*Reference point settings*/
+reference_point=[max]
+reference_point_format=sparse

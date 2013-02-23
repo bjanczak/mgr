@@ -1,0 +1,26 @@
+/*Input dataset settings*/
+dataset_file_format=sparse
+dataset_file_path=datasets/sparse_d126373_r8580_karypis_sport.txt
+dataset_dimension=126373
+dataset_dimension_value_threshold=0
+dataset_elements_number=8000
+
+/*Internal data representation settings*/
+dataset_internal_format=sparse
+
+/*Cosine similarity settings*/
+use_cosine_similarity=false
+
+/*Algorithm settings*/
+algorithm_name=ti_dbscan_ref
+
+/*Neighborhood settings*/
+eps=11.907
+min_pts=5
+
+/*Dataset access settings*/
+use_dataset_index_access=false
+
+/*Reference point settings*/
+reference_point=[min][max]
+reference_point_format=sparse

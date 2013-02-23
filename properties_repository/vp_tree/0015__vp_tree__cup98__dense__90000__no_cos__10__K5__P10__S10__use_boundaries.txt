@@ -1,0 +1,27 @@
+/*Input dataset settings*/
+dataset_file_format=dense
+dataset_file_path=datasets/dense_d56_r96367_cup98.txt
+dataset_dimension=56
+dataset_dimension_value_threshold=0
+dataset_elements_number=90000
+
+/*Internal data representation settings*/
+dataset_internal_format=dense
+
+/*Cosine similarity settings*/
+use_cosine_similarity=false
+
+/*Algorithm settings*/
+algorithm_name=vp_tree
+
+/*Classification*/
+classification_subset_factor=10
+
+/*Neighborhood settings*/
+k=5
+
+/*VPS-Tree settings*/
+p_sample_index=10
+s_sample_index=10
+search_method=k_neighborhood
+use_boundaries=true
