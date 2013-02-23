@@ -5,4 +5,5 @@ Release/
 x64/
 properties/
 logs/
+logs_repository/
 *vcxproj*
