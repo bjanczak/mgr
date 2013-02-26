@@ -1,0 +1,27 @@
+/*Input dataset settings*/
+dataset_file_format=dense
+dataset_file_path=datasets/dense_d55_r581012_covtype.txt
+dataset_dimension=55
+dataset_dimension_value_threshold=0
+dataset_elements_number=10000
+
+/*Internal data representation settings*/
+dataset_internal_format=sparse
+
+/*Cosine similarity settings*/
+use_cosine_similarity=true
+
+/*Algorithm settings*/
+algorithm_name=vp_tree
+
+/*Classification*/
+classification_subset_factor=50
+
+/*Neighborhood settings*/
+k=5
+
+/*VPS-Tree settings*/
+p_sample_index=10
+s_sample_index=10
+search_method=k_neighborhood
+use_boundaries=true
