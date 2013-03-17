@@ -1,0 +1,14 @@
+1) sprawdziæ poprawn¹ pisowniê odleg³oœci euklidesowej
+2) pope³niæ rozdzia³ 'Szacowanie odleg³oœci' z podrozdzia³ami:
+	a) z wykorzystaniem nierównoœci trójk¹ta,
+	b) z wykorzystaniem indeksu metrycznego.
+3) opisaæ implementacje/adaptacjê indeksu metrycznego,
+4) wyt³uœciæ etykiety podpisów rysunków, tabel i wydruków,
+5) numery rozdzia³ów podawaæ bez kropek na koñcu
+6) pytanie do dyrektora dydaktycznego o formatowanie pracy:
+	Pierwsze 3 strony musza byæ zgodne ze wzorcem, pozosta³ ju¿ nie.
+	Mo¿na ustaliæ czcionkê, jej wielkoœæ, wielkosc interlinii, szerokoœæ 
+	wciêcia akapitu i wielkosc marginesu. 
+	Zmiany dozwolone dopuki zachowana jest estetyka i czytelnoœc pracy.
+	Inspiracja LNCS.
+7) Pani profesor pochyli siê nad sformuowaniem tematu pracy magisterskiej

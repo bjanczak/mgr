@@ -1,0 +1,4 @@
+1) przeprowadziæ eksperymenty z rzutowaniem dla TI-DBSCAN
+2) przeprowadziæ eksperymenty analogiczne do wykonanych dla wyszukiwania k s¹siedztwa z zastosowaniem kosinusa
+3) Pani profesor pochyli siê nad sformuowaniem tematu pracy magisterskiej
+4) zmiana nazw Rysunek ?, Tabela ?, Wydruk ? na rys. ?, tab. ?, wyd. ?
