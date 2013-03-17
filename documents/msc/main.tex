@@ -22,7 +22,7 @@
 \usepackage[T1]{fontenc}
 % \usepackage{t1enc}
 % \usepackage[pdftex, bookmarks]{hyperref}
-\usepackage[pdftex, bookmarks=false]{hyperref}
+\usepackage[pdftex, bookmarks]{hyperref}
 \def\url#1{{ \tt #1}}
 
 \usepackage{listings}
@@ -70,7 +70,9 @@
 
 %\usepackage{multibib}
 %\newcites{bk,st,doc,web}{Książki i~artykuły,Standardy i~zalecenia,Dokumentacja produktów,Publikacje i~serwisy internetowe}
+\usepackage{color}
 \usepackage{tikz}
+\usetikzlibrary{patterns}
 \theoremstyle{definition}
 \newtheorem{defn}{Definicja}[section]
 \newtheorem{conj}{Teza}[section]
@@ -181,6 +183,9 @@ framerule=0.1pt,
 \input{tex/ch2}
 
 \input{tex/ch3}
+
+\input{tex/draws}
+
 
 \appendix
 
