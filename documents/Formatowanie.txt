@@ -1,0 +1,48 @@
+1) Marginesy:
+	(Lustrzane)
+	górny: 4 cm
+	dolny: 4 cm
+	wewnêtrzny: 3,5 cm
+	zewnêtrzny: 2,5 cm
+	
+2) Style:
+	normalny:
+		czcionka: Times New Roman
+		rozmiar: 11pt
+		akapit:
+			styl: wyjustowany
+			odstêp: 0,5 cm
+			interlinia: conajmniej 14 pkt
+			przed: 0 pkt
+			po: 0 pkt
+
+	nag³ówek 1:
+		czcionka: Times New Roman
+		rozmiar: 14pt bold
+		akapit:
+			styl: do lewej
+			odstêp: wysuniêty 1 cm
+			interlinia: conajmniej 18 pkt
+			przed: 21 pkt
+			po: 14 pkt
+
+	nag³ówek 2:
+		czcionka: Times New Roman
+		rozmiar: 12pt bold
+		akapit:
+			styl: do lewej
+			odstêp: wysuniêty 1 cm
+			interlinia: conajmniej 14 pkt
+			przed: 21 pkt
+			po: 10 pkt
+
+3) Odstêpy miêdzy listami/blokami/równaniami: 10 pkt
+
+4) Podpis:
+		etykieta in numer pogróbione, reszta normalna
+		czcionka: Times New Roman
+		rozmiar: 9pt
+		akapit:
+			styl: wyjustowany (jeœli d³u¿szy ni¿ jedna linia) / wyœrodkowany (jeœli d³ugoœci jednej linii)
+			przed: 0 pkt
+			po: 0 pkt
