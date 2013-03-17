@@ -1,0 +1,70 @@
+\documentclass{article}
+\usepackage{tikz,amsmath,siunitx}
+\usepackage{color}
+\usetikzlibrary{arrows,snakes,backgrounds,patterns,matrix,shapes,fit,calc,shadows,plotmarks}
+\usepackage[graphics,tightpage,active]{preview}
+\PreviewEnvironment{tikzpicture}
+\PreviewEnvironment{equation}
+\PreviewEnvironment{equation*}
+\newlength{\imagewidth}
+\newlength{\imagescale}
+\pagestyle{empty}
+\thispagestyle{empty}
+\begin{document}
+%%%%%
+\begin{tikzpicture}[scale=0.6]
+\draw(0,0) -- (10,0) coordinate (x axis);
+\draw(0,0) -- (0,10) coordinate (y axis);
+\foreach \x/\xtext in {0, 1, 2, 3, 4, 5, 6, 7, 8, 9} 
+	\draw (\x cm,1pt) -- (\x cm,-1pt) node[anchor=north,] {$\xtext$};
+\draw (10 cm,1pt) -- (10 cm,-1pt) node[anchor=north,] {$X$};
+\foreach \y/\ytext in {0, 1, 2, 3, 4, 5, 6, 7, 8, 9} 
+	\draw (1pt,\y cm) -- (-1pt,\y cm) node[anchor=east,] {$\ytext$};
+\draw (1pt, 10 cm) -- (-1pt, 10 cm) node[anchor=east,] {$Y$};
+\clip [draw](0,0) rectangle (10,10);
+\draw[color=gray] (0,0) circle (8.6cm);
+\draw[color=gray] (0,0) circle (5.6cm);
+\draw[color=gray] (10,0) circle (8.6cm);
+\draw[color=gray] (10,0) circle (5.6cm);
+\filldraw [black] 
+(0,0) circle (2pt) node[anchor=south west] {$R$};
+\filldraw [black] 
+(10,00) circle (2pt) node[anchor=south east] {$R2$};
+%linie szare poziome
+\filldraw[draw=gray!50!white] (0,1)--(10,1);
+\filldraw[draw=gray!50!white] (0,2)--(10,2);
+\filldraw[draw=gray!50!white] (0,3)--(10,3);
+\filldraw[draw=gray!50!white] (0,4)--(10,4);
+\filldraw[draw=gray!50!white] (0,5)--(10,5);
+\filldraw[draw=gray!50!white] (0,6)--(10,6);
+\filldraw[draw=gray!50!white] (0,7)--(10,7);
+\filldraw[draw=gray!50!white] (0,8)--(10,8);
+\filldraw[draw=gray!50!white] (0,9)--(10,9);
+\filldraw[draw=gray!50!white] (0,10)--(10,10);
+%linie szare pionowe
+\filldraw[draw=gray!50!white] (1,0)--(1,10);
+\filldraw[draw=gray!50!white] (2,0)--(2,10);
+\filldraw[draw=gray!50!white] (3,0)--(3,10);
+\filldraw[draw=gray!50!white] (4,0)--(4,10);
+\filldraw[draw=gray!50!white] (5,0)--(5,10);
+\filldraw[draw=gray!50!white] (6,0)--(6,10);
+\filldraw[draw=gray!50!white] (7,0)--(7,10);
+\filldraw[draw=gray!50!white] (8,0)--(8,10);
+\filldraw[draw=gray!50!white] (9,0)--(9,10);
+\filldraw[draw=gray!50!white] (10,0)--(10,10);
+\draw[color=gray, pattern=checkerboard, opacity=0.2] (5,5) circle (1.5cm);
+%punkty
+\filldraw [gray]
+(3,1) circle (2pt) node[anchor=east] {$A$}
+(3,4) circle (2pt) node[anchor=east] {$B$}
+(5,4) circle (2pt) node[anchor=east] {$C$}
+(5,5) circle (2pt) node[anchor=east] {$P$}
+(2,7) circle (2pt) node[anchor=east] {$D$}
+(8,1) circle (2pt) node[anchor=east] {$E$}
+(6,6) circle (2pt) node[anchor=east] {$F$}
+(6,8) circle (2pt) node[anchor=east] {$G$}
+(9,5) circle (2pt) node[anchor=east] {$H$}
+(9,8) circle (2pt) node[anchor=east] {$I$};
+\end{tikzpicture}
+%%%%%
+\end{document}

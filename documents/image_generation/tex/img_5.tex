@@ -1,0 +1,51 @@
+\documentclass{article}
+\usepackage{tikz,amsmath,siunitx}
+\usepackage{color}
+\usetikzlibrary{arrows,snakes,backgrounds,patterns,matrix,shapes,fit,calc,shadows,plotmarks}
+\usepackage[graphics,tightpage,active]{preview}
+\PreviewEnvironment{tikzpicture}
+\PreviewEnvironment{equation}
+\PreviewEnvironment{equation*}
+\newlength{\imagewidth}
+\newlength{\imagescale}
+\pagestyle{empty}
+\thispagestyle{empty}
+\begin{document}
+%%%%%
+\begin{tikzpicture}[scale=0.4]
+\filldraw [black]
+(1,4)     circle (3pt) 
+(2,2)     circle (3pt)
+(2.5,4)   circle (3pt) 
+(3,3)     circle (3pt)
+(4,4)     circle (3pt) 
+(3,5)     circle (3pt)
+(3.5,2)   circle (3pt) 
+(4.5,2)   circle (3pt)
+(5,1)     circle (3pt)  
+(6,1.5)   circle (3pt) 
+(5.5,2.5) circle (3pt) 
+(5,4)     circle (3pt)
+(6,3.5)   circle (3pt) 
+(7,2)     circle (3pt)
+(7,3)     circle (3pt)
+(7,4)     circle (3pt)
+(8,3)     circle (3pt)
+(8,5)     circle (3pt)
+(8.5,4)   circle (3pt)
+(4,1)     circle (3pt)
+(5.5,6)   circle (3pt);
+%okręgi zbioru drugiego
+\draw[color=black]
+(5.5,6)   circle (2.2) node[anchor=south] {$p$}
+(6,3.5)   circle (2.2) node[anchor=north] {$o$}
+(7,3)     circle (2.2)
+(5,4)     circle (2.2)
+(7,2)   circle (2.2) node[anchor=west] {$q$};
+\draw[->, very thick] (6,3.5) -- (5,4);
+\draw[->, very thick] (5,4) -- (5.5,6);
+\draw[->, very thick] (6,3.5) -- (7,3);
+\draw[->, very thick] (7,3) -- (7,2);
+\end{tikzpicture}
+%%%%%
+\end{document}

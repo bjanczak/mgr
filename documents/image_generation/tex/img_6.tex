@@ -1,0 +1,106 @@
+\documentclass{article}
+\usepackage{tikz,amsmath,siunitx}
+\usepackage{color}
+\usetikzlibrary{arrows,snakes,backgrounds,patterns,matrix,shapes,fit,calc,shadows,plotmarks}
+\usepackage[graphics,tightpage,active]{preview}
+\PreviewEnvironment{tikzpicture}
+\PreviewEnvironment{equation}
+\PreviewEnvironment{equation*}
+\newlength{\imagewidth}
+\newlength{\imagescale}
+\pagestyle{empty}
+\thispagestyle{empty}
+\begin{document}
+%%%%%
+\begin{tikzpicture}[scale=0.5]
+%punkty
+\filldraw [blue]
+(2.5,3.5)  circle (3pt) 
+(3,3)      circle (3pt) 
+(3,4)      circle (3pt)
+(3.5,2.5)  circle (3pt) 
+(3.5,3.5)  circle (3pt)
+(3.5,4.5)  circle (3pt) 
+(4,2)      circle (3pt)
+(4,3)      circle (3pt) 
+(4,4)      circle (3pt)
+(4,5)      circle (3pt)  
+(4.5,2.5)  circle (3pt) 
+(4.5,3.5)  circle (3pt) 
+(4.5,4.5)  circle (3pt)
+(5,3)      circle (3pt) 
+(5,4)      circle (3pt)
+(5.5,3.5)  circle (3pt);
+\filldraw [yellow]
+(8.5,3.5)  circle (3pt)
+(9,3)      circle (3pt)
+(9,4)      circle (3pt)
+(9.5,2.5)  circle (3pt)
+(9.5,3.5)  circle (3pt)
+(9.5,4.5)  circle (3pt)
+(10,2)     circle (3pt)
+(10,3)     circle (3pt)
+(10,4)     circle (3pt)
+(10,5)     circle (3pt)
+(10.5,2.5) circle (3pt)
+(10.5,3.5) circle (3pt)
+(10.5,4.5) circle (3pt)
+(11,3)     circle (3pt)
+(11,4)     circle (3pt)
+(11.5,3.5) circle (3pt);
+\filldraw [gray]
+(6.5,6.5)  circle (3pt)
+(7,7)      circle (3pt)
+(7.5,6.5)  circle (3pt)
+(13,2)     circle (3pt)
+(13,2.5)   circle (3pt)
+(13.5,2)   circle (3pt);
+%okręgi
+\draw [blue]
+(2.5,3.5)  circle (1.7) 
+(3,3)      circle (1.7) 
+(3,4)      circle (1.7)
+(3.5,2.5)  circle (1.7) 
+(3.5,3.5)  circle (1.7)
+(3.5,4.5)  circle (1.7) 
+(4,2)      circle (1.7)
+(4,3)      circle (1.7) 
+(4,4)      circle (1.7)
+(4,5)      circle (1.7)  
+(4.5,2.5)  circle (1.7) 
+(4.5,3.5)  circle (1.7) 
+(4.5,4.5)  circle (1.7)
+(5,3)      circle (1.7) 
+(5,4)      circle (1.7)
+(5.5,3.5)  circle (1.7);
+\draw [yellow]
+(8.5,3.5)  circle (1.7)
+(9,3)      circle (1.7)
+(9,4)      circle (1.7)
+(9.5,2.5)  circle (1.7)
+(9.5,3.5)  circle (1.7)
+(9.5,4.5)  circle (1.7)
+(10,2)     circle (1.7)
+(10,3)     circle (1.7)
+(10,4)     circle (1.7)
+(10,5)     circle (1.7)
+(10.5,2.5) circle (1.7)
+(10.5,3.5) circle (1.7)
+(10.5,4.5) circle (1.7)
+(11,3)     circle (1.7)
+(11,4)     circle (1.7)
+(11.5,3.5) circle (1.7);
+\draw [gray]
+(6.5,6.5)  circle (1.7)
+(7,7)      circle (1.7)
+(7.5,6.5)  circle (1.7)
+(13,2)     circle (1.7)
+(13,2.5)   circle (1.7)
+(13.5,2)   circle (1.7);
+\draw [black]
+(7,3.5)    circle (1.7);
+\filldraw [black]
+(7,3.5)    circle (3pt) node[anchor=west] {$b$};
+\end{tikzpicture}
+%%%%%
+\end{document}

@@ -1,0 +1,66 @@
+\documentclass{article}
+\usepackage{tikz,amsmath,siunitx}
+\usepackage{color}
+\usetikzlibrary{arrows,snakes,backgrounds,patterns,matrix,shapes,fit,calc,shadows,plotmarks}
+\usepackage[graphics,tightpage,active]{preview}
+\PreviewEnvironment{tikzpicture}
+\PreviewEnvironment{equation}
+\PreviewEnvironment{equation*}
+\newlength{\imagewidth}
+\newlength{\imagescale}
+\pagestyle{empty}
+\thispagestyle{empty}
+\begin{document}
+%%%%%
+\begin{tikzpicture}[scale=0.6]
+\draw(0,0) -- (10,0) coordinate (x axis);
+\draw(0,0) -- (0,10) coordinate (y axis);
+\foreach \x/\xtext in {0, 1, 2, 3, 4, 5, 6, 7, 8, 9} 
+	\draw (\x cm,1pt) -- (\x cm,-1pt) node[anchor=north,] {};
+\draw (10 cm,1pt) -- (10 cm,-1pt) node[anchor=north,] {$d1$};
+\foreach \y/\ytext in {0, 1, 2, 3, 4, 5, 6, 7, 8, 9} 
+	\draw (1pt,\y cm) -- (-1pt,\y cm) node[anchor=east,] {};
+\draw (1pt, 10 cm) -- (-1pt, 10 cm) node[anchor=east,] {$d2$};
+%rzuty na d1 i d2
+\draw [black]
+(0,3) node[anchor=east] {$D2_{A}$}
+(0,5) node[anchor=east] {$D2_{B}$}
+(0,1) node[anchor=east] {$D2_{C}$}
+(0,6) node[anchor=east] {$D2_{P}$}
+(0,7) node[anchor=east] {$D2_{D}$}
+(0,2) node[anchor=east] {$D2_{E}$}
+(0,9) node[anchor=east] {$D2_{G}$}
+(2,0) node[anchor=north] {$D1_{A,B}$}
+(5,0) node[anchor=north] {$D1_{D,P,C}$}
+(8,0) node[anchor=north] {$D1_{G,E}$};
+\filldraw [black]
+(0,1) circle (2pt)
+(5,0) circle (2pt);
+\clip [draw](0,0) rectangle (10,10);
+\draw[black] (5,1) circle (3.7cm);
+%linie szare poziome
+\filldraw[dashed, draw=gray!50!white] (8,9)--(0,9);
+\filldraw[dashed, draw=gray!50!white] (5,7)--(0,7);
+\filldraw[dashed, draw=gray!50!white] (5,6)--(0,6);
+\filldraw[dashed, draw=gray!50!white] (2,5)--(0,5);
+\filldraw[dashed, draw=gray!50!white] (8,4)--(0,4);
+\filldraw[dashed, draw=gray!50!white] (2,3)--(0,3);
+\filldraw[dashed, draw=gray!50!white] (8,2)--(0,2);
+\filldraw[dashed, draw=gray!50!white] (5,1)--(0,1);
+%linie szare pionowe
+\filldraw[dashed, draw=gray!50!white] (2,5)--(2,0);
+\filldraw[dashed, draw=gray!50!white] (5,7)--(5,0);
+\filldraw[dashed, draw=gray!50!white] (8,9)--(8,0);
+%punkty
+\filldraw [gray]
+(2,3) circle (2pt) node[anchor=east] {$A$}
+(2,5) circle (2pt) node[anchor=east] {$B$}
+(5,1) circle (2pt) node[anchor=east] {$C$}
+(5,6) circle (2pt) node[anchor=east] {$P$}
+(5,7) circle (2pt) node[anchor=east] {$D$}
+(8,2) circle (2pt) node[anchor=east] {$E$}
+(8,4) circle (2pt) node[anchor=east] {$F$}
+(8,9) circle (2pt) node[anchor=east] {$G$};
+\end{tikzpicture}
+%%%%%
+\end{document}

@@ -1,0 +1,55 @@
+\documentclass{article}
+\usepackage{tikz,amsmath,siunitx}
+\usepackage{color}
+\usetikzlibrary{arrows,snakes,backgrounds,patterns,matrix,shapes,fit,calc,shadows,plotmarks}
+\usepackage[graphics,tightpage,active]{preview}
+\PreviewEnvironment{tikzpicture}
+\PreviewEnvironment{equation}
+\PreviewEnvironment{equation*}
+\newlength{\imagewidth}
+\newlength{\imagescale}
+\pagestyle{empty}
+\thispagestyle{empty}
+\begin{document}
+%%%%%
+\begin{tikzpicture}[scale=0.6]
+\draw(0,0) -- (10,0) coordinate (x axis);
+\draw(0,0) -- (0,10) coordinate (y axis);
+\foreach \x/\xtext in {0, 1, 2, 3, 4, 5, 6, 7, 8, 9} 
+	\draw (\x cm,1pt) -- (\x cm,-1pt);
+\draw (10 cm,1pt) -- (10 cm,-1pt) node[anchor=north,] {$X$};
+\foreach \y/\ytext in {0, 1, 2, 3, 4, 5, 6, 7, 8, 9} 
+	\draw (1pt,\y cm) -- (-1pt,\y cm);
+\draw (1pt, 10 cm) -- (-1pt, 10 cm) node[anchor=east,] {$Y$};
+\draw [black] (0,0) node[anchor=north] {$0$};
+\draw [black] (0,0) node[anchor=east] {$0$};
+\clip [draw](0,0) rectangle (10,10);
+\draw[color=gray] (0,0) circle (7cm);
+\filldraw[dashed, draw=gray!50!white] (0,7)--(7,7);
+\filldraw[dashed, draw=gray!50!white] (7,0)--(7,7);
+\filldraw [gray] (7,7) circle (2pt) node[anchor=south] {$R1$};
+\draw[color=cyan] (7,7) circle (6.3cm);
+\draw[color=cyan] (7,7) circle (6.7cm);
+%punkty
+\filldraw [black]
+(0.12498 ,6.998884) circle (2pt)
+(0.249841,6.99554) circle (2pt);
+\filldraw [red]
+(0.498729,6.982211) circle (2pt) node[anchor=north west] {$p_{1}$};
+\filldraw [black]
+(0.745732,6.960164) circle (2pt)
+(1.466704,6.844617) circle (2pt)
+(2.757435,6.434015) circle (2pt)
+(6.998884,0.12498)  circle (2pt)
+(6.99554 ,0.249841) circle (2pt);
+\filldraw [red]
+(6.982211,0.498729) circle (2pt) node[anchor=south east] {$p_{2}$};
+\filldraw [black]
+(6.960164,0.745732) circle (2pt)
+(6.844617,1.466704) circle (2pt)
+(6.434015,2.757435) circle (2pt)
+(6.929646,0.989949) circle (2pt)
+(0.989949,6.929646) circle (2pt);
+\end{tikzpicture}
+%%%%%
+\end{document}

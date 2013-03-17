@@ -1,0 +1,56 @@
+\documentclass{article}
+\usepackage{tikz,amsmath,siunitx}
+\usepackage{color}
+\usetikzlibrary{arrows,snakes,backgrounds,patterns,matrix,shapes,fit,calc,shadows,plotmarks}
+\usepackage[graphics,tightpage,active]{preview}
+\PreviewEnvironment{tikzpicture}
+\PreviewEnvironment{equation}
+\PreviewEnvironment{equation*}
+\newlength{\imagewidth}
+\newlength{\imagescale}
+\pagestyle{empty}
+\thispagestyle{empty}
+\begin{document}
+%%%%%
+\begin{tikzpicture}[scale=1]
+\draw(0,0) -- (6,0) coordinate (x axis);
+\draw(0,0) -- (0,3) coordinate (y axis);
+\foreach \x/\xtext in {0, 1, 2, 3, 4, 5} 
+	\draw (\x cm,1pt) -- (\x cm,-1pt) node[anchor=north,] {$\xtext$};
+\draw (6 cm,1pt) -- (6 cm,-1pt) node[anchor=north,] {$X$};
+\foreach \y/\ytext in {0, 1, 2} 
+	\draw (1pt,\y cm) -- (-1pt,\y cm) node[anchor=east,] {$\ytext$};
+\draw (1pt, 3 cm) -- (-1pt, 3 cm) node[anchor=east,] {$Y$};
+%linie szare poziome
+\filldraw[draw=gray!50!white] (0,1)--(6,1);
+\filldraw[draw=gray!50!white] (0,2)--(6,2);
+\filldraw[draw=gray!50!white] (0,3)--(6,3);
+%linie szare pionowe
+\filldraw[draw=gray!50!white] (1,0)--(1,3);
+\filldraw[draw=gray!50!white] (2,0)--(2,3);
+\filldraw[draw=gray!50!white] (3,0)--(3,3);
+\filldraw[draw=gray!50!white] (4,0)--(4,3);
+\filldraw[draw=gray!50!white] (5,0)--(5,3);
+\filldraw[draw=gray!50!white] (6,0)--(6,3);
+%wektory
+\draw [->, ultra thick] (0,0) -- (0,2) node[anchor=south west] {$r$};
+\draw [->, ultra thick] (0,0) -- (2,1) node[anchor=south west] {$q$};
+\draw [->, ultra thick] (0,0) -- (5,1) node[anchor=south west] {$p$};
+%punkty
+\filldraw [cyan]
+(0,2) circle (1pt) 
+(2,1) circle (1pt)
+(5,1) circle (1pt);
+\clip [draw](0,0) rectangle (6,3);
+%linie przerywane
+\draw [dashed, cyan] (0,2) -- (2,1);
+\draw [dashed, cyan] (2,1) -- (5,1);
+%łuki
+\draw (2,0.4) arc (11.31:26.56:1.96);
+\draw (1,0.2) arc (11.31:90:1.12);
+%opis kątów
+\draw (0.4,0.5) node[anchor=center] {$\beta$};
+\draw (1.5,0.5) node[anchor=center] {$\alpha$};
+\end{tikzpicture}
+%%%%%
+\end{document}
