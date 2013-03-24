@@ -1,0 +1,36 @@
+\documentclass{article}
+\usepackage{tikz,amsmath,siunitx}
+\usepackage{color}
+\usetikzlibrary{arrows,snakes,backgrounds,patterns,matrix,shapes,fit,calc,shadows,plotmarks}
+\usepackage[graphics,tightpage,active]{preview}
+\PreviewEnvironment{tikzpicture}
+\PreviewEnvironment{equation}
+\PreviewEnvironment{equation*}
+\newlength{\imagewidth}
+\newlength{\imagescale}
+\pagestyle{empty}
+\thispagestyle{empty}
+\begin{document}
+%%%%%
+\begin{tikzpicture}[scale=0.6]
+\draw(0,0) -- (10,0) coordinate (x axis);
+\draw(0,0) -- (0,10) coordinate (y axis);
+\clip [draw](0,0) rectangle (10,10);
+%łuki
+
+%punkty
+\filldraw [black]
+(3,1) circle (2pt) node[anchor=east] {$A$}
+(3,4) circle (2pt) node[anchor=east] {$B$}
+(5,4) circle (2pt) node[anchor=east] {$C$}
+(5,5) circle (2pt) node[anchor=east] {$P$}
+(2,7) circle (2pt) node[anchor=east] {$D$}
+(8,1) circle (2pt) node[anchor=east] {$E$}
+(6,6) circle (2pt) node[anchor=east] {$F$}
+(6,8) circle (2pt) node[anchor=east] {$G$}
+(9,5) circle (2pt) node[anchor=east] {$H$}
+(9,8) circle (2pt) node[anchor=east] {$I$}
+;
+\end{tikzpicture}
+%%%%%
+\end{document}
