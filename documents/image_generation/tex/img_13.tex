@@ -12,25 +12,25 @@
 \thispagestyle{empty}
 \begin{document}
 %%%%%
-\begin{tikzpicture}[scale=10]
-\draw(0,0) -- (1,0) coordinate (x axis);
-\draw(0,0) -- (0,1) coordinate (y axis);
-\draw (1 cm,0.1pt) -- (1 cm,-0.1pt) node[anchor=north] {$1$};
-\draw (0.1pt, 1 cm) -- (-0.1pt, 1 cm) node[anchor=east] {$1$};
+\begin{tikzpicture}[scale=1]
+\draw(0,0) -- (5,0) coordinate (x axis);
+\draw(0,0) -- (0,5) coordinate (y axis);
+\draw (5 cm,1pt) -- (5 cm,-1pt) node[anchor=north] {$1$};
+\draw (1pt, 5 cm) -- (-1pt, 5 cm) node[anchor=east] {$1$};
 \draw [black] (0,0) node[anchor=north east] {$0$};
 %punkty
 \filldraw [black]
-(0.5,0.5) circle (0.1pt) node[anchor=south west] {$p_{m}$}
-(1,0.5) circle (0.1pt) node[anchor=south west] {$p_{e}$}
-(1,1) circle (0.1pt) node[anchor=south west] {$p_{c}$};
+(2.5,2.5) circle (1pt) node[anchor=south west] {$p_{m}$}
+(5,2.5) circle (1pt) node[anchor=south west] {$p_{e}$}
+(5,5) circle (1pt) node[anchor=south west] {$p_{c}$};
 %ramka
-\clip [draw](0,0) rectangle (1,1);
+\clip [draw](0,0) rectangle (5,5);
 %okręgi
 \draw[black] 
-(0.5,0.5) circle (0.3839);
+(2.5,2.5) circle (1.9195);
 \draw[black, dashed] 
-(1,0.5) circle (0.5225)
-(1,1) circle (0.7979);
+(5,2.5) circle (2.6125)
+(5,5) circle (3.9895);
 \end{tikzpicture}
 %%%%%
 \end{document}
