@@ -198,7 +198,7 @@ void VpTree::kNeighborhoodSearch(Point* query, VpsPoint* point, multimap<double,
 	
 		kNeighborhoodSearch(query, point->right, neighbors);
 	}
-	if(leftBoundary <= point->median){
+	if(leftBoundary < point->median){
 	
 		kNeighborhoodSearch(query, point->left, neighbors);
 	}
