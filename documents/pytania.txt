@@ -1,0 +1,8 @@
+1. czy opisywaæ czym jest gêsta i rzadka reprezentacja punktu - mo¿e w rozdziale o implementacji?
+2. czy opisywaæ na przyk³adzie zysk z zastosowania wielu punktów referencyjnych?
+3. czy bardziej rozbudowywaæ rozdzia³ o implementacji?
+4. czy mo¿na odwo³ywaæ siê do pracy jarka wawry?
+5. Porównanie zastosowania odleg³oœci kosinusowej i euklidesowej zamieœci³em w podsumowaniu, robiæ z tego osobny rozdzia³?
+6. czy wprowadzaæ obie definicji k s¹siedztwa?
+7. czy bibliobrafia wydajê siê byæ wystarczaj¹ca?
+8. czy jest sens tworzeni interfejsu graficznego?
