@@ -11,3 +11,10 @@
 *8) W rozdziale o indeksie metrycznym VP-tree zaznaczyæ, ¿e w dlaszej czêœci pracy bêdê siê do niego odnosi³ jako do indeksu metrycznego.
 9) W pierwszym rozdziale, w któym badana jest reprezentacja punktu wprowadziæ pojêcie rzadkiej i gêstej reprezentacji punktu.
 *10) zlikwidowanie podrozdzia³ów w rozdzia³ach, które zawieraj¹ jedynie jeden podrozdzia³
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+11) ostro¿nie z u¿ywaniem s³owa 'przedstawiono'
+*12) zawrzeæ w streszczeniu informacjê o implementacji silnika algorytmów, np.: 'Zaimplementowano wszystkie badane algorytmy oraz indeksy metryczne'
+*13) wskazaæ, ¿e zaimplementowano ró¿ne odmiany przeszukiwania drzewa metrycznego VP-tree
+14) nie piszemy odleg³oœæ kosinusowa, tylko miara kosinusowa!!
+15) dodaæ wyjaœnienie wektora oraz punktu
+16) kierunki przysz³ych prac!
