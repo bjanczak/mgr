@@ -1242,9 +1242,10 @@ void Dataset::printClusteringSumUp(ofstream& os){
 				
 				os<<"Classification point ID         : "<<it->first.id<<endl;
 				os<<"Equivalent point ID             : "<<it->second->id<<endl;
-				os<<"    eps          : "<<((KNeighborhoodPoint*)(it->second))->eps<<endl;
-				os<<"    neighbors nr : "<<((KNeighborhoodPoint*)(it->second))->neighbors.size()<<endl;
-				os<<"    neighbors    : "<<endl;
+				os<<"    eps                         : "<<((KNeighborhoodPoint*)(it->second))->eps<<endl;
+				os<<"    neighbors nr                : "<<((KNeighborhoodPoint*)(it->second))->neighbors.size()<<endl;
+				os<<"    real distance calculations  : "<<((KNeighborhoodPoint*)(it->second))->realDistanceCalculations<<endl;
+				os<<"    neighbors                   : "<<endl;
 
 				neighborsEnd = ((KNeighborhoodPoint*)(it->second))->neighbors.end();
 				

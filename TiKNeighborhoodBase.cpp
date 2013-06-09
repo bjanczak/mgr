@@ -26,7 +26,9 @@ multimap<double, vector<KNeighborhoodPoint>::iterator, DistanceComparator> TiKNe
 	, vector<vector<KNeighborhoodPoint>::iterator>::iterator pointIt
 	, KNeighborhoodPoint& point
 	, indexVerifyKCandidateNeighborsBackwardFunction backwardVerification
-	, indexVerifyKCandidateNeighborsForwardFunction forwardVerification){
+	, indexVerifyKCandidateNeighborsForwardFunction forwardVerification
+	, unsigned long& realDistanceCalculationsCounter
+	, unsigned long& verificationRealDistanceCalculationsCounter){
 	
 	multimap<double, vector<KNeighborhoodPoint>::iterator, DistanceComparator> kNeighborhood;
 	vector<vector<KNeighborhoodPoint>::iterator>::iterator pointBackwardIt = pointIt;
@@ -35,14 +37,14 @@ multimap<double, vector<KNeighborhoodPoint>::iterator, DistanceComparator> TiKNe
 	bool forwardSearch = indexFollowingPoint(dataset, pointForwardIt);
 	unsigned long foundNeighborsCounter = 0;
 
-	indexFindFirstKCandidateNeighborsForwardAndBackward(dataset, point, pointBackwardIt, pointForwardIt, backwardSearch, forwardSearch, kNeighborhood, foundNeighborsCounter);
-	indexFindFirstKCandidateNeighborsBackward(dataset, point, pointBackwardIt, backwardSearch, kNeighborhood, foundNeighborsCounter);
-	indexFindFirstKCandidateNeighborsForward(dataset, point, pointForwardIt, forwardSearch, kNeighborhood, foundNeighborsCounter);
+	indexFindFirstKCandidateNeighborsForwardAndBackward(dataset, point, pointBackwardIt, pointForwardIt, backwardSearch, forwardSearch, kNeighborhood, foundNeighborsCounter, realDistanceCalculationsCounter);
+	indexFindFirstKCandidateNeighborsBackward(dataset, point, pointBackwardIt, backwardSearch, kNeighborhood, foundNeighborsCounter, realDistanceCalculationsCounter);
+	indexFindFirstKCandidateNeighborsForward(dataset, point, pointForwardIt, forwardSearch, kNeighborhood, foundNeighborsCounter, realDistanceCalculationsCounter);
 
 	point.eps = getMaxDistance(kNeighborhood);
 
-	backwardVerification(dataset, point, pointBackwardIt, backwardSearch, kNeighborhood, this->k);
-	forwardVerification(dataset, point, pointForwardIt, forwardSearch, kNeighborhood, this->k);
+	backwardVerification(dataset, point, pointBackwardIt, backwardSearch, kNeighborhood, this->k, verificationRealDistanceCalculationsCounter);
+	forwardVerification(dataset, point, pointForwardIt, forwardSearch, kNeighborhood, this->k, verificationRealDistanceCalculationsCounter);
 
 	// In order to print value.
 	(*pointIt)->eps = point.eps;
@@ -54,7 +56,9 @@ multimap<double, vector<KNeighborhoodPoint>::iterator, DistanceComparator> TiKNe
 	, vector<KNeighborhoodPoint>::iterator pointIt
 	, KNeighborhoodPoint& point
 	, verifyKCandidateNeighborsBackwardFunction backwardVerification
-	, verifyKCandidateNeighborsForwardFunction forwardVerification){
+	, verifyKCandidateNeighborsForwardFunction forwardVerification
+	, unsigned long& realDistanceCalculationsCounter
+	, unsigned long& verificationRealDistanceCalculationsCounter){
 	
 	multimap<double, vector<KNeighborhoodPoint>::iterator, DistanceComparator> kNeighborhood;
 	vector<KNeighborhoodPoint>::iterator pointBackwardIt = pointIt;
@@ -63,14 +67,14 @@ multimap<double, vector<KNeighborhoodPoint>::iterator, DistanceComparator> TiKNe
 	bool forwardSearch = followingPoint(dataset, pointForwardIt);
 	unsigned long foundNeighborsCounter = 0;
 
-	findFirstKCandidateNeighborsForwardAndBackward(dataset, point, pointBackwardIt, pointForwardIt, backwardSearch, forwardSearch, kNeighborhood, foundNeighborsCounter);
-	findFirstKCandidateNeighborsBackward(dataset, point, pointBackwardIt, backwardSearch, kNeighborhood, foundNeighborsCounter);
-	findFirstKCandidateNeighborsForward(dataset, point, pointForwardIt, forwardSearch, kNeighborhood, foundNeighborsCounter);
+	findFirstKCandidateNeighborsForwardAndBackward(dataset, point, pointBackwardIt, pointForwardIt, backwardSearch, forwardSearch, kNeighborhood, foundNeighborsCounter, realDistanceCalculationsCounter);
+	findFirstKCandidateNeighborsBackward(dataset, point, pointBackwardIt, backwardSearch, kNeighborhood, foundNeighborsCounter, realDistanceCalculationsCounter);
+	findFirstKCandidateNeighborsForward(dataset, point, pointForwardIt, forwardSearch, kNeighborhood, foundNeighborsCounter, realDistanceCalculationsCounter);
 
 	point.eps = getMaxDistance(kNeighborhood);
 
-	backwardVerification(dataset, point, pointBackwardIt, backwardSearch, kNeighborhood, this->k);
-	forwardVerification(dataset, point, pointForwardIt, forwardSearch, kNeighborhood, this->k);
+	backwardVerification(dataset, point, pointBackwardIt, backwardSearch, kNeighborhood, this->k, verificationRealDistanceCalculationsCounter);
+	forwardVerification(dataset, point, pointForwardIt, forwardSearch, kNeighborhood, this->k, verificationRealDistanceCalculationsCounter);
 
 	// In order to print value.
 	pointIt->eps = point.eps;
@@ -86,7 +90,8 @@ void TiKNeighborhoodBase::indexFindFirstKCandidateNeighborsForwardAndBackward(
 	, bool& backwardSearch
 	, bool& forwardSearch
 	, multimap<double, vector<KNeighborhoodPoint>::iterator, DistanceComparator>& kNeighborhood
-	, unsigned long& foundNeighboursCounter){
+	, unsigned long& foundNeighboursCounter
+	, unsigned long& realDistanceCalculationsCounter){
 
 	double distance;
 
@@ -95,6 +100,7 @@ void TiKNeighborhoodBase::indexFindFirstKCandidateNeighborsForwardAndBackward(
 		if((point.distance[0] - (*pointBackwardIt)->distance[0]) < ((*pointForwardIt)->distance[0] - point.distance[0])){
 		
 			distance = Point::minkowskiDistance((**pointBackwardIt), point, 2);
+			realDistanceCalculationsCounter++;
 			foundNeighboursCounter++;
 			kNeighborhood.insert(pair<double, vector<KNeighborhoodPoint>::iterator>(distance, *pointBackwardIt));
 			backwardSearch = indexPrecedingPoint(dataset, pointBackwardIt);
@@ -103,6 +109,7 @@ void TiKNeighborhoodBase::indexFindFirstKCandidateNeighborsForwardAndBackward(
 			
 			distance = Point::minkowskiDistance((**pointForwardIt), point, 2);
 			foundNeighboursCounter++;
+			realDistanceCalculationsCounter++;
 			kNeighborhood.insert(pair<double, vector<KNeighborhoodPoint>::iterator>(distance, *pointForwardIt));
 			forwardSearch = indexFollowingPoint(dataset, pointForwardIt);
 		}
@@ -116,7 +123,8 @@ void TiKNeighborhoodBase::findFirstKCandidateNeighborsForwardAndBackward(
 	, bool& backwardSearch
 	, bool& forwardSearch
 	, multimap<double, vector<KNeighborhoodPoint>::iterator, DistanceComparator>& kNeighborhood
-	, unsigned long& foundNeighboursCounter){
+	, unsigned long& foundNeighboursCounter
+	, unsigned long& realDistanceCalculationsCounter){
 
 	double distance;
 
@@ -126,6 +134,7 @@ void TiKNeighborhoodBase::findFirstKCandidateNeighborsForwardAndBackward(
 		
 			distance = Point::minkowskiDistance((*pointBackwardIt), point, 2);
 			foundNeighboursCounter++;
+			realDistanceCalculationsCounter++;
 			kNeighborhood.insert(pair<double, vector<KNeighborhoodPoint>::iterator>(distance, pointBackwardIt));
 			backwardSearch = precedingPoint(dataset, pointBackwardIt);
 		}
@@ -133,6 +142,7 @@ void TiKNeighborhoodBase::findFirstKCandidateNeighborsForwardAndBackward(
 			
 			distance = Point::minkowskiDistance((*pointForwardIt), point, 2);
 			foundNeighboursCounter++;
+			realDistanceCalculationsCounter++;
 			kNeighborhood.insert(pair<double, vector<KNeighborhoodPoint>::iterator>(distance, pointForwardIt));
 			forwardSearch = followingPoint(dataset, pointForwardIt);
 		}
@@ -145,7 +155,8 @@ void TiKNeighborhoodBase::indexFindFirstKCandidateNeighborsBackward(
 	, vector<vector<KNeighborhoodPoint>::iterator>::iterator& pointBackwardIt
 	, bool &backwardSearch
 	, multimap<double, vector<KNeighborhoodPoint>::iterator, DistanceComparator>& kNeighborhood
-	, unsigned long& foundNeighboursCounter){
+	, unsigned long& foundNeighboursCounter
+	, unsigned long& realDistanceCalculationsCounter){
 
 	double distance;
 
@@ -153,6 +164,7 @@ void TiKNeighborhoodBase::indexFindFirstKCandidateNeighborsBackward(
 		
 		distance = Point::minkowskiDistance((**pointBackwardIt), point, 2);
 		foundNeighboursCounter++;
+		realDistanceCalculationsCounter++;
 		kNeighborhood.insert(pair<double, vector<KNeighborhoodPoint>::iterator>(distance, *pointBackwardIt));
 		backwardSearch = indexPrecedingPoint(dataset, pointBackwardIt);		
 	}
@@ -163,7 +175,8 @@ void TiKNeighborhoodBase::findFirstKCandidateNeighborsBackward(
 	, vector<KNeighborhoodPoint>::iterator& pointBackwardIt
 	, bool &backwardSearch
 	, multimap<double, vector<KNeighborhoodPoint>::iterator, DistanceComparator>& kNeighborhood
-	, unsigned long& foundNeighboursCounter){
+	, unsigned long& foundNeighboursCounter
+	, unsigned long& realDistanceCalculationsCounter){
 
 	double distance;
 
@@ -171,6 +184,7 @@ void TiKNeighborhoodBase::findFirstKCandidateNeighborsBackward(
 		
 		distance = Point::minkowskiDistance((*pointBackwardIt), point, 2);
 		foundNeighboursCounter++;
+		realDistanceCalculationsCounter++;
 		kNeighborhood.insert(pair<double, vector<KNeighborhoodPoint>::iterator>(distance, pointBackwardIt));
 		backwardSearch = precedingPoint(dataset, pointBackwardIt);		
 	}
@@ -182,7 +196,8 @@ void TiKNeighborhoodBase::indexFindFirstKCandidateNeighborsForward(
 	, vector<vector<KNeighborhoodPoint>::iterator>::iterator& pointForwardIt
 	, bool &forwardSearch
 	, multimap<double, vector<KNeighborhoodPoint>::iterator, DistanceComparator>& kNeighborhood
-	, unsigned long& foundNeighboursCounter){
+	, unsigned long& foundNeighboursCounter
+	, unsigned long& realDistanceCalculationsCounter){
 	
 	double distance;
 
@@ -190,6 +205,7 @@ void TiKNeighborhoodBase::indexFindFirstKCandidateNeighborsForward(
 			
 		distance = Point::minkowskiDistance((**pointForwardIt), point, 2);
 		foundNeighboursCounter++;
+		realDistanceCalculationsCounter++;
 		kNeighborhood.insert(pair<double, vector<KNeighborhoodPoint>::iterator>(distance, *pointForwardIt));
 		forwardSearch = indexFollowingPoint(dataset, pointForwardIt);
 	}
@@ -200,7 +216,8 @@ void TiKNeighborhoodBase::findFirstKCandidateNeighborsForward(
 	, vector<KNeighborhoodPoint>::iterator& pointForwardIt
 	, bool &forwardSearch
 	, multimap<double, vector<KNeighborhoodPoint>::iterator, DistanceComparator>& kNeighborhood
-	, unsigned long& foundNeighboursCounter){
+	, unsigned long& foundNeighboursCounter
+	, unsigned long& realDistanceCalculationsCounter){
 	
 	double distance;
 
@@ -208,6 +225,7 @@ void TiKNeighborhoodBase::findFirstKCandidateNeighborsForward(
 			
 		distance = Point::minkowskiDistance((*pointForwardIt), point, 2);
 		foundNeighboursCounter++;
+		realDistanceCalculationsCounter++;
 		kNeighborhood.insert(pair<double, vector<KNeighborhoodPoint>::iterator>(distance, pointForwardIt));
 		forwardSearch = followingPoint(dataset, pointForwardIt);
 	}

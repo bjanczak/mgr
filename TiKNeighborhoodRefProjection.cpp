@@ -81,6 +81,9 @@ TimeReport TiKNeighborhoodRefProjection::runDatasetIndexAccess(const Properties&
 	clock_t indexBuildingStart;
 	clock_t indexBuildingFinish;
 
+	vector<unsigned long> realDistanceCalculationsCounters;
+	vector<unsigned long> verificationRealDistanceCalculationsCounters;
+
 	this->k = properties.k;
 
 	/*
@@ -177,10 +180,15 @@ TimeReport TiKNeighborhoodRefProjection::runDatasetIndexAccess(const Properties&
 	clusteringStart = clock();
 			
 	classificationIndexEquivalentEnd = classificationDatasetIndexEquivalent.end();
-
+	unsigned long realDistanceCalculationsCounter;
+	unsigned long verificationRealDistanceCalculationsCounter;
 	for(classificationIndexEquivalentIt = classificationDatasetIndexEquivalent.begin(); classificationIndexEquivalentIt != classificationIndexEquivalentEnd; classificationIndexEquivalentIt++){
-				
-		(**classificationIndexEquivalentIt->second).neighbors = indexTiKNeighborhood(datasetIterators, classificationIndexEquivalentIt->second, classificationIndexEquivalentIt->first, TiKNeighborhoodRef::indexVerifyKCandidateNeighborsBackward, TiKNeighborhoodRef::indexVerifyKCandidateNeighborsForward);
+		realDistanceCalculationsCounter = 0;
+		verificationRealDistanceCalculationsCounter = 0;				
+		(**classificationIndexEquivalentIt->second).neighbors = indexTiKNeighborhood(datasetIterators, classificationIndexEquivalentIt->second, classificationIndexEquivalentIt->first, TiKNeighborhoodRef::indexVerifyKCandidateNeighborsBackward, TiKNeighborhoodRef::indexVerifyKCandidateNeighborsForward, realDistanceCalculationsCounter, verificationRealDistanceCalculationsCounter);
+		(**classificationIndexEquivalentIt->second).realDistanceCalculations = realDistanceCalculationsCounter + verificationRealDistanceCalculationsCounter;
+		realDistanceCalculationsCounters.push_back(realDistanceCalculationsCounter + verificationRealDistanceCalculationsCounter);
+		verificationRealDistanceCalculationsCounters.push_back(verificationRealDistanceCalculationsCounter);
 	}
 
 	clusteringFinish = clock();
@@ -191,6 +199,8 @@ TimeReport TiKNeighborhoodRefProjection::runDatasetIndexAccess(const Properties&
 	timeReport.indexBuildingExecutionTime = ((double)(indexBuildingFinish - indexBuildingStart))/CLOCKS_PER_SEC;
 	timeReport.algorithmExecutionTime = timeReport.clusteringExecutionTime + timeReport.distanceCalculationExecutionTime + timeReport.sortingPointsExecutionTime + timeReport.indexBuildingExecutionTime;
 	timeReport.positioningExecutionTime = ((double)(positioningFinish - positioningStart))/CLOCKS_PER_SEC;
+	timeReport.realDistanceCalculationsCounters = vector<unsigned long>(realDistanceCalculationsCounters);
+	timeReport.verificationRealDistanceCalculationsCounters = vector<unsigned long>(verificationRealDistanceCalculationsCounters);
 
 	return timeReport;	
 }
@@ -228,6 +238,9 @@ TimeReport TiKNeighborhoodRefProjection::runDatasetDirectAccess(const Properties
 	clock_t clusteringFinish;
 	clock_t positioningStart;
 	clock_t positioningFinish;
+
+	vector<unsigned long> realDistanceCalculationsCounters;
+	vector<unsigned long> verificationRealDistanceCalculationsCounters;
 
 	this->k = properties.k;
 
@@ -313,10 +326,15 @@ TimeReport TiKNeighborhoodRefProjection::runDatasetDirectAccess(const Properties
 	clusteringStart = clock();
 			
 	classificationEquivalentEnd = classificationDatasetEquivalent.end();
-
+	unsigned long realDistanceCalculationsCounter;
+	unsigned long verificationRealDistanceCalculationsCounter;
 	for(classificationEquivalentIt = classificationDatasetEquivalent.begin(); classificationEquivalentIt != classificationEquivalentEnd; classificationEquivalentIt++){
-				
-		(*classificationEquivalentIt->second).neighbors = tiKNeighborhood(*tempDataset, classificationEquivalentIt->second, classificationEquivalentIt->first, TiKNeighborhoodRef::verifyKCandidateNeighborsBackward, TiKNeighborhoodRef::verifyKCandidateNeighborsForward);
+		realDistanceCalculationsCounter = 0;
+		verificationRealDistanceCalculationsCounter = 0;		
+		(*classificationEquivalentIt->second).neighbors = tiKNeighborhood(*tempDataset, classificationEquivalentIt->second, classificationEquivalentIt->first, TiKNeighborhoodRef::verifyKCandidateNeighborsBackward, TiKNeighborhoodRef::verifyKCandidateNeighborsForward, realDistanceCalculationsCounter, verificationRealDistanceCalculationsCounter);
+		(*classificationEquivalentIt->second).realDistanceCalculations = realDistanceCalculationsCounter + verificationRealDistanceCalculationsCounter;
+		realDistanceCalculationsCounters.push_back(realDistanceCalculationsCounter + verificationRealDistanceCalculationsCounter);
+		verificationRealDistanceCalculationsCounters.push_back(verificationRealDistanceCalculationsCounter);
 	}
 
 	clusteringFinish = clock();
@@ -326,6 +344,8 @@ TimeReport TiKNeighborhoodRefProjection::runDatasetDirectAccess(const Properties
 	timeReport.sortingPointsExecutionTime =  ((double)(sortingFinish - sortingStart))/CLOCKS_PER_SEC;
 	timeReport.algorithmExecutionTime = timeReport.clusteringExecutionTime + timeReport.distanceCalculationExecutionTime + timeReport.sortingPointsExecutionTime;
 	timeReport.positioningExecutionTime = ((double)(positioningFinish - positioningStart))/CLOCKS_PER_SEC;
+	timeReport.realDistanceCalculationsCounters = vector<unsigned long>(realDistanceCalculationsCounters);
+	timeReport.verificationRealDistanceCalculationsCounters = vector<unsigned long>(verificationRealDistanceCalculationsCounters);
 
 	return timeReport;
 }

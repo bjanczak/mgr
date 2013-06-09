@@ -54,11 +54,13 @@ public:
 	virtual void kNeighborhoodSearch(
 		Point* query
 		, VpsPoint* point
-		, multimap<double, Point*, DistanceComparator>& neighbors);
+		, multimap<double, Point*, DistanceComparator>& neighbors
+		, unsigned long& realdDistanceCalculations);
 	virtual void boundariesKNeighborhoodSearch(
 		Point* query
 		, VpsPoint* point
-		, multimap<double, Point*, DistanceComparator>& neighbors);
+		, multimap<double, Point*, DistanceComparator>& neighbors
+		, unsigned long& realdDistanceCalculations);
 
 	/**
 	 * Searches neighbors in tau neighborhood of query point in vantage
@@ -90,7 +92,7 @@ private :
 	 *
 	 * @return          Pointer to created Vp Tree node.
 	 */
-	VpsPoint* makeVpTree(list<list<VpsPoint>::iterator>& candidates, list<VpsPoint>& dataset);
+	VpsPoint* makeVpTree(list<list<VpsPoint>::iterator>& candidates, list<VpsPoint>& dataset , unsigned long& realDistanceCalculations, unsigned long& selectVpRealDistanceCalculations);
 };
 
 #endif /* _VP_TREE_H_ */

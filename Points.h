@@ -202,6 +202,8 @@ public:
 
 	KNeighborhoodPoint(const Point& object);
 
+	unsigned long realDistanceCalculations;
+
 	/**
 	 * Compares points a and b by means of distance values.
 	 *

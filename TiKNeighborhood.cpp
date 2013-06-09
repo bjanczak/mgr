@@ -74,6 +74,9 @@ TimeReport TiKNeighborhood::runDatasetIndexAccess(const Properties& properties, 
 	clock_t indexBuildingStart;
 	clock_t indexBuildingFinish;
 
+	vector<unsigned long> realDistanceCalculationsCounters;
+	vector<unsigned long> verificationRealDistanceCalculationsCounters;
+
 	this->k = properties.k;
 
 	/*
@@ -149,10 +152,15 @@ TimeReport TiKNeighborhood::runDatasetIndexAccess(const Properties& properties, 
 	clusteringStart = clock();
 			
 	classificationIndexEquivalentEnd = classificationDatasetIndexEquivalent.end();
-
+	unsigned long realDistanceCalculationsCounter;
+	unsigned long verificationRealDistanceCalculationsCounter;
 	for(classificationIndexEquivalentIt = classificationDatasetIndexEquivalent.begin(); classificationIndexEquivalentIt != classificationIndexEquivalentEnd; classificationIndexEquivalentIt++){
-			
-		(**classificationIndexEquivalentIt->second).neighbors = indexTiKNeighborhood(datasetIterators, classificationIndexEquivalentIt->second, classificationIndexEquivalentIt->first, TiKNeighborhood::indexVerifyKCandidateNeighborsBackward, TiKNeighborhood::indexVerifyKCandidateNeighborsForward);
+		realDistanceCalculationsCounter = 0;
+		verificationRealDistanceCalculationsCounter = 0;
+		(**classificationIndexEquivalentIt->second).neighbors = indexTiKNeighborhood(datasetIterators, classificationIndexEquivalentIt->second, classificationIndexEquivalentIt->first, TiKNeighborhood::indexVerifyKCandidateNeighborsBackward, TiKNeighborhood::indexVerifyKCandidateNeighborsForward, realDistanceCalculationsCounter, verificationRealDistanceCalculationsCounter);
+		(**classificationIndexEquivalentIt->second).realDistanceCalculations = realDistanceCalculationsCounter + verificationRealDistanceCalculationsCounter;
+		realDistanceCalculationsCounters.push_back(realDistanceCalculationsCounter + verificationRealDistanceCalculationsCounter);
+		verificationRealDistanceCalculationsCounters.push_back(verificationRealDistanceCalculationsCounter);
 	}
 
 	clusteringFinish = clock();
@@ -163,7 +171,8 @@ TimeReport TiKNeighborhood::runDatasetIndexAccess(const Properties& properties, 
 	timeReport.indexBuildingExecutionTime = ((double)(indexBuildingFinish - indexBuildingStart))/CLOCKS_PER_SEC;
 	timeReport.algorithmExecutionTime = timeReport.clusteringExecutionTime + timeReport.distanceCalculationExecutionTime + timeReport.sortingPointsExecutionTime + timeReport.indexBuildingExecutionTime;	
 	timeReport.positioningExecutionTime = ((double)(positioningFinish - positioningStart))/CLOCKS_PER_SEC;
-	
+	timeReport.realDistanceCalculationsCounters = vector<unsigned long>(realDistanceCalculationsCounters);
+	timeReport.verificationRealDistanceCalculationsCounters = vector<unsigned long>(verificationRealDistanceCalculationsCounters);
 
 	return timeReport;
 }
@@ -196,6 +205,9 @@ TimeReport TiKNeighborhood::runDatasetDirectAccess(const Properties& properties,
 	clock_t clusteringFinish;
 	clock_t positioningStart;
 	clock_t positioningFinish;
+
+	vector<unsigned long> realDistanceCalculationsCounters;
+	vector<unsigned long> verificationRealDistanceCalculationsCounters;
 
 	this->k = properties.k;
 
@@ -260,10 +272,15 @@ TimeReport TiKNeighborhood::runDatasetDirectAccess(const Properties& properties,
 	clusteringStart = clock();
 			
 	classificationEquivalentEnd = classificationDatasetEquivalent.end();
-
+	unsigned long realDistanceCalculationsCounter;
+	unsigned long verificationRealDistanceCalculationsCounter;
 	for(classificationEquivalentIt = classificationDatasetEquivalent.begin(); classificationEquivalentIt != classificationEquivalentEnd; classificationEquivalentIt++){
-			
-		(*classificationEquivalentIt->second).neighbors = tiKNeighborhood(*tempDataset, classificationEquivalentIt->second, classificationEquivalentIt->first, TiKNeighborhood::verifyKCandidateNeighborsBackward, TiKNeighborhood::verifyKCandidateNeighborsForward);
+		realDistanceCalculationsCounter = 0;	
+		verificationRealDistanceCalculationsCounter = 0;
+		(*classificationEquivalentIt->second).neighbors = tiKNeighborhood(*tempDataset, classificationEquivalentIt->second, classificationEquivalentIt->first, TiKNeighborhood::verifyKCandidateNeighborsBackward, TiKNeighborhood::verifyKCandidateNeighborsForward, realDistanceCalculationsCounter, verificationRealDistanceCalculationsCounter);
+		(*classificationEquivalentIt->second).realDistanceCalculations = realDistanceCalculationsCounter + verificationRealDistanceCalculationsCounter;
+		realDistanceCalculationsCounters.push_back(realDistanceCalculationsCounter + verificationRealDistanceCalculationsCounter);
+		verificationRealDistanceCalculationsCounters.push_back(verificationRealDistanceCalculationsCounter);
 	}
 
 	clusteringFinish = clock();
@@ -273,7 +290,8 @@ TimeReport TiKNeighborhood::runDatasetDirectAccess(const Properties& properties,
 	timeReport.sortingPointsExecutionTime =  ((double)(sortingFinish - sortingStart))/CLOCKS_PER_SEC;
 	timeReport.algorithmExecutionTime = timeReport.clusteringExecutionTime + timeReport.distanceCalculationExecutionTime + timeReport.sortingPointsExecutionTime;	
 	timeReport.positioningExecutionTime = ((double)(positioningFinish - positioningStart))/CLOCKS_PER_SEC;
-
+	timeReport.realDistanceCalculationsCounters = vector<unsigned long>(realDistanceCalculationsCounters);
+	timeReport.verificationRealDistanceCalculationsCounters = vector<unsigned long>(verificationRealDistanceCalculationsCounters);
 	return timeReport;
 }
 
@@ -283,7 +301,8 @@ void TiKNeighborhood::indexVerifyKCandidateNeighborsBackward (
 	, vector<vector<KNeighborhoodPoint>::iterator>::iterator& pointBackwardIt
 	, bool& backwardSearch
 	, multimap<double, vector<KNeighborhoodPoint>::iterator, DistanceComparator>& kNeighborhood
-	, unsigned long k){
+	, unsigned long k
+	, unsigned long& realDistanceCalculationsCounter){
 
 	double distance;
 	unsigned long i;
@@ -291,6 +310,7 @@ void TiKNeighborhood::indexVerifyKCandidateNeighborsBackward (
 	while(backwardSearch && ((point.distance[0] - (*pointBackwardIt)->distance[0]) <= point.eps)){
 
 		distance = Point::minkowskiDistance((**pointBackwardIt), point, 2);
+		realDistanceCalculationsCounter++;
 
 		if(distance < point.eps){
 		
@@ -322,7 +342,8 @@ void TiKNeighborhood::verifyKCandidateNeighborsBackward (
 	, vector<KNeighborhoodPoint>::iterator& pointBackwardIt
 	, bool& backwardSearch
 	, multimap<double, vector<KNeighborhoodPoint>::iterator, DistanceComparator>& kNeighborhood
-	, unsigned long k){
+	, unsigned long k
+	, unsigned long& realDistanceCalculationsCounter){
 
 	double distance;
 	unsigned long i;
@@ -330,6 +351,7 @@ void TiKNeighborhood::verifyKCandidateNeighborsBackward (
 	while(backwardSearch && ((point.distance[0] - pointBackwardIt->distance[0]) <= point.eps)){
 
 		distance = Point::minkowskiDistance((*pointBackwardIt), point, 2);
+		realDistanceCalculationsCounter++;
 
 		if(distance < point.eps){
 		
@@ -362,7 +384,8 @@ void TiKNeighborhood::indexVerifyKCandidateNeighborsForward (
 	, vector<vector<KNeighborhoodPoint>::iterator>::iterator& pointForwardIt
 	, bool& forwardSearch
 	, multimap<double, vector<KNeighborhoodPoint>::iterator, DistanceComparator>& kNeighborhood
-	, unsigned long k){
+	, unsigned long k
+	, unsigned long& realDistanceCalculationsCounter){
 
 	double distance;
 	unsigned long i;
@@ -370,6 +393,7 @@ void TiKNeighborhood::indexVerifyKCandidateNeighborsForward (
 	while(forwardSearch && (((*pointForwardIt)->distance[0] - point.distance[0]) <= point.eps)){
 
 		distance = Point::minkowskiDistance((**pointForwardIt), point, 2);
+		realDistanceCalculationsCounter++;
 
 		if(distance < point.eps){
 		
@@ -401,7 +425,8 @@ void TiKNeighborhood::verifyKCandidateNeighborsForward (
 	, vector<KNeighborhoodPoint>::iterator& pointForwardIt
 	, bool& forwardSearch
 	, multimap<double, vector<KNeighborhoodPoint>::iterator, DistanceComparator>& kNeighborhood
-	, unsigned long k){
+	, unsigned long k
+	, unsigned long& realDistanceCalculationsCounter){
 
 	double distance;
 	unsigned long i;
@@ -409,6 +434,7 @@ void TiKNeighborhood::verifyKCandidateNeighborsForward (
 	while(forwardSearch && ((pointForwardIt->distance[0] - point.distance[0]) <= point.eps)){
 
 		distance = Point::minkowskiDistance((*pointForwardIt), point, 2);
+		realDistanceCalculationsCounter++;
 
 		if(distance < point.eps){
 		

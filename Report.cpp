@@ -65,6 +65,11 @@ Report::Report(){
 	this->calculatingReferencePointsTime	= DBL_MIN;
 	this->isUseDatasetIndexAcess            = false;
 	this->isUseBoundaries                   = false;
+	this->realDistanceCalculationsCounters = vector<unsigned long>();
+	this->verificationRealDistanceCalculationsCounters = vector<unsigned long>();
+	this->vpTreeSearchRealDistanceCalculations = vector<unsigned long>();
+	this->makeVpTreeRealDistanceCalculations = 0;
+	this->makeVpTreeSelectVpRealDistanceCalculations = 0;
 }
 
 Report::Report(const Report& object){
@@ -112,6 +117,11 @@ Report::Report(const Report& object){
 	this->calculatingReferencePointsTime	= object.calculatingReferencePointsTime;
 	this->isUseDatasetIndexAcess            = object.isUseDatasetIndexAcess;
 	this->isUseBoundaries                   = object.isUseBoundaries;
+	this->realDistanceCalculationsCounters = vector<unsigned long>(object.realDistanceCalculationsCounters);
+	this->verificationRealDistanceCalculationsCounters = vector<unsigned long>(object.verificationRealDistanceCalculationsCounters);
+	this->vpTreeSearchRealDistanceCalculations = vector<unsigned long>(object.vpTreeSearchRealDistanceCalculations);
+	this->makeVpTreeRealDistanceCalculations = object.makeVpTreeRealDistanceCalculations;
+	this->makeVpTreeSelectVpRealDistanceCalculations = object.makeVpTreeSelectVpRealDistanceCalculations;
 }
 
 Report::Report(const Properties& properties, const TimeReport& timeReport, const string reportFileName){
@@ -159,6 +169,11 @@ Report::Report(const Properties& properties, const TimeReport& timeReport, const
 	this->indexBuildingExecutionTime		= timeReport.indexBuildingExecutionTime;
 	this->datafileReadingTime				= timeReport.datafileReadingTime;
 	this->calculatingReferencePointsTime	= timeReport.calculatingReferencePointsTime;	
+	this->realDistanceCalculationsCounters = vector<unsigned long>(timeReport.realDistanceCalculationsCounters);
+	this->verificationRealDistanceCalculationsCounters = vector<unsigned long>(timeReport.verificationRealDistanceCalculationsCounters);
+	this->vpTreeSearchRealDistanceCalculations = vector<unsigned long>(timeReport.vpTreeSearchRealDistanceCalculations);
+	this->makeVpTreeRealDistanceCalculations = timeReport.makeVpTreeRealDistanceCalculations;
+	this->makeVpTreeSelectVpRealDistanceCalculations = timeReport.makeVpTreeSelectVpRealDistanceCalculations;
 }
 
 void Report::printHeader(ofstream& os){
@@ -195,6 +210,14 @@ void Report::printHeader(ofstream& os){
 	os<<"P Sample Index"<<columnSeparator;	
 	os<<"S Sample Index"<<columnSeparator;
 	os<<"Use Boundaries"<<columnSeparator;	
+	os<<"Real Distance Calculations"<<columnSeparator;
+	os<<"Average Real Distance Calculations"<<columnSeparator;	
+	os<<"Verification Real Distance Calculations"<<columnSeparator;
+	os<<"Average Verification Real Distance Calculations"<<columnSeparator;	
+	os<<"Building Vp-Tree real distance calculations"<<columnSeparator;
+	os<<"Building Vp-Tree VP select real distance calculations"<<columnSeparator;
+	os<<"Vp-Tree search real distance calculations"<<columnSeparator;
+	os<<"Vp-Tree search average real distance calculations"<<columnSeparator;
 	os<<"Properties File Path"<<columnSeparator;	
 	os<<"Report File Path";	
 	os<<endl;
@@ -417,7 +440,61 @@ void Report::print(ofstream& os){
 		os<<"N/A"<<columnSeparator;
 		os<<"N/A"<<columnSeparator;
 		os<<"N/A"<<columnSeparator;
-	}		
+	}
+
+	unsigned long realDistanceCalculationsCountersSum = 0;
+	unsigned long verificationRealDistanceCalculationsCountersSum = 0;
+	unsigned long vpTreeSearchRealDistanceCalculationsCountersSum = 0;
+	vector<unsigned long>::iterator begin = this->realDistanceCalculationsCounters.begin();
+	vector<unsigned long>::iterator end = this->realDistanceCalculationsCounters.end();	
+	while(begin != end) {
+		realDistanceCalculationsCountersSum = realDistanceCalculationsCountersSum + *begin;
+		begin++;
+	}
+	begin = this->verificationRealDistanceCalculationsCounters.begin();
+	end = this->verificationRealDistanceCalculationsCounters.end();	
+	while(begin != end) {
+		verificationRealDistanceCalculationsCountersSum = verificationRealDistanceCalculationsCountersSum + *begin;
+		begin++;
+	}
+	begin = this->vpTreeSearchRealDistanceCalculations.begin();
+	end = this->vpTreeSearchRealDistanceCalculations.end();	
+	while(begin != end) {
+		vpTreeSearchRealDistanceCalculationsCountersSum = vpTreeSearchRealDistanceCalculationsCountersSum + *begin;
+		begin++;
+	}
+	if (this->realDistanceCalculationsCounters.size() > 0) {
+		os<<realDistanceCalculationsCountersSum<<columnSeparator;
+		os<<realDistanceCalculationsCountersSum/this->realDistanceCalculationsCounters.size()<<columnSeparator;
+	} else {
+		os<<"N/A"<<columnSeparator;
+		os<<"N/A"<<columnSeparator;	
+	}
+	if (this->verificationRealDistanceCalculationsCounters.size() > 0) {
+		os<<verificationRealDistanceCalculationsCountersSum<<columnSeparator;
+	os<<verificationRealDistanceCalculationsCountersSum/this->verificationRealDistanceCalculationsCounters.size()<<columnSeparator;	
+	} else {
+		os<<"N/A"<<columnSeparator;
+		os<<"N/A"<<columnSeparator;	
+	}
+
+	if (this->makeVpTreeRealDistanceCalculations > 0) {
+		os<<this->makeVpTreeRealDistanceCalculations<<columnSeparator;
+	}else {
+		os<<"N/A"<<columnSeparator;
+	}
+	if (this->makeVpTreeRealDistanceCalculations > 0) {
+		os<<this->makeVpTreeSelectVpRealDistanceCalculations<<columnSeparator;
+	} else {
+		os<<"N/A"<<columnSeparator;
+	}
+	if (this->vpTreeSearchRealDistanceCalculations.size() > 0) {
+		os<<vpTreeSearchRealDistanceCalculationsCountersSum<<columnSeparator;
+		os<<vpTreeSearchRealDistanceCalculationsCountersSum/this->vpTreeSearchRealDistanceCalculations.size()<<columnSeparator;	
+	} else {
+		os<<"N/A"<<columnSeparator;
+		os<<"N/A"<<columnSeparator;	
+	}
 	os<<this->propertiesFileName<<columnSeparator;	
 	os<<this->reportFileName;
 	os<<endl;

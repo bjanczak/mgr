@@ -309,6 +309,31 @@ public:
 	 * Calculating reference points time.
 	 */
 	double calculatingReferencePointsTime;
+
+	/*
+	 * Number of distance calculations per point.
+	 */
+	vector<unsigned long> realDistanceCalculationsCounters;
+
+	/*
+	 * Number of distance calculations per point in verification process.
+	 */
+	vector<unsigned long> verificationRealDistanceCalculationsCounters;
+
+	/*
+	 * Number of distance calculations per point in vp-tree search.
+	 */
+	vector<unsigned long> vpTreeSearchRealDistanceCalculations;
+	
+	/*
+	 * Number of real distance calculations while Vp-Tree building.
+	 */
+	unsigned long makeVpTreeRealDistanceCalculations;
+
+	/*
+	 * Number of real distance calculations while VP selection
+	 */
+	unsigned long makeVpTreeSelectVpRealDistanceCalculations;
 };
 
 #endif /* _REPORT_H_ */

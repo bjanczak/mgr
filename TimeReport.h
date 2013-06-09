@@ -12,6 +12,7 @@
 #define _TIME_REPORT_H_
 
 #include <fstream>
+#include <vector>
 
 using namespace std;
 
@@ -68,7 +69,19 @@ public:
 	 */
 	double calculatingReferencePointsTime;
 
+	vector<unsigned long> realDistanceCalculationsCounters;
+
+	vector<unsigned long> verificationRealDistanceCalculationsCounters;
+	
+	vector<unsigned long> vpTreeSearchRealDistanceCalculations;
+
+	unsigned long makeVpTreeRealDistanceCalculations;
+
+	unsigned long makeVpTreeSelectVpRealDistanceCalculations;
+
 	TimeReport();
+
+	~TimeReport();
 
 	TimeReport( const TimeReport& object);
 

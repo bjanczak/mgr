@@ -22,6 +22,16 @@ TimeReport::TimeReport(){
 	this->indexBuildingExecutionTime = DBL_MIN;
 	this->datafileReadingTime = DBL_MIN;
 	this->calculatingReferencePointsTime = DBL_MIN;
+	this->realDistanceCalculationsCounters = vector<unsigned long>();
+	this->verificationRealDistanceCalculationsCounters = vector<unsigned long>();
+	this->vpTreeSearchRealDistanceCalculations = vector<unsigned long>();
+	this->makeVpTreeRealDistanceCalculations = 0;
+	this->makeVpTreeSelectVpRealDistanceCalculations = 0;
+}
+
+TimeReport::~TimeReport(){
+	this->realDistanceCalculationsCounters.clear();
+	this->verificationRealDistanceCalculationsCounters.clear();
 }
 
 TimeReport::TimeReport( const TimeReport& object){
@@ -35,6 +45,11 @@ TimeReport::TimeReport( const TimeReport& object){
 	this->indexBuildingExecutionTime = object.indexBuildingExecutionTime;
 	this->datafileReadingTime = object.datafileReadingTime;
 	this->calculatingReferencePointsTime = object.calculatingReferencePointsTime;
+	this->realDistanceCalculationsCounters = vector<unsigned long>(object.realDistanceCalculationsCounters);
+	this->verificationRealDistanceCalculationsCounters = vector<unsigned long>(object.verificationRealDistanceCalculationsCounters);
+	this->vpTreeSearchRealDistanceCalculations = vector<unsigned long>(object.vpTreeSearchRealDistanceCalculations);
+	this->makeVpTreeRealDistanceCalculations = object.makeVpTreeRealDistanceCalculations;
+	this->makeVpTreeSelectVpRealDistanceCalculations = object.makeVpTreeSelectVpRealDistanceCalculations;
 }
 
 void TimeReport::clear(){
@@ -48,6 +63,11 @@ void TimeReport::clear(){
 	this->indexBuildingExecutionTime = DBL_MIN;
 	this->datafileReadingTime = DBL_MIN;
 	this->calculatingReferencePointsTime = DBL_MIN;
+	this->realDistanceCalculationsCounters.clear();
+	this->verificationRealDistanceCalculationsCounters.clear();
+	this->vpTreeSearchRealDistanceCalculations.clear();
+	this->makeVpTreeRealDistanceCalculations = 0;
+	this->makeVpTreeSelectVpRealDistanceCalculations = 0;
 }
 
 void TimeReport::print(ofstream &os){
@@ -104,5 +124,54 @@ void TimeReport::print(ofstream &os){
 	if(this->indexBuildingExecutionTime != DBL_MIN){
 		os<<"	Building index              : "<<this->indexBuildingExecutionTime<<" [s]"<<endl;
 		os<<endl;
+	}
+
+	unsigned long realDistanceCalculationsCountersSum = 0;
+	unsigned long verificationRealDistanceCalculationsCountersSum = 0;
+	unsigned long vpTreeSearchRealDistanceCalculationsCountersSum = 0;
+	vector<unsigned long>::iterator begin = this->realDistanceCalculationsCounters.begin();
+	vector<unsigned long>::iterator end = this->realDistanceCalculationsCounters.end();	
+	while(begin != end) {
+		realDistanceCalculationsCountersSum = realDistanceCalculationsCountersSum + *begin;
+		begin++;
+	}
+	begin = this->verificationRealDistanceCalculationsCounters.begin();
+	end = this->verificationRealDistanceCalculationsCounters.end();	
+	while(begin != end) {
+		verificationRealDistanceCalculationsCountersSum = verificationRealDistanceCalculationsCountersSum + *begin;
+		begin++;
+	}
+	begin = this->vpTreeSearchRealDistanceCalculations.begin();
+	end = this->vpTreeSearchRealDistanceCalculations.end();	
+	while(begin != end) {
+		vpTreeSearchRealDistanceCalculationsCountersSum = vpTreeSearchRealDistanceCalculationsCountersSum + *begin;
+		begin++;
+	}
+	os<<endl;
+	os<<endl;
+	os<<endl;
+	os<<"********************************************"<<endl;
+	os<<"     Real Distance Calculations Report"<<endl;
+	os<<"********************************************"<<endl;
+	os<<endl;
+	os<<endl;
+	os<<endl;
+	if (this->realDistanceCalculationsCounters.size() > 0) {
+		os<<"Real distance calculations                                : "<<realDistanceCalculationsCountersSum<<endl;
+		os<<"Average real distance calculations                        : "<<realDistanceCalculationsCountersSum/this->realDistanceCalculationsCounters.size()<<endl;
+	}
+	if (this->verificationRealDistanceCalculationsCounters.size() > 0) {
+		os<<"Verification real distance calculations                   : "<<verificationRealDistanceCalculationsCountersSum<<endl;
+		os<<"Verification average real distance calculations           : "<<verificationRealDistanceCalculationsCountersSum/this->verificationRealDistanceCalculationsCounters.size()<<endl;	
+	}
+	if (this->makeVpTreeRealDistanceCalculations > 0) {
+		os<<"Building Vp-Tree real distance calculations              : "<<this->makeVpTreeRealDistanceCalculations<<endl;
+	}
+	if (this->makeVpTreeRealDistanceCalculations > 0) {
+		os<<"Building Vp-Tree VP select real distance calculations    : "<<this->makeVpTreeSelectVpRealDistanceCalculations<<endl;
+	}
+	if (this->vpTreeSearchRealDistanceCalculations.size() > 0) {
+		os<<"Vp-Tree search real distance calculations                 : "<<vpTreeSearchRealDistanceCalculationsCountersSum<<endl;
+		os<<"Vp-Tree search average real distance calculations         : "<<vpTreeSearchRealDistanceCalculationsCountersSum/this->vpTreeSearchRealDistanceCalculations.size()<<endl;	
 	}
 }

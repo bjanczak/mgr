@@ -80,14 +80,16 @@ protected:
 		, vector<vector<KNeighborhoodPoint>::iterator>::iterator& pointBackwardIt
 		, bool& backwardSearch
 		, multimap<double, vector<KNeighborhoodPoint>::iterator, DistanceComparator>& kNeighborhood
-		, unsigned long k);
+		, unsigned long k
+		, unsigned long& realDistanceCalculationsCounter);
 	static void verifyKCandidateNeighborsBackward (
 		const vector<KNeighborhoodPoint>& dataset
 		, KNeighborhoodPoint& point
 		, vector<KNeighborhoodPoint>::iterator& pointBackwardIt
 		, bool& backwardSearch
 		, multimap<double, vector<KNeighborhoodPoint>::iterator, DistanceComparator>& kNeighborhood
-		, unsigned long k);
+		, unsigned long k
+		, unsigned long& realDistanceCalculationsCounter);
 
 	/**
 	 * Verifies found K neighbors of point given (pointIt) using many
@@ -111,14 +113,16 @@ protected:
 		, vector<vector<KNeighborhoodPoint>::iterator>::iterator& pointForwardIt
 		, bool& forwardSearch
 		, multimap<double, vector<KNeighborhoodPoint>::iterator, DistanceComparator>& kNeighborhood
-		, unsigned long k);
+		, unsigned long k
+		, unsigned long& realDistanceCalculationsCounter);
 	static void verifyKCandidateNeighborsForward (
 		const vector<KNeighborhoodPoint>& dataset
 		, KNeighborhoodPoint& point
 		, vector<KNeighborhoodPoint>::iterator& pointForwardIt
 		, bool& forwardSearch
 		, multimap<double, vector<KNeighborhoodPoint>::iterator, DistanceComparator>& kNeighborhood
-		, unsigned long k);
+		, unsigned long k
+		, unsigned long& realDistanceCalculationsCounter);
 
 	/**
 	 * Verifies whether the query point given (queryPointIt) is a neighbor

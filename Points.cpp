@@ -405,18 +405,21 @@ KNeighborhoodPoint::KNeighborhoodPoint():Point(){
 	
 	this->eps = 0;
 	this->neighbors;
+	this->realDistanceCalculations = 0;
 }
 
 KNeighborhoodPoint::KNeighborhoodPoint(const KNeighborhoodPoint& object):Point(object){
 	
 	this->eps = object.eps;
 	this->neighbors = object.neighbors;
+	this->realDistanceCalculations = object.realDistanceCalculations;
 }
 
 KNeighborhoodPoint::KNeighborhoodPoint(const Point& object):Point(object){
 	
 	this->eps = 0;
 	this->neighbors;
+	this->realDistanceCalculations = 0;
 }
 bool KNeighborhoodPoint::distanceComparatorIterator(const vector<KNeighborhoodPoint>::iterator a, const vector<KNeighborhoodPoint>::iterator b){
 

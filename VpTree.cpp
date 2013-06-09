@@ -57,6 +57,10 @@ TimeReport VpTree::run(const Properties& properties, Dataset& dataset){
 	clock_t indexBuildingStart;
 	clock_t indexBuildingFinish;
 
+	unsigned long makeVpTreeRealDistanceCalculations = 0;
+	unsigned long makeVpTreeSelectVpRealDistanceCalculations = 0;
+	vector<unsigned long> vpTreeSearchRealDistanceCalculations;
+
 	this->pSampleLimit = properties.pSampleIndex;
 	this->dSampleLimit = properties.sSampleIndex;
 
@@ -89,7 +93,7 @@ TimeReport VpTree::run(const Properties& properties, Dataset& dataset){
 
 	indexBuildingStart = clock();
 
-	dataset.vpsTree = makeVpTree(pointList, tempDataset);
+	dataset.vpsTree = makeVpTree(pointList, tempDataset, makeVpTreeRealDistanceCalculations, makeVpTreeSelectVpRealDistanceCalculations);
 
 	indexBuildingFinish = clock();
 
@@ -124,20 +128,22 @@ TimeReport VpTree::run(const Properties& properties, Dataset& dataset){
 		if(properties.searchMethod == Properties::K_NEIGHBORHOOD){
 			
 			counter = 0;
-
+			unsigned long realDistanceCalculations;
 			if(properties.isUseBoundaries){
 
 				for(; classificationIt != classificationEnd; classificationIt++){
-		
-					boundariesKNeighborhoodSearch(&classificationIt->first, dataset.vpsTree, tempKNeighbors[counter]);
+					realDistanceCalculations = 0;
+					boundariesKNeighborhoodSearch(&classificationIt->first, dataset.vpsTree, tempKNeighbors[counter], realDistanceCalculations);
+					vpTreeSearchRealDistanceCalculations.push_back(realDistanceCalculations);
 					counter++;
 				}
 			}
 			else{
 
 				for(; classificationIt != classificationEnd; classificationIt++){
-		
-					kNeighborhoodSearch(&classificationIt->first, dataset.vpsTree, tempKNeighbors[counter]);
+					realDistanceCalculations = 0;
+					kNeighborhoodSearch(&classificationIt->first, dataset.vpsTree, tempKNeighbors[counter], realDistanceCalculations);
+					vpTreeSearchRealDistanceCalculations.push_back(realDistanceCalculations);
 					counter++;
 				}
 			}
@@ -171,11 +177,14 @@ TimeReport VpTree::run(const Properties& properties, Dataset& dataset){
 	timeReport.indexBuildingExecutionTime = ((double)(indexBuildingFinish - indexBuildingStart))/CLOCKS_PER_SEC;
 	timeReport.clusteringExecutionTime = ((double)(clusteringFinish - clusteringStart))/CLOCKS_PER_SEC;
 	timeReport.algorithmExecutionTime = timeReport.indexBuildingExecutionTime + timeReport.clusteringExecutionTime;
+	timeReport.makeVpTreeRealDistanceCalculations = makeVpTreeRealDistanceCalculations + makeVpTreeSelectVpRealDistanceCalculations;
+	timeReport.makeVpTreeSelectVpRealDistanceCalculations = makeVpTreeSelectVpRealDistanceCalculations;
+	timeReport.vpTreeSearchRealDistanceCalculations = vector<unsigned long>(vpTreeSearchRealDistanceCalculations);
 
 	return timeReport;
 }
 
-void VpTree::kNeighborhoodSearch(Point* query, VpsPoint* point, multimap<double, Point*, DistanceComparator>& neighbors){
+void VpTree::kNeighborhoodSearch(Point* query, VpsPoint* point, multimap<double, Point*, DistanceComparator>& neighbors, unsigned long& realdDistanceCalculations){
 
 	if(point == NULL){
 	
@@ -185,6 +194,7 @@ void VpTree::kNeighborhoodSearch(Point* query, VpsPoint* point, multimap<double,
 	it--;
 	double tau = it->first;
 	double distance = Point::minkowskiDistance(*query, *point, 2);
+	realdDistanceCalculations++;
 	double leftBoundary = distance - tau;
 	double rightBoundary = distance + tau;
 
@@ -196,14 +206,14 @@ void VpTree::kNeighborhoodSearch(Point* query, VpsPoint* point, multimap<double,
 
 	if(rightBoundary >= point->median){
 	
-		kNeighborhoodSearch(query, point->right, neighbors);
+		kNeighborhoodSearch(query, point->right, neighbors, realdDistanceCalculations);
 	}
 	if(leftBoundary < point->median){
 	
-		kNeighborhoodSearch(query, point->left, neighbors);
+		kNeighborhoodSearch(query, point->left, neighbors, realdDistanceCalculations);
 	}
 }
-void VpTree::boundariesKNeighborhoodSearch(Point* query, VpsPoint* point, multimap<double, Point*, DistanceComparator>& neighbors){
+void VpTree::boundariesKNeighborhoodSearch(Point* query, VpsPoint* point, multimap<double, Point*, DistanceComparator>& neighbors, unsigned long& realDistanceCalculations){
 
 	if(point == NULL){
 	
@@ -213,6 +223,7 @@ void VpTree::boundariesKNeighborhoodSearch(Point* query, VpsPoint* point, multim
 	it--;
 	double tau = it->first;
 	double distance = Point::minkowskiDistance(*query, *point, 2);
+	realDistanceCalculations++;
 	double leftBoundary = distance - tau;
 	double rightBoundary = distance + tau;
 	double leftBuffer;
@@ -233,25 +244,25 @@ void VpTree::boundariesKNeighborhoodSearch(Point* query, VpsPoint* point, multim
 
 			if(leftBuffer < rightBuffer){
 				
-				kNeighborhoodSearch(query, point->left, neighbors);
-				kNeighborhoodSearch(query, point->right, neighbors);
+				kNeighborhoodSearch(query, point->left, neighbors, realDistanceCalculations);
+				kNeighborhoodSearch(query, point->right, neighbors, realDistanceCalculations);
 			}
 			else{
 				
-				kNeighborhoodSearch(query, point->right, neighbors);
-				kNeighborhoodSearch(query, point->left, neighbors);
+				kNeighborhoodSearch(query, point->right, neighbors, realDistanceCalculations);
+				kNeighborhoodSearch(query, point->left, neighbors, realDistanceCalculations);
 			}
 		}
 		else{
 		
-			kNeighborhoodSearch(query, point->left, neighbors);
+			kNeighborhoodSearch(query, point->left, neighbors, realDistanceCalculations);
 		}
 	}
 	else{
 	
 		if(rightBoundary >= point->rightBoundLow){
 			
-			kNeighborhoodSearch(query, point->right, neighbors);
+			kNeighborhoodSearch(query, point->right, neighbors, realDistanceCalculations);
 		}
 	}
 }
@@ -332,7 +343,7 @@ void VpTree::boundariesRangeSearch( Point* query, double& tau, VpsPoint* point, 
 	}
 }
 
-VpsPoint* VpTree::makeVpTree(list<list<VpsPoint>::iterator>& candidates, list<VpsPoint>& dataset){
+VpsPoint* VpTree::makeVpTree(list<list<VpsPoint>::iterator>& candidates, list<VpsPoint>& dataset, unsigned long& realDistanceCalculations, unsigned long& selectVpRealDistanceCalculations){
 
 	VpsPoint* result = NULL;
 	list<VpsPoint>::iterator vantagePointIt;
@@ -376,6 +387,7 @@ VpsPoint* VpTree::makeVpTree(list<list<VpsPoint>::iterator>& candidates, list<Vp
 			vector<double> medianWithNeighbors;
 
 			vantagePointIt = selectVp(candidates);
+			selectVpRealDistanceCalculations = selectVpRealDistanceCalculations + (this->pSampleLimit * this->dSampleLimit);
 			end = candidates.end();
 			distances.reserve(candidates.size());
 			
@@ -385,6 +397,7 @@ VpsPoint* VpTree::makeVpTree(list<list<VpsPoint>::iterator>& candidates, list<Vp
 			for(it = candidates.begin(); it != end; ){				
 
 				distance = Point::minkowskiDistance(*(*it), *vantagePointIt, 2);
+				realDistanceCalculations++;
 				distances.push_back(pair<double, list<VpsPoint>::iterator>(distance, *it));
 				
 				it++;
@@ -445,8 +458,8 @@ VpsPoint* VpTree::makeVpTree(list<list<VpsPoint>::iterator>& candidates, list<Vp
 			result->median = medianWithNeighbors[0];
 			result->leftBoundHigh = medianWithNeighbors[1];
 			result->rightBoundLow = medianWithNeighbors[2];
-			result->left = makeVpTree(leftCandidates, dataset);
-			result->right = makeVpTree(rightCandidates, dataset);
+			result->left = makeVpTree(leftCandidates, dataset, realDistanceCalculations, selectVpRealDistanceCalculations);
+			result->right = makeVpTree(rightCandidates, dataset, realDistanceCalculations, selectVpRealDistanceCalculations);
 	}
 
 	return result;

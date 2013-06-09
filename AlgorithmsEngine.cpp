@@ -399,6 +399,11 @@ void AlgorithmsEngine::runAlgorithm(){
 	this->timeReport.indexBuildingExecutionTime = tempTimeReport.indexBuildingExecutionTime;
 	this->timeReport.positioningExecutionTime = tempTimeReport.positioningExecutionTime;
 	this->timeReport.sortingPointsExecutionTime = tempTimeReport.sortingPointsExecutionTime;
+	this->timeReport.realDistanceCalculationsCounters = vector<unsigned long>(tempTimeReport.realDistanceCalculationsCounters);
+	this->timeReport.verificationRealDistanceCalculationsCounters = vector<unsigned long>(tempTimeReport.verificationRealDistanceCalculationsCounters);
+	this->timeReport.vpTreeSearchRealDistanceCalculations = vector<unsigned long>(tempTimeReport.vpTreeSearchRealDistanceCalculations);
+	this->timeReport.makeVpTreeRealDistanceCalculations = tempTimeReport.makeVpTreeRealDistanceCalculations;
+	this->timeReport.makeVpTreeSelectVpRealDistanceCalculations = tempTimeReport.makeVpTreeSelectVpRealDistanceCalculations;
 }
 
 void AlgorithmsEngine::run(){
@@ -530,6 +535,13 @@ void AlgorithmsEngine::printCleanedUltimateReport(){
 	vector<double> normalizingDatasetExecutionTime;
 	vector<double> datafileReadingTime;
 	vector<double> calculatingReferencePointsTime;
+	vector<double> makeVpTreeRealDistanceCalculations;
+	vector<double> makeVpTreeSelectVpRealDistanceCalculations;
+
+	vector<unsigned long> realDistanceCalculationsCounter;
+	vector<unsigned long> verificationRealDistanceCalculationsCounter;
+	vector<unsigned long> vpTreeSearchRealDistanceCalculations;
+
 	Report report;
 
 	for(unsigned long i = 0; i <this->testRepeats; i++){
@@ -543,6 +555,9 @@ void AlgorithmsEngine::printCleanedUltimateReport(){
 		normalizingDatasetExecutionTime.push_back(ultimateReport[index].normalizingDatasetExecutionTime);
 		datafileReadingTime.push_back(ultimateReport[index].datafileReadingTime);
 		calculatingReferencePointsTime.push_back(ultimateReport[index].calculatingReferencePointsTime);
+		makeVpTreeRealDistanceCalculations.push_back(ultimateReport[index].makeVpTreeRealDistanceCalculations);
+		makeVpTreeSelectVpRealDistanceCalculations.push_back(ultimateReport[index].makeVpTreeSelectVpRealDistanceCalculations);
+
 		report = ultimateReport[index];	
 	}
 
@@ -555,6 +570,8 @@ void AlgorithmsEngine::printCleanedUltimateReport(){
 	report.normalizingDatasetExecutionTime = Utils::getCleanValue(normalizingDatasetExecutionTime);
 	report.datafileReadingTime = Utils::getCleanValue(datafileReadingTime);
 	report.calculatingReferencePointsTime = Utils::getCleanValue(calculatingReferencePointsTime);
+	report.makeVpTreeRealDistanceCalculations = Utils::getCleanValue(makeVpTreeRealDistanceCalculations);
+	report.makeVpTreeSelectVpRealDistanceCalculations = Utils::getCleanValue(makeVpTreeSelectVpRealDistanceCalculations);
 
 	report.print(*cleanedUltimateReportFile);	
 }
