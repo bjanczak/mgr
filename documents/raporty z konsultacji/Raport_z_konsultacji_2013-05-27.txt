@@ -1,5 +1,5 @@
 *1) Ustalono, ¿e odleg³oœæ kosinusowa piszemy z ma³ej litery
-2) Z rozdzia³u '6. Szczegó³y implementacyjne' przenieœæ informacje do wstêpu do '7. Badania eksperymentalne'. Wspomnieæ o jêzykou programowania, platformie, parametrach wejœciowych i rezultacie uruchomienia.
+*2) Z rozdzia³u '6. Szczegó³y implementacyjne' przenieœæ informacje do wstêpu do '7. Badania eksperymentalne'. Wspomnieæ o jêzykou programowania, platformie, parametrach wejœciowych i rezultacie uruchomienia.
 3) Sprawdziæ czy zastosowanie wielu punkto referencyjnych jest wystarczaj¹co dobrze wyjaœnione
 4) Poprawiæ formatowanie spisu treœci
 5) Poprawiæ formatowanie bibliografii
@@ -17,4 +17,6 @@
 *13) wskazaæ, ¿e zaimplementowano ró¿ne odmiany przeszukiwania drzewa metrycznego VP-tree
 14) nie piszemy odleg³oœæ kosinusowa, tylko miara kosinusowa!!
 15) dodaæ wyjaœnienie wektora oraz punktu
-16) kierunki przysz³ych prac!
+*16) kierunki przysz³ych prac!
+*17) dodanie instrukcji uruchomienia jako dodatek
+18) uzupe³niæ wstêp
