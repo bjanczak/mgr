@@ -127,24 +127,48 @@ void TimeReport::print(ofstream &os){
 	}
 
 	unsigned long realDistanceCalculationsCountersSum = 0;
+	unsigned long realDistanceCalculationsCountersMin = ULONG_MAX;
+	unsigned long realDistanceCalculationsCountersMax = 0;
 	unsigned long verificationRealDistanceCalculationsCountersSum = 0;
+	unsigned long verificationRealDistanceCalculationsCountersMin = ULONG_MAX;
+	unsigned long verificationRealDistanceCalculationsCountersMax = 0;
 	unsigned long vpTreeSearchRealDistanceCalculationsCountersSum = 0;
+	unsigned long vpTreeSearchRealDistanceCalculationsCountersMin = ULONG_MAX;
+	unsigned long vpTreeSearchRealDistanceCalculationsCountersMax = 0;
 	vector<unsigned long>::iterator begin = this->realDistanceCalculationsCounters.begin();
 	vector<unsigned long>::iterator end = this->realDistanceCalculationsCounters.end();	
 	while(begin != end) {
 		realDistanceCalculationsCountersSum = realDistanceCalculationsCountersSum + *begin;
+		if (*begin > realDistanceCalculationsCountersMax) {
+			realDistanceCalculationsCountersMax = *begin;
+		}
+		if (*begin < realDistanceCalculationsCountersMin) {
+			realDistanceCalculationsCountersMin = *begin;
+		}
 		begin++;
 	}
 	begin = this->verificationRealDistanceCalculationsCounters.begin();
 	end = this->verificationRealDistanceCalculationsCounters.end();	
 	while(begin != end) {
 		verificationRealDistanceCalculationsCountersSum = verificationRealDistanceCalculationsCountersSum + *begin;
+		if (*begin > verificationRealDistanceCalculationsCountersMax) {
+			verificationRealDistanceCalculationsCountersMax = *begin;
+		}
+		if (*begin < verificationRealDistanceCalculationsCountersMin) {
+			verificationRealDistanceCalculationsCountersMin = *begin;
+		}
 		begin++;
 	}
 	begin = this->vpTreeSearchRealDistanceCalculations.begin();
 	end = this->vpTreeSearchRealDistanceCalculations.end();	
 	while(begin != end) {
 		vpTreeSearchRealDistanceCalculationsCountersSum = vpTreeSearchRealDistanceCalculationsCountersSum + *begin;
+		if (*begin > vpTreeSearchRealDistanceCalculationsCountersMax) {
+			vpTreeSearchRealDistanceCalculationsCountersMax = *begin;
+		}
+		if (*begin < vpTreeSearchRealDistanceCalculationsCountersMax) {
+			vpTreeSearchRealDistanceCalculationsCountersMax = *begin;
+		}
 		begin++;
 	}
 	os<<endl;
@@ -159,10 +183,14 @@ void TimeReport::print(ofstream &os){
 	if (this->realDistanceCalculationsCounters.size() > 0) {
 		os<<"Real distance calculations                                : "<<realDistanceCalculationsCountersSum<<endl;
 		os<<"Average real distance calculations                        : "<<realDistanceCalculationsCountersSum/this->realDistanceCalculationsCounters.size()<<endl;
+		os<<"Min real distance calculations                            : "<<realDistanceCalculationsCountersMin<<endl;
+		os<<"Max real distance calculations                            : "<<realDistanceCalculationsCountersMax<<endl;
 	}
 	if (this->verificationRealDistanceCalculationsCounters.size() > 0) {
 		os<<"Verification real distance calculations                   : "<<verificationRealDistanceCalculationsCountersSum<<endl;
-		os<<"Verification average real distance calculations           : "<<verificationRealDistanceCalculationsCountersSum/this->verificationRealDistanceCalculationsCounters.size()<<endl;	
+		os<<"Verification average real distance calculations           : "<<verificationRealDistanceCalculationsCountersSum/this->verificationRealDistanceCalculationsCounters.size()<<endl;
+		os<<"Verification min real distance calculations               : "<<verificationRealDistanceCalculationsCountersMin<<endl;
+		os<<"Verification max real distance calculations               : "<<verificationRealDistanceCalculationsCountersMax<<endl;
 	}
 	if (this->makeVpTreeRealDistanceCalculations > 0) {
 		os<<"Building Vp-Tree real distance calculations              : "<<this->makeVpTreeRealDistanceCalculations<<endl;
@@ -172,6 +200,8 @@ void TimeReport::print(ofstream &os){
 	}
 	if (this->vpTreeSearchRealDistanceCalculations.size() > 0) {
 		os<<"Vp-Tree search real distance calculations                 : "<<vpTreeSearchRealDistanceCalculationsCountersSum<<endl;
-		os<<"Vp-Tree search average real distance calculations         : "<<vpTreeSearchRealDistanceCalculationsCountersSum/this->vpTreeSearchRealDistanceCalculations.size()<<endl;	
+		os<<"Vp-Tree search average real distance calculations         : "<<vpTreeSearchRealDistanceCalculationsCountersSum/this->vpTreeSearchRealDistanceCalculations.size()<<endl;
+		os<<"Vp-Tree search min real distance calculations             : "<<vpTreeSearchRealDistanceCalculationsCountersMin<<endl;	
+		os<<"Vp-Tree search max real distance calculations             : "<<vpTreeSearchRealDistanceCalculationsCountersMax<<endl;	
 	}
 }

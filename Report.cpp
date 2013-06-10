@@ -211,13 +211,19 @@ void Report::printHeader(ofstream& os){
 	os<<"S Sample Index"<<columnSeparator;
 	os<<"Use Boundaries"<<columnSeparator;	
 	os<<"Real Distance Calculations"<<columnSeparator;
-	os<<"Average Real Distance Calculations"<<columnSeparator;	
+	os<<"Average Real Distance Calculations"<<columnSeparator;
+	os<<"Minimal Real Distance Calculations"<<columnSeparator;	
+	os<<"Maximal Real Distance Calculations"<<columnSeparator;	
 	os<<"Verification Real Distance Calculations"<<columnSeparator;
 	os<<"Average Verification Real Distance Calculations"<<columnSeparator;	
+	os<<"Minimal Verification Real Distance Calculations"<<columnSeparator;	
+	os<<"Maximal Verification Real Distance Calculations"<<columnSeparator;	
 	os<<"Building Vp-Tree real distance calculations"<<columnSeparator;
 	os<<"Building Vp-Tree VP select real distance calculations"<<columnSeparator;
 	os<<"Vp-Tree search real distance calculations"<<columnSeparator;
 	os<<"Vp-Tree search average real distance calculations"<<columnSeparator;
+	os<<"Vp-Tree search minimal real distance calculations"<<columnSeparator;
+	os<<"Vp-Tree search maximal real distance calculations"<<columnSeparator;
 	os<<"Properties File Path"<<columnSeparator;	
 	os<<"Report File Path";	
 	os<<endl;
@@ -443,38 +449,70 @@ void Report::print(ofstream& os){
 	}
 
 	unsigned long realDistanceCalculationsCountersSum = 0;
+	unsigned long realDistanceCalculationsCountersMin = ULONG_MAX;
+	unsigned long realDistanceCalculationsCountersMax = 0;
 	unsigned long verificationRealDistanceCalculationsCountersSum = 0;
+	unsigned long verificationRealDistanceCalculationsCountersMin = ULONG_MAX;
+	unsigned long verificationRealDistanceCalculationsCountersMax = 0;
 	unsigned long vpTreeSearchRealDistanceCalculationsCountersSum = 0;
+	unsigned long vpTreeSearchRealDistanceCalculationsCountersMin = ULONG_MAX;
+	unsigned long vpTreeSearchRealDistanceCalculationsCountersMax = 0;
 	vector<unsigned long>::iterator begin = this->realDistanceCalculationsCounters.begin();
 	vector<unsigned long>::iterator end = this->realDistanceCalculationsCounters.end();	
 	while(begin != end) {
 		realDistanceCalculationsCountersSum = realDistanceCalculationsCountersSum + *begin;
+		if (*begin > realDistanceCalculationsCountersMax) {
+			realDistanceCalculationsCountersMax = *begin;
+		}
+		if (*begin < realDistanceCalculationsCountersMin) {
+			realDistanceCalculationsCountersMin = *begin;
+		}
 		begin++;
 	}
 	begin = this->verificationRealDistanceCalculationsCounters.begin();
 	end = this->verificationRealDistanceCalculationsCounters.end();	
 	while(begin != end) {
 		verificationRealDistanceCalculationsCountersSum = verificationRealDistanceCalculationsCountersSum + *begin;
+		if (*begin > verificationRealDistanceCalculationsCountersMax) {
+			verificationRealDistanceCalculationsCountersMax = *begin;
+		}
+		if (*begin < verificationRealDistanceCalculationsCountersMin) {
+			verificationRealDistanceCalculationsCountersMin = *begin;
+		}
 		begin++;
 	}
 	begin = this->vpTreeSearchRealDistanceCalculations.begin();
 	end = this->vpTreeSearchRealDistanceCalculations.end();	
 	while(begin != end) {
 		vpTreeSearchRealDistanceCalculationsCountersSum = vpTreeSearchRealDistanceCalculationsCountersSum + *begin;
+		if (*begin > vpTreeSearchRealDistanceCalculationsCountersMax) {
+			vpTreeSearchRealDistanceCalculationsCountersMax = *begin;
+		}
+		if (*begin < vpTreeSearchRealDistanceCalculationsCountersMax) {
+			vpTreeSearchRealDistanceCalculationsCountersMax = *begin;
+		}
 		begin++;
 	}
 	if (this->realDistanceCalculationsCounters.size() > 0) {
 		os<<realDistanceCalculationsCountersSum<<columnSeparator;
 		os<<realDistanceCalculationsCountersSum/this->realDistanceCalculationsCounters.size()<<columnSeparator;
+		os<<realDistanceCalculationsCountersMin<<columnSeparator;
+		os<<realDistanceCalculationsCountersMax<<columnSeparator;		
 	} else {
 		os<<"N/A"<<columnSeparator;
+		os<<"N/A"<<columnSeparator;
+		os<<"N/A"<<columnSeparator;	
 		os<<"N/A"<<columnSeparator;	
 	}
 	if (this->verificationRealDistanceCalculationsCounters.size() > 0) {
 		os<<verificationRealDistanceCalculationsCountersSum<<columnSeparator;
-	os<<verificationRealDistanceCalculationsCountersSum/this->verificationRealDistanceCalculationsCounters.size()<<columnSeparator;	
+		os<<verificationRealDistanceCalculationsCountersSum/this->verificationRealDistanceCalculationsCounters.size()<<columnSeparator;	
+		os<<verificationRealDistanceCalculationsCountersMin<<columnSeparator;
+		os<<verificationRealDistanceCalculationsCountersMax<<columnSeparator;
 	} else {
 		os<<"N/A"<<columnSeparator;
+		os<<"N/A"<<columnSeparator;
+		os<<"N/A"<<columnSeparator;	
 		os<<"N/A"<<columnSeparator;	
 	}
 
@@ -490,9 +528,13 @@ void Report::print(ofstream& os){
 	}
 	if (this->vpTreeSearchRealDistanceCalculations.size() > 0) {
 		os<<vpTreeSearchRealDistanceCalculationsCountersSum<<columnSeparator;
-		os<<vpTreeSearchRealDistanceCalculationsCountersSum/this->vpTreeSearchRealDistanceCalculations.size()<<columnSeparator;	
+		os<<vpTreeSearchRealDistanceCalculationsCountersSum/this->vpTreeSearchRealDistanceCalculations.size()<<columnSeparator;
+		os<<vpTreeSearchRealDistanceCalculationsCountersMin<<columnSeparator;
+		os<<vpTreeSearchRealDistanceCalculationsCountersMax<<columnSeparator;
 	} else {
 		os<<"N/A"<<columnSeparator;
+		os<<"N/A"<<columnSeparator;
+		os<<"N/A"<<columnSeparator;	
 		os<<"N/A"<<columnSeparator;	
 	}
 	os<<this->propertiesFileName<<columnSeparator;	
