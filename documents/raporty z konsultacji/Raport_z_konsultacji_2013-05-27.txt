@@ -19,4 +19,4 @@
 15) dodaæ wyjaœnienie wektora oraz punktu
 *16) kierunki przysz³ych prac!
 *17) dodanie instrukcji uruchomienia jako dodatek
-18) uzupe³niæ wstêp
+*18) uzupe³niæ wstêp
