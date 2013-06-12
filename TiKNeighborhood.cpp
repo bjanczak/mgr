@@ -76,6 +76,7 @@ TimeReport TiKNeighborhood::runDatasetIndexAccess(const Properties& properties, 
 
 	vector<unsigned long> realDistanceCalculationsCounters;
 	vector<unsigned long> verificationRealDistanceCalculationsCounters;
+	vector<unsigned long> placementComparisonCounters;
 
 	this->k = properties.k;
 
@@ -126,12 +127,13 @@ TimeReport TiKNeighborhood::runDatasetIndexAccess(const Properties& properties, 
 	positioningStart = clock();
 
 	if(properties.useBinaryPlacement){
-	
+		unsigned long placementComparisonCounter;
 		for(classificationIt = classificationDataset->begin(); classificationIt != classificationEnd; classificationIt++){
-		
-			indexPlacementIt = Dataset::indexGetPlacementBinary(datasetIterators, classificationIt->first);
+			placementComparisonCounter = 0;
+			indexPlacementIt = Dataset::indexGetPlacementBinary(datasetIterators, classificationIt->first, placementComparisonCounter);
 			classificationIt->second = &(**indexPlacementIt);
 			classificationDatasetIndexEquivalent.push_back(pair<Point, vector<vector<KNeighborhoodPoint>::iterator>::iterator>(classificationIt->first, indexPlacementIt));
+			placementComparisonCounters.push_back(placementComparisonCounter);
 		}
 	}
 	else{
@@ -173,6 +175,7 @@ TimeReport TiKNeighborhood::runDatasetIndexAccess(const Properties& properties, 
 	timeReport.positioningExecutionTime = ((double)(positioningFinish - positioningStart))/CLOCKS_PER_SEC;
 	timeReport.realDistanceCalculationsCounters = vector<unsigned long>(realDistanceCalculationsCounters);
 	timeReport.verificationRealDistanceCalculationsCounters = vector<unsigned long>(verificationRealDistanceCalculationsCounters);
+	timeReport.placementComparisonCounters = vector<unsigned long>(placementComparisonCounters);
 
 	return timeReport;
 }
@@ -208,6 +211,7 @@ TimeReport TiKNeighborhood::runDatasetDirectAccess(const Properties& properties,
 
 	vector<unsigned long> realDistanceCalculationsCounters;
 	vector<unsigned long> verificationRealDistanceCalculationsCounters;
+	vector<unsigned long> placementComparisonCounters;
 
 	this->k = properties.k;
 
@@ -246,12 +250,13 @@ TimeReport TiKNeighborhood::runDatasetDirectAccess(const Properties& properties,
 	positioningStart = clock();
 	
 	if(properties.useBinaryPlacement){
-	
+		unsigned long placementComparisonCounter;
 		for(classificationIt = classificationDataset->begin(); classificationIt != classificationEnd; classificationIt++){
-		
-			placementIt = Dataset::getPlacementBinary(*tempDataset, classificationIt->first);
+			placementComparisonCounter = 0;
+			placementIt = Dataset::getPlacementBinary(*tempDataset, classificationIt->first, placementComparisonCounter);
 			classificationIt->second = &(*placementIt);
 			classificationDatasetEquivalent.push_back(pair<Point, vector<KNeighborhoodPoint>::iterator>(classificationIt->first, placementIt));
+			placementComparisonCounters.push_back(placementComparisonCounter);
 		}
 	}
 	else{
@@ -292,6 +297,8 @@ TimeReport TiKNeighborhood::runDatasetDirectAccess(const Properties& properties,
 	timeReport.positioningExecutionTime = ((double)(positioningFinish - positioningStart))/CLOCKS_PER_SEC;
 	timeReport.realDistanceCalculationsCounters = vector<unsigned long>(realDistanceCalculationsCounters);
 	timeReport.verificationRealDistanceCalculationsCounters = vector<unsigned long>(verificationRealDistanceCalculationsCounters);
+	timeReport.placementComparisonCounters = vector<unsigned long>(placementComparisonCounters);
+
 	return timeReport;
 }
 

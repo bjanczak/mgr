@@ -75,9 +75,15 @@ public:
 	
 	vector<unsigned long> vpTreeSearchRealDistanceCalculations;
 
+	vector<unsigned long> placementComparisonCounters;
+
 	unsigned long makeVpTreeRealDistanceCalculations;
 
 	unsigned long makeVpTreeSelectVpRealDistanceCalculations;
+
+	unsigned long vpTreeHeight;
+
+	unsigned long vpTreeLeafs;
 
 	TimeReport();
 

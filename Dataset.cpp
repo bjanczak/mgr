@@ -1338,7 +1338,7 @@ vector<KNeighborhoodPoint>::iterator Dataset::getPlacementBinary(const Point& po
 	return datasetKNeighborhoodPoint.begin() + currentIndex;	
 }
 
-vector<vector<KNeighborhoodPoint>::iterator>::iterator Dataset::indexGetPlacementBinary(vector<vector<KNeighborhoodPoint>::iterator>& datasetIndex, const Point& point){
+vector<vector<KNeighborhoodPoint>::iterator>::iterator Dataset::indexGetPlacementBinary(vector<vector<KNeighborhoodPoint>::iterator>& datasetIndex, const Point& point, unsigned long& comparisonCounter){
 	
 	unsigned long minIndex = 0;
 	unsigned long maxIndex = datasetIndex.size() - 1;
@@ -1377,11 +1377,13 @@ vector<vector<KNeighborhoodPoint>::iterator>::iterator Dataset::indexGetPlacemen
 			
 			maxIndex = currentIndex -1;
 		}
+
+		comparisonCounter++;
 	}
 
 	return datasetIndex.begin() + currentIndex;
 }
-vector<KNeighborhoodPoint>::iterator Dataset::getPlacementBinary(vector<KNeighborhoodPoint>& datasetIndex, const Point& point){
+vector<KNeighborhoodPoint>::iterator Dataset::getPlacementBinary(vector<KNeighborhoodPoint>& datasetIndex, const Point& point, unsigned long& comparisonCounter){
 	
 	unsigned long minIndex = 0;
 	unsigned long maxIndex = datasetIndex.size() - 1;
@@ -1420,6 +1422,8 @@ vector<KNeighborhoodPoint>::iterator Dataset::getPlacementBinary(vector<KNeighbo
 			
 			maxIndex = currentIndex -1;
 		}
+
+		comparisonCounter++;
 	}
 
 	return datasetIndex.begin() + currentIndex;

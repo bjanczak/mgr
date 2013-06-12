@@ -12,6 +12,7 @@
 #include "KNeighborhood.h"
 
 #include <algorithm>
+#include <vector>
 #include <ctime>
 
 KNeighborhood::KNeighborhood():KNeighborhoodBase(){
@@ -75,6 +76,8 @@ TimeReport KNeighborhood::runDatasetIndexAccess(const Properties& properties, Da
 	vector<pair<KNeighborhoodPoint, vector<vector<KNeighborhoodPoint>::iterator>::iterator>>::iterator classificationIndexEquivalentIt;
 	vector<pair<KNeighborhoodPoint, vector<vector<KNeighborhoodPoint>::iterator>::iterator>>::iterator classificationIndexEquivalentEnd;
 	
+	vector<unsigned long> placementComparisonCounters;
+
 	this->k = properties.k;
 
 	/*
@@ -126,12 +129,13 @@ TimeReport KNeighborhood::runDatasetIndexAccess(const Properties& properties, Da
 	positioningStart = clock();
 
 	if(properties.useBinaryPlacement){
-	
+		unsigned long placementComparisonCounter;
 		for(classificationIt = classificationDataset->begin(); classificationIt != classificationEnd; classificationIt++){
-		
-			indexPlacementIt = Dataset::indexGetPlacementBinary(datasetIterators,classificationIt->first);
+			placementComparisonCounter = 0;
+			indexPlacementIt = Dataset::indexGetPlacementBinary(datasetIterators,classificationIt->first, placementComparisonCounter);
 			classificationIt->second = &(**indexPlacementIt);
 			classificationDatasetIndexEquivalent.push_back(pair<Point, vector<vector<KNeighborhoodPoint>::iterator>::iterator>(classificationIt->first, indexPlacementIt));
+			placementComparisonCounters.push_back(placementComparisonCounter);
 		}
 	}
 	else{
@@ -166,6 +170,7 @@ TimeReport KNeighborhood::runDatasetIndexAccess(const Properties& properties, Da
 	timeReport.algorithmExecutionTime = timeReport.clusteringExecutionTime;	
 	timeReport.positioningExecutionTime = ((double)(positioningFinish - positioningStart))/CLOCKS_PER_SEC;
 	timeReport.indexBuildingExecutionTime = ((double)(indexBuildingFinish - indexBuildingStart))/CLOCKS_PER_SEC;
+	timeReport.placementComparisonCounters = vector<unsigned long>(placementComparisonCounters);
 
 	return timeReport;
 }
@@ -198,6 +203,8 @@ TimeReport KNeighborhood::runDatasetDirectAccess(const Properties& properties, D
 	vector<pair<KNeighborhoodPoint, vector<KNeighborhoodPoint>::iterator>> classificationDatasetEquivalent;
 	vector<pair<KNeighborhoodPoint, vector<KNeighborhoodPoint>::iterator>>::iterator classificationEquivalentIt;
 	vector<pair<KNeighborhoodPoint, vector<KNeighborhoodPoint>::iterator>>::iterator classificationEquivalentEnd;
+
+	vector<unsigned long> placementComparisonCounters;
 	
 	this->k = properties.k;
 
@@ -236,12 +243,13 @@ TimeReport KNeighborhood::runDatasetDirectAccess(const Properties& properties, D
 	positioningStart = clock();
 
 	if(properties.useBinaryPlacement){
-	
+		unsigned long placementComparisonCounter;
 		for(classificationIt = classificationDataset->begin(); classificationIt != classificationEnd; classificationIt++){
-		
-			placementIt = Dataset::getPlacementBinary(*tempDataset,classificationIt->first);
+			placementComparisonCounter = 0;
+			placementIt = Dataset::getPlacementBinary(*tempDataset,classificationIt->first, placementComparisonCounter);
 			classificationIt->second = &(*placementIt);
 			classificationDatasetEquivalent.push_back(pair<Point, vector<KNeighborhoodPoint>::iterator>(classificationIt->first, placementIt));
+			placementComparisonCounters.push_back(placementComparisonCounter);
 		}
 	}
 	else{
@@ -275,6 +283,7 @@ TimeReport KNeighborhood::runDatasetDirectAccess(const Properties& properties, D
 	timeReport.sortingPointsExecutionTime =  ((double)(sortingFinish - sortingStart))/CLOCKS_PER_SEC;
 	timeReport.algorithmExecutionTime = timeReport.clusteringExecutionTime;	
 	timeReport.positioningExecutionTime = ((double)(positioningFinish - positioningStart))/CLOCKS_PER_SEC;
+	timeReport.placementComparisonCounters = vector<unsigned long>(placementComparisonCounters);
 
 	return timeReport;
 }

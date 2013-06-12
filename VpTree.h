@@ -81,6 +81,17 @@ public:
 		, double& tau
 		, VpsPoint* point
 		, multimap<double, Point*, DistanceComparator>& neighbors);
+	
+	/**
+	 * Calculates height.
+	 */
+	unsigned long calculateHeight(VpsPoint* point);
+
+	/**
+	 * Calculates leafs.
+	 */
+	unsigned long calculatesLeafs(VpsPoint* point);
+
 private :
 
 	/**

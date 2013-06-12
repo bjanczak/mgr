@@ -68,8 +68,11 @@ Report::Report(){
 	this->realDistanceCalculationsCounters = vector<unsigned long>();
 	this->verificationRealDistanceCalculationsCounters = vector<unsigned long>();
 	this->vpTreeSearchRealDistanceCalculations = vector<unsigned long>();
+	this->placementComparisonCounters = vector<unsigned long>();
 	this->makeVpTreeRealDistanceCalculations = 0;
 	this->makeVpTreeSelectVpRealDistanceCalculations = 0;
+	this->vpTreeHeight = 0;
+	this->vpTreeLeafs = 0;
 }
 
 Report::Report(const Report& object){
@@ -122,6 +125,9 @@ Report::Report(const Report& object){
 	this->vpTreeSearchRealDistanceCalculations = vector<unsigned long>(object.vpTreeSearchRealDistanceCalculations);
 	this->makeVpTreeRealDistanceCalculations = object.makeVpTreeRealDistanceCalculations;
 	this->makeVpTreeSelectVpRealDistanceCalculations = object.makeVpTreeSelectVpRealDistanceCalculations;
+	this->placementComparisonCounters = vector<unsigned long>(placementComparisonCounters);
+	this->vpTreeHeight = object.vpTreeHeight;
+	this->vpTreeLeafs = object.vpTreeLeafs;
 }
 
 Report::Report(const Properties& properties, const TimeReport& timeReport, const string reportFileName){
@@ -172,8 +178,11 @@ Report::Report(const Properties& properties, const TimeReport& timeReport, const
 	this->realDistanceCalculationsCounters = vector<unsigned long>(timeReport.realDistanceCalculationsCounters);
 	this->verificationRealDistanceCalculationsCounters = vector<unsigned long>(timeReport.verificationRealDistanceCalculationsCounters);
 	this->vpTreeSearchRealDistanceCalculations = vector<unsigned long>(timeReport.vpTreeSearchRealDistanceCalculations);
+	this->placementComparisonCounters = vector<unsigned long>(timeReport.placementComparisonCounters);
 	this->makeVpTreeRealDistanceCalculations = timeReport.makeVpTreeRealDistanceCalculations;
 	this->makeVpTreeSelectVpRealDistanceCalculations = timeReport.makeVpTreeSelectVpRealDistanceCalculations;
+	this->vpTreeHeight = timeReport.vpTreeHeight;
+	this->vpTreeLeafs = timeReport.vpTreeLeafs;
 }
 
 void Report::printHeader(ofstream& os){
@@ -218,8 +227,14 @@ void Report::printHeader(ofstream& os){
 	os<<"Average Verification Real Distance Calculations"<<columnSeparator;	
 	os<<"Minimal Verification Real Distance Calculations"<<columnSeparator;	
 	os<<"Maximal Verification Real Distance Calculations"<<columnSeparator;	
+	os<<"Placement comparisons"<<columnSeparator;	
+	os<<"Placement average comparisons"<<columnSeparator;	
+	os<<"Placement min comparisons"<<columnSeparator;	
+	os<<"Placement max comparisons"<<columnSeparator;	
 	os<<"Building Vp-Tree real distance calculations"<<columnSeparator;
 	os<<"Building Vp-Tree VP select real distance calculations"<<columnSeparator;
+	os<<"Vp-Tree height"<<columnSeparator;
+	os<<"Vp-Tree leafs"<<columnSeparator;
 	os<<"Vp-Tree search real distance calculations"<<columnSeparator;
 	os<<"Vp-Tree search average real distance calculations"<<columnSeparator;
 	os<<"Vp-Tree search minimal real distance calculations"<<columnSeparator;
@@ -457,6 +472,10 @@ void Report::print(ofstream& os){
 	unsigned long vpTreeSearchRealDistanceCalculationsCountersSum = 0;
 	unsigned long vpTreeSearchRealDistanceCalculationsCountersMin = ULONG_MAX;
 	unsigned long vpTreeSearchRealDistanceCalculationsCountersMax = 0;
+	unsigned long placementComparisonCountersSum = 0;
+	unsigned long placementComparisonCountersMin = ULONG_MAX;
+	unsigned long placementComparisonCountersMax = 0;
+
 	vector<unsigned long>::iterator begin = this->realDistanceCalculationsCounters.begin();
 	vector<unsigned long>::iterator end = this->realDistanceCalculationsCounters.end();	
 	while(begin != end) {
@@ -493,6 +512,19 @@ void Report::print(ofstream& os){
 		}
 		begin++;
 	}
+	begin = this->placementComparisonCounters.begin();
+	end = this->placementComparisonCounters.end();	
+	while(begin != end) {
+		placementComparisonCountersSum = placementComparisonCountersSum + *begin;
+		if (*begin > placementComparisonCountersMax) {
+			placementComparisonCountersMax = *begin;
+		}
+		if (*begin < placementComparisonCountersMin) {
+			placementComparisonCountersMin = *begin;
+		}
+		begin++;
+	}
+
 	if (this->realDistanceCalculationsCounters.size() > 0) {
 		os<<realDistanceCalculationsCountersSum<<columnSeparator;
 		os<<realDistanceCalculationsCountersSum/this->realDistanceCalculationsCounters.size()<<columnSeparator;
@@ -515,7 +547,17 @@ void Report::print(ofstream& os){
 		os<<"N/A"<<columnSeparator;	
 		os<<"N/A"<<columnSeparator;	
 	}
-
+	if (this->placementComparisonCounters.size() > 0) {
+		os<<placementComparisonCountersSum<<columnSeparator;
+		os<<placementComparisonCountersSum/this->placementComparisonCounters.size()<<columnSeparator;	
+		os<<placementComparisonCountersMin<<columnSeparator;
+		os<<placementComparisonCountersMax<<columnSeparator;
+	} else {
+		os<<"N/A"<<columnSeparator;
+		os<<"N/A"<<columnSeparator;
+		os<<"N/A"<<columnSeparator;	
+		os<<"N/A"<<columnSeparator;	
+	}
 	if (this->makeVpTreeRealDistanceCalculations > 0) {
 		os<<this->makeVpTreeRealDistanceCalculations<<columnSeparator;
 	}else {
@@ -523,6 +565,16 @@ void Report::print(ofstream& os){
 	}
 	if (this->makeVpTreeRealDistanceCalculations > 0) {
 		os<<this->makeVpTreeSelectVpRealDistanceCalculations<<columnSeparator;
+	} else {
+		os<<"N/A"<<columnSeparator;
+	}
+	if (this->vpTreeHeight > 0) {
+		os<<this->vpTreeHeight<<columnSeparator;
+	} else {
+		os<<"N/A"<<columnSeparator;
+	}
+	if (this->vpTreeLeafs > 0) {
+		os<<this->vpTreeLeafs<<columnSeparator;
 	} else {
 		os<<"N/A"<<columnSeparator;
 	}

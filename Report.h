@@ -334,6 +334,21 @@ public:
 	 * Number of real distance calculations while VP selection
 	 */
 	unsigned long makeVpTreeSelectVpRealDistanceCalculations;
+
+	/*
+	 * Number of comparisons while placement per point.
+	 */
+	vector<unsigned long> placementComparisonCounters;
+
+	/*
+	 * Vp-Tree height.
+	 */
+	unsigned long vpTreeHeight;
+
+	/*
+	 * Vp-Tree leafs.
+	 */
+	unsigned long vpTreeLeafs;
 };
 
 #endif /* _REPORT_H_ */

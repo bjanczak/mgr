@@ -404,6 +404,9 @@ void AlgorithmsEngine::runAlgorithm(){
 	this->timeReport.vpTreeSearchRealDistanceCalculations = vector<unsigned long>(tempTimeReport.vpTreeSearchRealDistanceCalculations);
 	this->timeReport.makeVpTreeRealDistanceCalculations = tempTimeReport.makeVpTreeRealDistanceCalculations;
 	this->timeReport.makeVpTreeSelectVpRealDistanceCalculations = tempTimeReport.makeVpTreeSelectVpRealDistanceCalculations;
+	this->timeReport.placementComparisonCounters = tempTimeReport.placementComparisonCounters;
+	this->timeReport.vpTreeHeight = tempTimeReport.vpTreeHeight;
+	this->timeReport.vpTreeLeafs = tempTimeReport.vpTreeLeafs;
 }
 
 void AlgorithmsEngine::run(){

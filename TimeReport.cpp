@@ -25,8 +25,11 @@ TimeReport::TimeReport(){
 	this->realDistanceCalculationsCounters = vector<unsigned long>();
 	this->verificationRealDistanceCalculationsCounters = vector<unsigned long>();
 	this->vpTreeSearchRealDistanceCalculations = vector<unsigned long>();
+	this->placementComparisonCounters = vector<unsigned long>();
 	this->makeVpTreeRealDistanceCalculations = 0;
 	this->makeVpTreeSelectVpRealDistanceCalculations = 0;
+	this->vpTreeHeight = 0;
+	this->vpTreeLeafs = 0;
 }
 
 TimeReport::~TimeReport(){
@@ -48,8 +51,11 @@ TimeReport::TimeReport( const TimeReport& object){
 	this->realDistanceCalculationsCounters = vector<unsigned long>(object.realDistanceCalculationsCounters);
 	this->verificationRealDistanceCalculationsCounters = vector<unsigned long>(object.verificationRealDistanceCalculationsCounters);
 	this->vpTreeSearchRealDistanceCalculations = vector<unsigned long>(object.vpTreeSearchRealDistanceCalculations);
+	this->placementComparisonCounters = vector<unsigned long>(object.placementComparisonCounters);
 	this->makeVpTreeRealDistanceCalculations = object.makeVpTreeRealDistanceCalculations;
 	this->makeVpTreeSelectVpRealDistanceCalculations = object.makeVpTreeSelectVpRealDistanceCalculations;
+	this->vpTreeHeight = object.vpTreeHeight;
+	this->vpTreeLeafs = object.vpTreeLeafs;
 }
 
 void TimeReport::clear(){
@@ -66,8 +72,11 @@ void TimeReport::clear(){
 	this->realDistanceCalculationsCounters.clear();
 	this->verificationRealDistanceCalculationsCounters.clear();
 	this->vpTreeSearchRealDistanceCalculations.clear();
+	this->placementComparisonCounters.clear();
 	this->makeVpTreeRealDistanceCalculations = 0;
 	this->makeVpTreeSelectVpRealDistanceCalculations = 0;
+	this->vpTreeHeight = 0;
+	this->vpTreeLeafs = 0;
 }
 
 void TimeReport::print(ofstream &os){
@@ -135,6 +144,10 @@ void TimeReport::print(ofstream &os){
 	unsigned long vpTreeSearchRealDistanceCalculationsCountersSum = 0;
 	unsigned long vpTreeSearchRealDistanceCalculationsCountersMin = ULONG_MAX;
 	unsigned long vpTreeSearchRealDistanceCalculationsCountersMax = 0;
+	unsigned long placementComparisonCountersSum = 0;
+	unsigned long placementComparisonCountersMin = ULONG_MAX;
+	unsigned long placementComparisonCountersMax = 0;
+
 	vector<unsigned long>::iterator begin = this->realDistanceCalculationsCounters.begin();
 	vector<unsigned long>::iterator end = this->realDistanceCalculationsCounters.end();	
 	while(begin != end) {
@@ -166,8 +179,20 @@ void TimeReport::print(ofstream &os){
 		if (*begin > vpTreeSearchRealDistanceCalculationsCountersMax) {
 			vpTreeSearchRealDistanceCalculationsCountersMax = *begin;
 		}
-		if (*begin < vpTreeSearchRealDistanceCalculationsCountersMax) {
-			vpTreeSearchRealDistanceCalculationsCountersMax = *begin;
+		if (*begin < vpTreeSearchRealDistanceCalculationsCountersMin) {
+			vpTreeSearchRealDistanceCalculationsCountersMin = *begin;
+		}
+		begin++;
+	}
+	begin = this->placementComparisonCounters.begin();
+	end = this->placementComparisonCounters.end();	
+	while(begin != end) {
+		placementComparisonCountersSum = placementComparisonCountersSum + *begin;
+		if (*begin > placementComparisonCountersMax) {
+			placementComparisonCountersMax = *begin;
+		}
+		if (*begin < placementComparisonCountersMin) {
+			placementComparisonCountersMin = *begin;
 		}
 		begin++;
 	}
@@ -192,11 +217,23 @@ void TimeReport::print(ofstream &os){
 		os<<"Verification min real distance calculations               : "<<verificationRealDistanceCalculationsCountersMin<<endl;
 		os<<"Verification max real distance calculations               : "<<verificationRealDistanceCalculationsCountersMax<<endl;
 	}
-	if (this->makeVpTreeRealDistanceCalculations > 0) {
-		os<<"Building Vp-Tree real distance calculations              : "<<this->makeVpTreeRealDistanceCalculations<<endl;
+	if (this->placementComparisonCounters.size() > 0) {
+		os<<"Placement comparisons                                     : "<<placementComparisonCountersSum<<endl;
+		os<<"Placement average comparisons                             : "<<placementComparisonCountersSum/this->placementComparisonCounters.size()<<endl;
+		os<<"Placement min comparisons                                 : "<<placementComparisonCountersMin<<endl;
+		os<<"Placement max comparisons                                 : "<<placementComparisonCountersMax<<endl;
 	}
 	if (this->makeVpTreeRealDistanceCalculations > 0) {
-		os<<"Building Vp-Tree VP select real distance calculations    : "<<this->makeVpTreeSelectVpRealDistanceCalculations<<endl;
+		os<<"Building Vp-Tree real distance calculations               : "<<this->makeVpTreeRealDistanceCalculations<<endl;
+	}
+	if (this->makeVpTreeRealDistanceCalculations > 0) {
+		os<<"Building Vp-Tree VP select real distance calculations     : "<<this->makeVpTreeSelectVpRealDistanceCalculations<<endl;
+	}
+	if (this->vpTreeHeight > 0) {
+		os<<"Vp-Tree height                                            : "<<this->vpTreeHeight<<endl;
+	}
+	if (this->vpTreeLeafs > 0) {
+		os<<"Vp-Tree leafs                                             : "<<this->vpTreeLeafs<<endl;
 	}
 	if (this->vpTreeSearchRealDistanceCalculations.size() > 0) {
 		os<<"Vp-Tree search real distance calculations                 : "<<vpTreeSearchRealDistanceCalculationsCountersSum<<endl;

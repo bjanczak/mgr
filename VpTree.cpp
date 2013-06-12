@@ -180,6 +180,8 @@ TimeReport VpTree::run(const Properties& properties, Dataset& dataset){
 	timeReport.makeVpTreeRealDistanceCalculations = makeVpTreeRealDistanceCalculations + makeVpTreeSelectVpRealDistanceCalculations;
 	timeReport.makeVpTreeSelectVpRealDistanceCalculations = makeVpTreeSelectVpRealDistanceCalculations;
 	timeReport.vpTreeSearchRealDistanceCalculations = vector<unsigned long>(vpTreeSearchRealDistanceCalculations);
+	timeReport.vpTreeHeight = this->calculateHeight(dataset.vpsTree);
+	timeReport.vpTreeLeafs = this->calculatesLeafs(dataset.vpsTree);
 
 	return timeReport;
 }
@@ -463,4 +465,24 @@ VpsPoint* VpTree::makeVpTree(list<list<VpsPoint>::iterator>& candidates, list<Vp
 	}
 
 	return result;
+}
+
+unsigned long VpTree::calculateHeight(VpsPoint* point){
+	if(point == NULL) {
+		return 0;
+	}
+	return 1 + max(calculateHeight(point->left), calculateHeight(point->right));
+}
+
+unsigned long VpTree::calculatesLeafs(VpsPoint* point){
+
+	if (point == NULL) {
+		return 0;
+	}
+
+	if(point->left == NULL && point->right == NULL) {
+		return 1;
+	}
+
+	return calculatesLeafs(point->left) + calculatesLeafs(point->right);
 }
