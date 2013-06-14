@@ -1,22 +1,24 @@
 *1) Ustalono, ¿e odleg³oœæ kosinusowa piszemy z ma³ej litery
 *2) Z rozdzia³u '6. Szczegó³y implementacyjne' przenieœæ informacje do wstêpu do '7. Badania eksperymentalne'. Wspomnieæ o jêzykou programowania, platformie, parametrach wejœciowych i rezultacie uruchomienia.
-3) Sprawdziæ czy zastosowanie wielu punkto referencyjnych jest wystarczaj¹co dobrze wyjaœnione
-4) Poprawiæ formatowanie spisu treœci
-5) Poprawiæ formatowanie bibliografii
+*3) Sprawdziæ czy zastosowanie wielu punkto referencyjnych jest wystarczaj¹co dobrze wyjaœnione
+*4) Poprawiæ formatowanie spisu treœci
+*5) Poprawiæ formatowanie bibliografii
 *6) Proponowane tytu³y rozdzia³ów:
     - '5. Algorytmy gêstoœciowego grupowania danych i wyszukiwania k s¹siedztwa z u¿yciem nierównoœci trójk¹ta'
 	- '5.1 Zastosowanie nierównoœci trójk¹ta w ujêciu podstawowym'
 	- '5.2 Zastosowanie rzutowania'
-7) Wprowadzenie definicji k plus s¹siedztwa w rozdziale o k s¹siedztwie
+*7) Wprowadzenie definicji k plus s¹siedztwa w rozdziale o k s¹siedztwie
 *8) W rozdziale o indeksie metrycznym VP-tree zaznaczyæ, ¿e w dlaszej czêœci pracy bêdê siê do niego odnosi³ jako do indeksu metrycznego.
-9) W pierwszym rozdziale, w któym badana jest reprezentacja punktu wprowadziæ pojêcie rzadkiej i gêstej reprezentacji punktu.
+*9) W pierwszym rozdziale, w któym badana jest reprezentacja punktu wprowadziæ pojêcie rzadkiej i gêstej reprezentacji punktu.
 *10) zlikwidowanie podrozdzia³ów w rozdzia³ach, które zawieraj¹ jedynie jeden podrozdzia³
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------
-11) ostro¿nie z u¿ywaniem s³owa 'przedstawiono'
+*11) ostro¿nie z u¿ywaniem s³owa 'przedstawiono'
 *12) zawrzeæ w streszczeniu informacjê o implementacji silnika algorytmów, np.: 'Zaimplementowano wszystkie badane algorytmy oraz indeksy metryczne'
 *13) wskazaæ, ¿e zaimplementowano ró¿ne odmiany przeszukiwania drzewa metrycznego VP-tree
-14) nie piszemy odleg³oœæ kosinusowa, tylko miara kosinusowa!!
+*14) nie piszemy odleg³oœæ kosinusowa, tylko miara kosinusowa!!
 15) dodaæ wyjaœnienie wektora oraz punktu
 *16) kierunki przysz³ych prac!
 *17) dodanie instrukcji uruchomienia jako dodatek
 *18) uzupe³niæ wstêp
+19) czy dodaæ rysunek dla rmin i kosinusa? NIE
+20) poprawiæ wsyzstkie rys Tab i Wyd!
