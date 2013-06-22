@@ -85,6 +85,8 @@ public:
 
 	unsigned long vpTreeLeafs;
 
+	vector<double> diffs;
+
 	TimeReport();
 
 	~TimeReport();

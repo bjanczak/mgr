@@ -10,6 +10,7 @@
  */
 
 #include "Report.h"
+#include "Utils.h"
 
 const string Report::columnSeparator = "; ";
 
@@ -69,6 +70,7 @@ Report::Report(){
 	this->verificationRealDistanceCalculationsCounters = vector<unsigned long>();
 	this->vpTreeSearchRealDistanceCalculations = vector<unsigned long>();
 	this->placementComparisonCounters = vector<unsigned long>();
+	this->diffs = vector<double>();
 	this->makeVpTreeRealDistanceCalculations = 0;
 	this->makeVpTreeSelectVpRealDistanceCalculations = 0;
 	this->vpTreeHeight = 0;
@@ -125,7 +127,8 @@ Report::Report(const Report& object){
 	this->vpTreeSearchRealDistanceCalculations = vector<unsigned long>(object.vpTreeSearchRealDistanceCalculations);
 	this->makeVpTreeRealDistanceCalculations = object.makeVpTreeRealDistanceCalculations;
 	this->makeVpTreeSelectVpRealDistanceCalculations = object.makeVpTreeSelectVpRealDistanceCalculations;
-	this->placementComparisonCounters = vector<unsigned long>(placementComparisonCounters);
+	this->placementComparisonCounters = vector<unsigned long>(object.placementComparisonCounters);
+	this->diffs = vector<double>(object.diffs);
 	this->vpTreeHeight = object.vpTreeHeight;
 	this->vpTreeLeafs = object.vpTreeLeafs;
 }
@@ -179,6 +182,7 @@ Report::Report(const Properties& properties, const TimeReport& timeReport, const
 	this->verificationRealDistanceCalculationsCounters = vector<unsigned long>(timeReport.verificationRealDistanceCalculationsCounters);
 	this->vpTreeSearchRealDistanceCalculations = vector<unsigned long>(timeReport.vpTreeSearchRealDistanceCalculations);
 	this->placementComparisonCounters = vector<unsigned long>(timeReport.placementComparisonCounters);
+	this->diffs = vector<double>(timeReport.diffs);
 	this->makeVpTreeRealDistanceCalculations = timeReport.makeVpTreeRealDistanceCalculations;
 	this->makeVpTreeSelectVpRealDistanceCalculations = timeReport.makeVpTreeSelectVpRealDistanceCalculations;
 	this->vpTreeHeight = timeReport.vpTreeHeight;
@@ -239,6 +243,9 @@ void Report::printHeader(ofstream& os){
 	os<<"Vp-Tree search average real distance calculations"<<columnSeparator;
 	os<<"Vp-Tree search minimal real distance calculations"<<columnSeparator;
 	os<<"Vp-Tree search maximal real distance calculations"<<columnSeparator;
+	os<<"Vp-Tree L/R diff average"<<columnSeparator;
+	os<<"Vp-Tree L/R diff minimal"<<columnSeparator;
+	os<<"Vp-Tree L/R diff maximal"<<columnSeparator;
 	os<<"Properties File Path"<<columnSeparator;	
 	os<<"Report File Path";	
 	os<<endl;
@@ -507,8 +514,8 @@ void Report::print(ofstream& os){
 		if (*begin > vpTreeSearchRealDistanceCalculationsCountersMax) {
 			vpTreeSearchRealDistanceCalculationsCountersMax = *begin;
 		}
-		if (*begin < vpTreeSearchRealDistanceCalculationsCountersMax) {
-			vpTreeSearchRealDistanceCalculationsCountersMax = *begin;
+		if (*begin < vpTreeSearchRealDistanceCalculationsCountersMin) {
+			vpTreeSearchRealDistanceCalculationsCountersMin = *begin;
 		}
 		begin++;
 	}
@@ -585,6 +592,15 @@ void Report::print(ofstream& os){
 		os<<vpTreeSearchRealDistanceCalculationsCountersMax<<columnSeparator;
 	} else {
 		os<<"N/A"<<columnSeparator;
+		os<<"N/A"<<columnSeparator;
+		os<<"N/A"<<columnSeparator;	
+		os<<"N/A"<<columnSeparator;	
+	}
+	if (this->diffs.size() > 0) {
+		os<<Utils::avgValue(diffs)<<columnSeparator;
+		os<<Utils::minValue(diffs)<<columnSeparator;
+		os<<Utils::maxValue(diffs)<<columnSeparator;
+	} else {
 		os<<"N/A"<<columnSeparator;
 		os<<"N/A"<<columnSeparator;	
 		os<<"N/A"<<columnSeparator;	

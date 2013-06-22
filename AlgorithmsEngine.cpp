@@ -407,6 +407,7 @@ void AlgorithmsEngine::runAlgorithm(){
 	this->timeReport.placementComparisonCounters = tempTimeReport.placementComparisonCounters;
 	this->timeReport.vpTreeHeight = tempTimeReport.vpTreeHeight;
 	this->timeReport.vpTreeLeafs = tempTimeReport.vpTreeLeafs;
+	this->timeReport.diffs =  vector<double>(tempTimeReport.diffs);
 }
 
 void AlgorithmsEngine::run(){

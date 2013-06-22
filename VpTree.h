@@ -103,7 +103,8 @@ private :
 	 *
 	 * @return          Pointer to created Vp Tree node.
 	 */
-	VpsPoint* makeVpTree(list<list<VpsPoint>::iterator>& candidates, list<VpsPoint>& dataset , unsigned long& realDistanceCalculations, unsigned long& selectVpRealDistanceCalculations);
+	VpsPoint* makeVpTree(list<list<VpsPoint>::iterator>& candidates, list<VpsPoint>& dataset , unsigned long& realDistanceCalculations, unsigned long& selectVpRealDistanceCalculations,
+		vector<double>& diffs);
 };
 
 #endif /* _VP_TREE_H_ */

@@ -13,6 +13,7 @@
 #include "Utils.h"
 
 #include <algorithm>
+
 #include <set>
 #include <time.h>
 
@@ -60,6 +61,7 @@ TimeReport VpTree::run(const Properties& properties, Dataset& dataset){
 	unsigned long makeVpTreeRealDistanceCalculations = 0;
 	unsigned long makeVpTreeSelectVpRealDistanceCalculations = 0;
 	vector<unsigned long> vpTreeSearchRealDistanceCalculations;
+	vector<double> diffs;
 
 	this->pSampleLimit = properties.pSampleIndex;
 	this->dSampleLimit = properties.sSampleIndex;
@@ -93,7 +95,10 @@ TimeReport VpTree::run(const Properties& properties, Dataset& dataset){
 
 	indexBuildingStart = clock();
 
-	dataset.vpsTree = makeVpTree(pointList, tempDataset, makeVpTreeRealDistanceCalculations, makeVpTreeSelectVpRealDistanceCalculations);
+	dataset.vpsTree = makeVpTree(pointList, tempDataset, makeVpTreeRealDistanceCalculations, makeVpTreeSelectVpRealDistanceCalculations, diffs);
+	double avg  = Utils::avgValue(diffs);
+	double max  = Utils::maxValue(diffs);
+	double min  = Utils::minValue(diffs);
 
 	indexBuildingFinish = clock();
 
@@ -182,6 +187,7 @@ TimeReport VpTree::run(const Properties& properties, Dataset& dataset){
 	timeReport.vpTreeSearchRealDistanceCalculations = vector<unsigned long>(vpTreeSearchRealDistanceCalculations);
 	timeReport.vpTreeHeight = this->calculateHeight(dataset.vpsTree);
 	timeReport.vpTreeLeafs = this->calculatesLeafs(dataset.vpsTree);
+	timeReport.diffs = diffs;
 
 	return timeReport;
 }
@@ -345,7 +351,8 @@ void VpTree::boundariesRangeSearch( Point* query, double& tau, VpsPoint* point, 
 	}
 }
 
-VpsPoint* VpTree::makeVpTree(list<list<VpsPoint>::iterator>& candidates, list<VpsPoint>& dataset, unsigned long& realDistanceCalculations, unsigned long& selectVpRealDistanceCalculations){
+VpsPoint* VpTree::makeVpTree(list<list<VpsPoint>::iterator>& candidates, list<VpsPoint>& dataset, unsigned long& realDistanceCalculations, unsigned long& selectVpRealDistanceCalculations, 
+	vector<double>& diffs){
 
 	VpsPoint* result = NULL;
 	list<VpsPoint>::iterator vantagePointIt;
@@ -353,7 +360,6 @@ VpsPoint* VpTree::makeVpTree(list<list<VpsPoint>::iterator>& candidates, list<Vp
 	switch(candidates.size()){
 	
 		case 0:
-		
 			result = NULL;
 			break;
 	
@@ -453,15 +459,22 @@ VpsPoint* VpTree::makeVpTree(list<list<VpsPoint>::iterator>& candidates, list<Vp
 				}
 			}
 
-			distances.clear();
+			
 
+			long diff = rightCandidates.size() - leftCandidates.size();
+			if (diff < 0) {
+			diff = diff * -1;	
+			}
+			diffs.push_back(diff);
+
+			distances.clear();
 			result = new VpsPoint(*vantagePointIt);	
 			dataset.erase(vantagePointIt);
 			result->median = medianWithNeighbors[0];
 			result->leftBoundHigh = medianWithNeighbors[1];
 			result->rightBoundLow = medianWithNeighbors[2];
-			result->left = makeVpTree(leftCandidates, dataset, realDistanceCalculations, selectVpRealDistanceCalculations);
-			result->right = makeVpTree(rightCandidates, dataset, realDistanceCalculations, selectVpRealDistanceCalculations);
+			result->left = makeVpTree(leftCandidates, dataset, realDistanceCalculations, selectVpRealDistanceCalculations, diffs);
+			result->right = makeVpTree(rightCandidates, dataset, realDistanceCalculations, selectVpRealDistanceCalculations, diffs);
 	}
 
 	return result;

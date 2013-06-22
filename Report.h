@@ -349,6 +349,8 @@ public:
 	 * Vp-Tree leafs.
 	 */
 	unsigned long vpTreeLeafs;
+
+	vector<double> diffs;
 };
 
 #endif /* _REPORT_H_ */

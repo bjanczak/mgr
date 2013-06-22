@@ -10,6 +10,7 @@
  */
 
 #include "TimeReport.h"
+#include "Utils.h"
 
 TimeReport::TimeReport(){
 
@@ -240,5 +241,10 @@ void TimeReport::print(ofstream &os){
 		os<<"Vp-Tree search average real distance calculations         : "<<vpTreeSearchRealDistanceCalculationsCountersSum/this->vpTreeSearchRealDistanceCalculations.size()<<endl;
 		os<<"Vp-Tree search min real distance calculations             : "<<vpTreeSearchRealDistanceCalculationsCountersMin<<endl;	
 		os<<"Vp-Tree search max real distance calculations             : "<<vpTreeSearchRealDistanceCalculationsCountersMax<<endl;	
+	}
+	if (this->diffs.size() > 0) {
+		os<<"Vp-Tree L/R diff average                 : "<<Utils::avgValue(diffs)<<endl;
+		os<<"Vp-Tree L/R diff min                     : "<<Utils::minValue(diffs)<<endl;
+		os<<"Vp-Tree L/R diff max                     : "<<Utils::maxValue(diffs)<<endl;	
 	}
 }
