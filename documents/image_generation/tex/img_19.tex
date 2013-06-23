@@ -1,0 +1,77 @@
+\documentclass{article}
+\usepackage{tikz,amsmath,siunitx}
+\usepackage{color}
+\usetikzlibrary{arrows,snakes,backgrounds,patterns,matrix,shapes,fit,calc,shadows,plotmarks}
+\usepackage[graphics,tightpage,active]{preview}
+\PreviewEnvironment{tikzpicture}
+\PreviewEnvironment{equation}
+\PreviewEnvironment{equation*}
+\newlength{\imagewidth}
+\newlength{\imagescale}
+\pagestyle{empty}
+\thispagestyle{empty}
+\begin{document}
+%%%%%
+\begin{tikzpicture}[scale=5]
+\draw(0,0) -- (1.2,0) coordinate (x axis);
+\draw(0,0) -- (0,1.2) coordinate (y axis);
+\foreach \x/\xtext in {0.0, 0.2, 0.4, 0.6, 0.8, 1.0} 
+	\draw (\x cm,0.2pt) -- (\x cm,-0.2pt) node[anchor=north,] {$\xtext$};
+\draw (1.2cm,0.2pt) -- (1.2cm,-0.2pt) node[anchor=north,] {$X$};
+\foreach \y/\ytext in {0.0, 0.2, 0.4, 0.6, 0.8, 1.0} 
+	\draw (0.2pt,\y cm) -- (-0.2pt,\y cm) node[anchor=east,] {$\ytext$};
+\draw (0.2pt, 1.2cm) -- (-0.2pt, 1.2cm) node[anchor=east,] {$Y$};
+%linie szare poziome
+\filldraw[draw=gray!50!white] (0,0.2)--(1.2,0.2);
+\filldraw[draw=gray!50!white] (0,0.4)--(1.2,0.4);
+\filldraw[draw=gray!50!white] (0,0.6)--(1.2,0.6);
+\filldraw[draw=gray!50!white] (0,0.8)--(1.2,0.8);
+\filldraw[draw=gray!50!white] (0,1.0)--(1.2,1.0);
+\filldraw[draw=gray!50!white] (0,1.2)--(1.2,1.2);
+%linie szare pionowe
+\filldraw[draw=gray!50!white] (0.2,0)--(0.2,1.2);
+\filldraw[draw=gray!50!white] (0.4,0)--(0.4,1.2);
+\filldraw[draw=gray!50!white] (0.6,0)--(0.6,1.2);
+\filldraw[draw=gray!50!white] (0.8,0)--(0.8,1.2);
+\filldraw[draw=gray!50!white] (1.0,0)--(1.0,1.2);
+\filldraw[draw=gray!50!white] (1.2,0)--(1.2,1.2);
+%wektory
+\draw [->, dashed] (0,0) -- (0.72,0.69) ;
+\draw [->, dashed] (0,0) -- (0.83,0.55);
+\draw [->, dashed] (0,0) -- (0.62,0.78);
+\draw [->, dashed] (0,0) -- (0.34,0.94) ;
+\draw [->, dashed] (0,0) -- (0.0,1.0);
+\draw [->, dashed] (0,0) -- (0.77,0.64);
+\draw [->, dashed] (0,0) -- (0.95,0.32);
+\draw [->, dashed] (0,0) -- (0.55,0.83);
+%linie
+\draw [blue, dashed] (0.0,1.0) -- (0.34,0.94);
+\draw [blue, dashed] (0.34,0.94) -- (0.55,0.83);
+\draw [blue, dashed] (0.55,0.83) -- (0.62,0.78);
+\draw [blue, dashed] (0.62,0.78) -- (0.72,0.69);
+\draw [blue, dashed] (0.72,0.69) -- (0.77,0.64);
+\draw [blue, dashed] (0.77,0.64) -- (0.83,0.55);
+\draw [blue, dashed] (0.83,0.55) -- (0.95,0.32);
+%punkty
+\filldraw [blue]
+(0.72,0.69) circle (0.2pt)
+(0.83,0.55) circle (0.2pt)
+(0.62,0.78) circle (0.2pt)
+(0.34,0.94) circle (0.2pt)
+(0.0,1.0) circle (0.2pt)
+(0.77,0.64) circle (0.2pt)
+(0.95,0.32) circle (0.2pt)
+(0.55,0.83) circle (0.2pt);
+\filldraw [black]
+(0.72,0.69) node[anchor=south west] {$u_{1}$}
+(0.83,0.55) node[anchor=south west] {$u_{2}$}
+(0.62,0.78) node[anchor=south west] {$u_{3}$}
+(0.34,0.94) node[anchor=south west] {$u_{4}$}
+(0.0,1.0)   node[anchor=south west] {$u_{5}$}
+(0.77,0.64) node[anchor=south west] {$u_{6}$}
+(0.95,0.32) node[anchor=south west] {$u_{7}$}
+(0.55,0.83) node[anchor=south west] {$u_{8}$};
+\clip [draw](0,0) rectangle (1.2,1.2);
+\end{tikzpicture}
+%%%%%
+\end{document}
