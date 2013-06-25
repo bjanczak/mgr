@@ -32,15 +32,15 @@
 \filldraw[draw=gray!50!white] (4,0)--(4,3);
 \filldraw[draw=gray!50!white] (5,0)--(5,3);
 \filldraw[draw=gray!50!white] (6,0)--(6,3);
-%wektory
-\draw [->, ultra thick] (0,0) -- (0,2) node[anchor=south west] {$r$};
-\draw [->, ultra thick] (0,0) -- (2,1) node[anchor=south west] {$q$};
-\draw [->, ultra thick] (0,0) -- (5,1) node[anchor=south west] {$p$};
 %punkty
 \filldraw [cyan]
 (0,2) circle (1pt) 
 (2,1) circle (1pt)
 (5,1) circle (1pt);
+%wektory
+\draw [->] (0,0) -- (0,2) node[anchor=south west] {$r$};
+\draw [->] (0,0) -- (2,1) node[anchor=south west] {$q$};
+\draw [->] (0,0) -- (5,1) node[anchor=south west] {$p$};
 \clip [draw](0,0) rectangle (6,3);
 %linie przerywane
 \draw [dashed, cyan] (0,2) -- (2,1);
