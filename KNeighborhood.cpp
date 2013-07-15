@@ -43,16 +43,16 @@ TimeReport KNeighborhood::run(const Properties& properties, Dataset& dataset){
 
 TimeReport KNeighborhood::runDatasetIndexAccess(const Properties& properties, Dataset& dataset){
 
-	clock_t distanceCalculationStart;
-	clock_t distanceCalculationFinish;
-	clock_t sortingStart;
-	clock_t sortingFinish;
-	clock_t clusteringStart;
-	clock_t clusteringFinish;
-	clock_t positioningStart;
-	clock_t positioningFinish;
-	clock_t indexBuildingStart;
-	clock_t indexBuildingFinish;
+	clock_t distanceCalculationStart = 0;
+	clock_t distanceCalculationFinish = 0;
+	clock_t sortingStart = 0;
+	clock_t sortingFinish = 0;
+	clock_t clusteringStart = 0;
+	clock_t clusteringFinish = 0;
+	clock_t positioningStart = 0;
+	clock_t positioningFinish = 0;
+	clock_t indexBuildingStart = 0;
+	clock_t indexBuildingFinish = 0;
 
 	TimeReport timeReport;
 
@@ -77,28 +77,23 @@ TimeReport KNeighborhood::runDatasetIndexAccess(const Properties& properties, Da
 	vector<pair<KNeighborhoodPoint, vector<vector<KNeighborhoodPoint>::iterator>::iterator>>::iterator classificationIndexEquivalentEnd;
 	
 	vector<unsigned long> placementComparisonCounters;
+	vector<unsigned long> realDistanceCalculationsCounters;
 
 	this->k = properties.k;
 
 	/*
 	 * Build working index.
 	 */
-	indexBuildingStart = clock();
-
 	for(it = tempDataset->begin(); it != end; it++){
 	
 		datasetIterators.push_back(it);
 	}
-
-	indexBuildingFinish = clock();
 
 	datasetIteratorsEnd = datasetIterators.end();
 
 	/*
 	 * Distance to reference point calculation.
 	 */
-	distanceCalculationStart = clock();
-
 	for(it = tempDataset->begin(); it != end; it++){
 	
 		it->distance.push_back(Point::minkowskiDistance(referencePoint, (*it), 2));
@@ -112,43 +107,22 @@ TimeReport KNeighborhood::runDatasetIndexAccess(const Properties& properties, Da
 		classificationIt->first.distance.push_back(Point::minkowskiDistance(referencePoint, classificationIt->first, 2));
 	}
 
-	distanceCalculationFinish = clock();
-
 	/*
 	 * Sorting points by distance to reference point.
 	 */
-	sortingStart = clock();
-
 	sort(datasetIterators.begin(), datasetIterators.end(), KNeighborhoodPoint::distanceComparatorIterator);
-
-	sortingFinish = clock();
 
 	/*
 	 * Find dataset points nearest to classification points by distance criteria.
 	 */	
-	positioningStart = clock();
-
-	if(properties.useBinaryPlacement){
-		unsigned long placementComparisonCounter;
-		for(classificationIt = classificationDataset->begin(); classificationIt != classificationEnd; classificationIt++){
-			placementComparisonCounter = 0;
-			indexPlacementIt = Dataset::indexGetPlacementBinary(datasetIterators,classificationIt->first, placementComparisonCounter);
-			classificationIt->second = &(**indexPlacementIt);
-			classificationDatasetIndexEquivalent.push_back(pair<Point, vector<vector<KNeighborhoodPoint>::iterator>::iterator>(classificationIt->first, indexPlacementIt));
-			placementComparisonCounters.push_back(placementComparisonCounter);
-		}
+	unsigned long placementComparisonCounter;
+	for(classificationIt = classificationDataset->begin(); classificationIt != classificationEnd; classificationIt++){
+		placementComparisonCounter = 0;
+		indexPlacementIt = Dataset::indexGetPlacementBinary(datasetIterators,classificationIt->first, placementComparisonCounter);
+		classificationIt->second = &(**indexPlacementIt);
+		classificationDatasetIndexEquivalent.push_back(pair<Point, vector<vector<KNeighborhoodPoint>::iterator>::iterator>(classificationIt->first, indexPlacementIt));
+		placementComparisonCounters.push_back(placementComparisonCounter);
 	}
-	else{
-	
-		for(classificationIt = classificationDataset->begin(); classificationIt != classificationEnd; classificationIt++){
-		
-			indexPlacementIt = Dataset::indexGetPlacementLineary(datasetIterators,classificationIt->first);
-			classificationIt->second = &(**indexPlacementIt);
-			classificationDatasetIndexEquivalent.push_back(pair<Point, vector<vector<KNeighborhoodPoint>::iterator>::iterator>(classificationIt->first, indexPlacementIt));
-		}
-	}
-
-	positioningFinish = clock();
 
 	/*
 	 * Clustering.
@@ -158,8 +132,9 @@ TimeReport KNeighborhood::runDatasetIndexAccess(const Properties& properties, Da
 	classificationIndexEquivalentEnd = classificationDatasetIndexEquivalent.end();
 
 	for(classificationIndexEquivalentIt = classificationDatasetIndexEquivalent.begin(); classificationIndexEquivalentIt != classificationIndexEquivalentEnd; classificationIndexEquivalentIt++){
-			
-		(**classificationIndexEquivalentIt->second).neighbors = indexTiKNeighborhood(datasetIterators, classificationIndexEquivalentIt->second);
+		unsigned long realDistanceCalculationsCounter = 0;			
+		(**classificationIndexEquivalentIt->second).neighbors = indexTiKNeighborhood(datasetIterators, classificationIndexEquivalentIt->second, realDistanceCalculationsCounter);
+		realDistanceCalculationsCounters.push_back(realDistanceCalculationsCounter);
 	}
 
 	clusteringFinish = clock();
@@ -171,6 +146,7 @@ TimeReport KNeighborhood::runDatasetIndexAccess(const Properties& properties, Da
 	timeReport.positioningExecutionTime = ((double)(positioningFinish - positioningStart))/CLOCKS_PER_SEC;
 	timeReport.indexBuildingExecutionTime = ((double)(indexBuildingFinish - indexBuildingStart))/CLOCKS_PER_SEC;
 	timeReport.placementComparisonCounters = vector<unsigned long>(placementComparisonCounters);
+	timeReport.realDistanceCalculationsCounters = vector<unsigned long>(realDistanceCalculationsCounters);
 
 	return timeReport;
 }
@@ -205,13 +181,10 @@ TimeReport KNeighborhood::runDatasetDirectAccess(const Properties& properties, D
 	vector<pair<KNeighborhoodPoint, vector<KNeighborhoodPoint>::iterator>>::iterator classificationEquivalentEnd;
 
 	vector<unsigned long> placementComparisonCounters;
+
+	vector<unsigned long> realDistanceCalculationsCounters;
 	
 	this->k = properties.k;
-
-	/*
-	 * Distance to reference point calculation.
-	 */
-	distanceCalculationStart = clock();
 
 	for(it = tempDataset->begin(); it != end; it++){
 	
@@ -226,54 +199,23 @@ TimeReport KNeighborhood::runDatasetDirectAccess(const Properties& properties, D
 		classificationIt->first.distance.push_back(Point::minkowskiDistance(referencePoint, classificationIt->first, 2));
 	}
 
-	distanceCalculationFinish = clock();
-
-	/*
-	 * Sorting points by distance to reference point.
-	 */
-	sortingStart = clock();
-
 	sort(tempDataset->begin(), tempDataset->end(), KNeighborhoodPoint::distanceComparator);
 
-	sortingFinish = clock();
-
-	/*
-	 * Find dataset points nearest to classification points by distance criteria.
-	 */	
-	positioningStart = clock();
-
-	if(properties.useBinaryPlacement){
-		unsigned long placementComparisonCounter;
-		for(classificationIt = classificationDataset->begin(); classificationIt != classificationEnd; classificationIt++){
-			placementComparisonCounter = 0;
-			placementIt = Dataset::getPlacementBinary(*tempDataset,classificationIt->first, placementComparisonCounter);
-			classificationIt->second = &(*placementIt);
-			classificationDatasetEquivalent.push_back(pair<Point, vector<KNeighborhoodPoint>::iterator>(classificationIt->first, placementIt));
-			placementComparisonCounters.push_back(placementComparisonCounter);
-		}
+	unsigned long placementComparisonCounter;
+	for(classificationIt = classificationDataset->begin(); classificationIt != classificationEnd; classificationIt++){
+		placementComparisonCounter = 0;
+		placementIt = Dataset::getPlacementBinary(*tempDataset,classificationIt->first, placementComparisonCounter);
+		classificationIt->second = &(*placementIt);
+		classificationDatasetEquivalent.push_back(pair<Point, vector<KNeighborhoodPoint>::iterator>(classificationIt->first, placementIt));
+		placementComparisonCounters.push_back(placementComparisonCounter);
 	}
-	else{
-	
-		for(classificationIt = classificationDataset->begin(); classificationIt != classificationEnd; classificationIt++){
-		
-			placementIt = Dataset::getPlacementLineary(*tempDataset,classificationIt->first);
-			classificationIt->second = &(*placementIt);
-			classificationDatasetEquivalent.push_back(pair<Point,  vector<KNeighborhoodPoint>::iterator>(classificationIt->first, placementIt));
-		}
-	}
-
-	positioningFinish = clock();
-
-	/*
-	 * Clustering.
-	 */
-	clusteringStart = clock();
 
 	classificationEquivalentEnd = classificationDatasetEquivalent.end();
 
 	for(classificationEquivalentIt = classificationDatasetEquivalent.begin(); classificationEquivalentIt != classificationEquivalentEnd; classificationEquivalentIt++){
-			
-		(*classificationEquivalentIt->second).neighbors = tiKNeighborhood(*tempDataset, classificationEquivalentIt->second);
+		unsigned long realDistanceCalculationsCounter = 0;				
+		(*classificationEquivalentIt->second).neighbors = tiKNeighborhood(*tempDataset, classificationEquivalentIt->second, realDistanceCalculationsCounter);
+		realDistanceCalculationsCounters.push_back(realDistanceCalculationsCounter);
 	}
 
 	clusteringFinish = clock();
@@ -284,13 +226,19 @@ TimeReport KNeighborhood::runDatasetDirectAccess(const Properties& properties, D
 	timeReport.algorithmExecutionTime = timeReport.clusteringExecutionTime;	
 	timeReport.positioningExecutionTime = ((double)(positioningFinish - positioningStart))/CLOCKS_PER_SEC;
 	timeReport.placementComparisonCounters = vector<unsigned long>(placementComparisonCounters);
+	timeReport.realDistanceCalculationsCounters = vector<unsigned long>(realDistanceCalculationsCounters);
 
 	return timeReport;
 }
 
+bool myfunction (pair<double, vector<KNeighborhoodPoint>::iterator> i, pair<double, vector<KNeighborhoodPoint>::iterator> j) {
+	return (i.first==j.first);
+}
+
 multimap<double, vector<KNeighborhoodPoint>::iterator, DistanceComparator> KNeighborhood::indexTiKNeighborhood(
 	vector<vector<KNeighborhoodPoint>::iterator>& dataset
-	, vector<vector<KNeighborhoodPoint>::iterator>::iterator pointIt){
+	, vector<vector<KNeighborhoodPoint>::iterator>::iterator pointIt
+	, unsigned long & realDistanceCalculationsCounter){
 	
 	unsigned long foundNeighborsCounter = 1;
 	
@@ -300,76 +248,74 @@ multimap<double, vector<KNeighborhoodPoint>::iterator, DistanceComparator> KNeig
 	
 	vector<vector<KNeighborhoodPoint>::iterator>::iterator it;
 	vector<vector<KNeighborhoodPoint>::iterator>::iterator end = dataset.end();
-	
+
 	/*
 	 * Brute force implementation.
 	 */
 	for(it = dataset.begin(); it != end; it++){
 	
-		if(it != pointIt){		
-			kNeighborhood.insert(pair<double,vector<KNeighborhoodPoint>::iterator>(Point::minkowskiDistance((**pointIt), (**it), 2), *it));
-		}
-	}	
-	
-	mapIt = kNeighborhood.begin();
-	mapEnd = kNeighborhood.end();
-	
-	while(foundNeighborsCounter<k){
-	
-		mapIt++;
-		foundNeighborsCounter++;
-	}
+			realDistanceCalculationsCounter ++;
+			double distance = Point::minkowskiDistance((**pointIt), (**it), 2);
 
-	(*pointIt)->eps = mapIt->first;
-	mapIt++;
-	
-	kNeighborhood.erase(mapIt, mapEnd);
+			if (kNeighborhood.end() == kNeighborhood.begin()) {
+				kNeighborhood.insert(pair<double,vector<KNeighborhoodPoint>::iterator>(distance, *it));
+			} else {
+				mapEnd = kNeighborhood.end();
+				mapEnd--;
+
+				if (distance < mapEnd->first) {
+					unsigned long keysNr = kNeighborhood.count(distance);
+					if((kNeighborhood.size() - keysNr) >= k){
+						kNeighborhood.erase(mapEnd->first);
+						kNeighborhood.insert(pair<double,vector<KNeighborhoodPoint>::iterator>(distance, *it));
+					} else {
+						kNeighborhood.insert(pair<double,vector<KNeighborhoodPoint>::iterator>(distance, *it));
+					}
+				} else if (distance == mapEnd->first) {
+					kNeighborhood.insert(pair<double,vector<KNeighborhoodPoint>::iterator>(distance, *it));
+				}
+			}
+	}	
 
 	return kNeighborhood;
 }
 
 multimap<double, vector<KNeighborhoodPoint>::iterator, DistanceComparator> KNeighborhood::tiKNeighborhood(
 	vector<KNeighborhoodPoint>& dataset
-	, vector<KNeighborhoodPoint>::iterator pointIt){
+	, vector<KNeighborhoodPoint>::iterator pointIt
+	, unsigned long & realDistanceCalculationsCounter){
 	
 	unsigned long foundNeighborsCounter = 1;
 	
 	multimap<double, vector<KNeighborhoodPoint>::iterator, DistanceComparator> kNeighborhood;
 	multimap<double, vector<KNeighborhoodPoint>::iterator, DistanceComparator>::iterator mapIt;
 	multimap<double, vector<KNeighborhoodPoint>::iterator, DistanceComparator>::iterator mapEnd;
+	std::map<double, vector<KNeighborhoodPoint>::iterator, DistanceComparator> kNeighborhoodDistinct;
+	std:map<double, vector<KNeighborhoodPoint>::iterator, DistanceComparator>::iterator iter;
 	
 	vector<KNeighborhoodPoint>::iterator it;
 	vector<KNeighborhoodPoint>::iterator end = dataset.end();
 	
-	for(unsigned int i = 0; i < 2*this->k; i++){
-		
-		kNeighborhood.insert(pair<double,vector<KNeighborhoodPoint>::iterator>(DBL_MAX, it));
-	}
-
 	/*
 	 * Brute force implementation.
 	 */
 	for(it = dataset.begin(); it != end; it++){
 	
 		if(it != pointIt){		
+			realDistanceCalculationsCounter++;
+			double distance = Point::minkowskiDistance((*pointIt), (*it), 2);
+			kNeighborhood.insert(pair<double,vector<KNeighborhoodPoint>::iterator>(distance, it));
+			kNeighborhoodDistinct.insert(pair<double,vector<KNeighborhoodPoint>::iterator>(distance, it));
 			
-			kNeighborhood.insert(pair<double,vector<KNeighborhoodPoint>::iterator>(Point::minkowskiDistance((*pointIt), (*it), 2), it));
+			unsigned long size = kNeighborhoodDistinct.size();
+			if(size > k) {
+				iter = kNeighborhoodDistinct.end();
+				iter--;
+				kNeighborhood.erase(iter->first);
+				kNeighborhoodDistinct.erase(iter->first);
+			}
 		}
 	}	
 	
-	mapIt = kNeighborhood.begin();
-	mapEnd = kNeighborhood.end();
-	
-	while(foundNeighborsCounter<k){
-	
-		mapIt++;
-		foundNeighborsCounter++;
-	}
-
-	pointIt->eps = mapIt->first;
-	mapIt++;
-	
-	kNeighborhood.erase(mapIt, mapEnd);
-
 	return kNeighborhood;
 }

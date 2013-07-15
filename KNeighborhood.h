@@ -48,10 +48,12 @@ public:
 	 */
 	multimap<double, vector<KNeighborhoodPoint>::iterator, DistanceComparator> indexTiKNeighborhood(
 		vector<vector<KNeighborhoodPoint>::iterator>& dataset
-		, vector<vector<KNeighborhoodPoint>::iterator>::iterator pointIt);
+		, vector<vector<KNeighborhoodPoint>::iterator>::iterator pointIt
+		, unsigned long & realDistanceCalculationsCounter);
 	multimap<double, vector<KNeighborhoodPoint>::iterator, DistanceComparator> tiKNeighborhood(
 		vector<KNeighborhoodPoint>& dataset
-		, vector<KNeighborhoodPoint>::iterator pointIt);
+		, vector<KNeighborhoodPoint>::iterator pointIt
+		, unsigned long & realDistanceCalculationsCounter);
 
 private:
 
