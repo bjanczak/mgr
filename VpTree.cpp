@@ -13,6 +13,7 @@
 #include "Utils.h"
 
 #include <algorithm>
+#include <iostream>
 
 #include <set>
 #include <time.h>
@@ -67,20 +68,6 @@ TimeReport VpTree::run(const Properties& properties, Dataset& dataset){
 	this->dSampleLimit = properties.sSampleIndex;
 
 	Dataset::fillVpsPointList(tempDataset, dataset.datasetPoint, dataset.isDense);
-
-	/*
-	 * Fill tempKNeighbors if k neighborhood method search.
-	 */
-	if(properties.searchMethod == Properties::K_NEIGHBORHOOD){
-	
-		for(unsigned long i=0; i < classificationDatasetSize; i++){
-	
-			for(unsigned long j=0; j < k; j++){
-			
-				tempKNeighbors[i].insert(pair<double, Point*>(DBL_MAX, &p));
-			}
-		}
-	}
 
 	/*
 	 * Build list of iterators on tempDataset.
@@ -138,7 +125,7 @@ TimeReport VpTree::run(const Properties& properties, Dataset& dataset){
 
 				for(; classificationIt != classificationEnd; classificationIt++){
 					realDistanceCalculations = 0;
-					boundariesKNeighborhoodSearch(&classificationIt->first, dataset.vpsTree, tempKNeighbors[counter], realDistanceCalculations);
+					boundariesKNeighborhoodSearch(&classificationIt->first, dataset.vpsTree, tempKNeighbors[counter], k, realDistanceCalculations);
 					vpTreeSearchRealDistanceCalculations.push_back(realDistanceCalculations);
 					counter++;
 				}
@@ -147,7 +134,7 @@ TimeReport VpTree::run(const Properties& properties, Dataset& dataset){
 
 				for(; classificationIt != classificationEnd; classificationIt++){
 					realDistanceCalculations = 0;
-					kNeighborhoodSearch(&classificationIt->first, dataset.vpsTree, tempKNeighbors[counter], realDistanceCalculations);
+					kNeighborhoodSearch(&classificationIt->first, dataset.vpsTree, tempKNeighbors[counter], k, realDistanceCalculations);
 					vpTreeSearchRealDistanceCalculations.push_back(realDistanceCalculations);
 					counter++;
 				}
@@ -192,44 +179,73 @@ TimeReport VpTree::run(const Properties& properties, Dataset& dataset){
 	return timeReport;
 }
 
-void VpTree::kNeighborhoodSearch(Point* query, VpsPoint* point, multimap<double, Point*, DistanceComparator>& neighbors, unsigned long& realdDistanceCalculations){
-
-	if(point == NULL){
-	
+void VpTree::kNeighborhoodSearch(Point* query, VpsPoint* point, multimap<double, Point*, DistanceComparator>& kNeighborhood, const unsigned long k, unsigned long& realdDistanceCalculations) {
+	if(point == NULL){	
 		return;
 	}
-	multimap<double, Point*, DistanceComparator>::iterator it = neighbors.end();
-	it--;
-	double tau = it->first;
+
+	double tau = DBL_MAX;
+	if (kNeighborhood.end() != kNeighborhood.begin()) {
+		multimap<double, Point*, DistanceComparator>::iterator it = kNeighborhood.end();
+		it--;
+		tau = it->first;
+	}
+
 	double distance = Point::minkowskiDistance(*query, *point, 2);
+	
 	realdDistanceCalculations++;
-	double leftBoundary = distance - tau;
-	double rightBoundary = distance + tau;
+	
+	double median = point->median;
 
 	if(distance <= tau){
-	
-		neighbors.erase(it);
-		neighbors.insert(pair<double, Point*>(distance, point));
+		if (kNeighborhood.end() == kNeighborhood.begin()) {
+			kNeighborhood.insert(pair<double, Point*>(distance, point));
+		} else {
+			multimap<double, Point*, DistanceComparator>::iterator mapEnd = kNeighborhood.end();
+			mapEnd--;
+
+			if (distance < mapEnd->first) {
+				unsigned long keysNr = kNeighborhood.count(tau);
+				if((kNeighborhood.size() - keysNr) >= (k - 1)){
+					kNeighborhood.erase(mapEnd->first);
+					kNeighborhood.insert(pair<double, Point*>(distance, point));
+				} else {
+					kNeighborhood.insert(pair<double, Point*>(distance, point));
+				}
+			} else if (distance == mapEnd->first) {
+				kNeighborhood.insert(pair<double, Point*>(distance, point));
+			}
+		}
 	}
 
-	if(rightBoundary >= point->median){
-	
-		kNeighborhoodSearch(query, point->right, neighbors, realdDistanceCalculations);
-	}
-	if(leftBoundary < point->median){
-	
-		kNeighborhoodSearch(query, point->left, neighbors, realdDistanceCalculations);
-	}
+	if (distance < median) {
+		if(distance - tau <= median){	
+			kNeighborhoodSearch(query, point->left, kNeighborhood, k, realdDistanceCalculations);
+		}
+		if(distance + tau >= median){	
+			kNeighborhoodSearch(query, point->right, kNeighborhood, k, realdDistanceCalculations);
+		}
+	} else {
+		if(distance + tau >= median){	
+			kNeighborhoodSearch(query, point->right, kNeighborhood, k, realdDistanceCalculations);
+		}
+		if(distance - tau <= median){	
+			kNeighborhoodSearch(query, point->left, kNeighborhood, k, realdDistanceCalculations);
+		}
+	}	
 }
-void VpTree::boundariesKNeighborhoodSearch(Point* query, VpsPoint* point, multimap<double, Point*, DistanceComparator>& neighbors, unsigned long& realDistanceCalculations){
 
-	if(point == NULL){
-	
+void VpTree::boundariesKNeighborhoodSearch(Point* query, VpsPoint* point, multimap<double, Point*, DistanceComparator>& kNeighborhood, const unsigned long k, unsigned long& realDistanceCalculations) {
+	if(point == NULL){	
 		return;
 	}
-	multimap<double, Point*, DistanceComparator>::iterator it = neighbors.end();
-	it--;
-	double tau = it->first;
+	double tau = DBL_MAX;
+	if (kNeighborhood.end() != kNeighborhood.begin()) {
+		multimap<double, Point*, DistanceComparator>::iterator it = kNeighborhood.end();
+		it--;
+		tau = it->first;
+	}
+	
 	double distance = Point::minkowskiDistance(*query, *point, 2);
 	realDistanceCalculations++;
 	double leftBoundary = distance - tau;
@@ -238,40 +254,40 @@ void VpTree::boundariesKNeighborhoodSearch(Point* query, VpsPoint* point, multim
 	double rightBuffer;
 
 	if(distance <= tau){
-	
-		neighbors.erase(it);
-		neighbors.insert(pair<double, Point*>(distance, point));
-	}
-	
-	if(leftBoundary <= point->leftBoundHigh){
-	
-		if(rightBoundary >= point->rightBoundLow){
-		
-			leftBuffer = point->leftBoundHigh - leftBoundary;
-			rightBuffer = rightBoundary - point->rightBoundLow;
+		if (kNeighborhood.end() == kNeighborhood.begin()) {
+			kNeighborhood.insert(pair<double, Point*>(distance, point));
+		} else {
+			multimap<double, Point*, DistanceComparator>::iterator mapEnd = kNeighborhood.end();
+			mapEnd--;
 
-			if(leftBuffer < rightBuffer){
-				
-				kNeighborhoodSearch(query, point->left, neighbors, realDistanceCalculations);
-				kNeighborhoodSearch(query, point->right, neighbors, realDistanceCalculations);
+			if (distance < mapEnd->first) {
+				unsigned long keysNr = kNeighborhood.count(tau);
+				if((kNeighborhood.size() - keysNr) >= (k - 1)){
+					kNeighborhood.erase(mapEnd->first);
+					kNeighborhood.insert(pair<double, Point*>(distance, point));
+				} else {
+					kNeighborhood.insert(pair<double, Point*>(distance, point));
+				}
+			} else if (distance == mapEnd->first) {
+				kNeighborhood.insert(pair<double, Point*>(distance, point));
 			}
-			else{
-				
-				kNeighborhoodSearch(query, point->right, neighbors, realDistanceCalculations);
-				kNeighborhoodSearch(query, point->left, neighbors, realDistanceCalculations);
-			}
-		}
-		else{
-		
-			kNeighborhoodSearch(query, point->left, neighbors, realDistanceCalculations);
 		}
 	}
-	else{
-	
-		if(rightBoundary >= point->rightBoundLow){
-			
-			kNeighborhoodSearch(query, point->right, neighbors, realDistanceCalculations);
+
+	if (distance < point->median) {
+		if (distance - tau <= point->leftBoundHigh) {
+			boundariesKNeighborhoodSearch(query, point->left, kNeighborhood, k, realDistanceCalculations);
 		}
+		if (distance + tau >= point->rightBoundLow) {
+			boundariesKNeighborhoodSearch(query, point->right, kNeighborhood, k, realDistanceCalculations);
+		}
+	} else {
+		if (distance + tau >= point->rightBoundLow) {
+			boundariesKNeighborhoodSearch(query, point->right, kNeighborhood, k, realDistanceCalculations);
+		}
+		if (distance - tau <= point->leftBoundHigh) {
+			boundariesKNeighborhoodSearch(query, point->left, kNeighborhood, k, realDistanceCalculations);
+		}		
 	}
 }
 

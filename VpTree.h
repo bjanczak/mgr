@@ -50,16 +50,20 @@ public:
 	 * @query           Query point for which k neighbors are searched.
 	 * @point           Currently examined vantage point.
 	 * @neighbors       Map of pointers to found neighbors.
+	 * @k
+	 * @boundariesKNeighborhoodSearch
 	 */
 	virtual void kNeighborhoodSearch(
 		Point* query
 		, VpsPoint* point
 		, multimap<double, Point*, DistanceComparator>& neighbors
+		, const unsigned long k
 		, unsigned long& realdDistanceCalculations);
 	virtual void boundariesKNeighborhoodSearch(
 		Point* query
 		, VpsPoint* point
 		, multimap<double, Point*, DistanceComparator>& neighbors
+		, const unsigned long k
 		, unsigned long& realdDistanceCalculations);
 
 	/**

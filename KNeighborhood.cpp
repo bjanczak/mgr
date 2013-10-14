@@ -290,8 +290,6 @@ multimap<double, vector<KNeighborhoodPoint>::iterator, DistanceComparator> KNeig
 	multimap<double, vector<KNeighborhoodPoint>::iterator, DistanceComparator> kNeighborhood;
 	multimap<double, vector<KNeighborhoodPoint>::iterator, DistanceComparator>::iterator mapIt;
 	multimap<double, vector<KNeighborhoodPoint>::iterator, DistanceComparator>::iterator mapEnd;
-	std::map<double, vector<KNeighborhoodPoint>::iterator, DistanceComparator> kNeighborhoodDistinct;
-	std:map<double, vector<KNeighborhoodPoint>::iterator, DistanceComparator>::iterator iter;
 	
 	vector<KNeighborhoodPoint>::iterator it;
 	vector<KNeighborhoodPoint>::iterator end = dataset.end();
@@ -300,21 +298,27 @@ multimap<double, vector<KNeighborhoodPoint>::iterator, DistanceComparator> KNeig
 	 * Brute force implementation.
 	 */
 	for(it = dataset.begin(); it != end; it++){
-	
-		if(it != pointIt){		
-			realDistanceCalculationsCounter++;
+			realDistanceCalculationsCounter ++;
 			double distance = Point::minkowskiDistance((*pointIt), (*it), 2);
-			kNeighborhood.insert(pair<double,vector<KNeighborhoodPoint>::iterator>(distance, it));
-			kNeighborhoodDistinct.insert(pair<double,vector<KNeighborhoodPoint>::iterator>(distance, it));
-			
-			unsigned long size = kNeighborhoodDistinct.size();
-			if(size > k) {
-				iter = kNeighborhoodDistinct.end();
-				iter--;
-				kNeighborhood.erase(iter->first);
-				kNeighborhoodDistinct.erase(iter->first);
+
+			if (kNeighborhood.end() == kNeighborhood.begin()) {
+				kNeighborhood.insert(pair<double, vector<KNeighborhoodPoint>::iterator>(distance, it));
+			} else {
+				mapEnd = kNeighborhood.end();
+				mapEnd--;
+
+				if (distance < mapEnd->first) {
+					unsigned long keysNr = kNeighborhood.count(mapEnd->first);
+					if((kNeighborhood.size() - keysNr) >= (k - 1)){
+						kNeighborhood.erase(mapEnd->first);
+						kNeighborhood.insert(pair<double,vector<KNeighborhoodPoint>::iterator>(distance, it));
+					} else {
+						kNeighborhood.insert(pair<double,vector<KNeighborhoodPoint>::iterator>(distance, it));
+					}
+				} else if (distance == mapEnd->first) {
+					kNeighborhood.insert(pair<double,vector<KNeighborhoodPoint>::iterator>(distance, it));
+				}
 			}
-		}
 	}	
 	
 	return kNeighborhood;
