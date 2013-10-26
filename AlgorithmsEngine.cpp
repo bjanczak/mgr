@@ -320,7 +320,9 @@ void AlgorithmsEngine::readData(){
 	if(normalizationStart != normalizationFinish){
 
 		timeReport.normalizingDatasetExecutionTime = ((double)(normalizationFinish - normalizationStart))/CLOCKS_PER_SEC;
-	}
+	} else {
+		timeReport.normalizingDatasetExecutionTime = 0;
+    }
 }
 
 Algorithm* AlgorithmsEngine::getAlgorithm(){

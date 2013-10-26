@@ -273,7 +273,7 @@ TimeReport TiKNeighborhoodRef::runDatasetDirectAccess(const Properties& properti
 			placementComparisonCounter = 0;
 			placementIt = Dataset::getPlacementBinary(*tempDataset, classificationIt->first, placementComparisonCounter);
 			classificationIt->second = &(*placementIt);
-			classificationDatasetEquivalent.push_back(pair<Point, vector<KNeighborhoodPoint>::iterator>(classificationIt->first, placementIt));
+			classificationDatasetEquivalent.push_back(pair<KNeighborhoodPoint, vector<KNeighborhoodPoint>::iterator>(classificationIt->first, placementIt));
 			placementComparisonCounters.push_back(placementComparisonCounter);
 		}
 	}
@@ -283,7 +283,7 @@ TimeReport TiKNeighborhoodRef::runDatasetDirectAccess(const Properties& properti
 		
 			placementIt = Dataset::getPlacementLineary(*tempDataset, classificationIt->first);
 			classificationIt->second = &(*placementIt);
-			classificationDatasetEquivalent.push_back(pair<Point, vector<KNeighborhoodPoint>::iterator>(classificationIt->first, placementIt));
+			classificationDatasetEquivalent.push_back(pair<KNeighborhoodPoint, vector<KNeighborhoodPoint>::iterator>(classificationIt->first, placementIt));
 		}
 	}
 	
@@ -293,17 +293,21 @@ TimeReport TiKNeighborhoodRef::runDatasetDirectAccess(const Properties& properti
 	 * Clustering.
 	 */
 	clusteringStart = clock();
-			
+
+	classificationIt = classificationDataset->begin();
 	classificationEquivalentEnd = classificationDatasetEquivalent.end();
 	unsigned long realDistanceCalculationsCounter;
 	unsigned long verificationRealDistanceCalculationsCounter;
 	for(classificationEquivalentIt = classificationDatasetEquivalent.begin(); classificationEquivalentIt != classificationEquivalentEnd; classificationEquivalentIt++){
 		realDistanceCalculationsCounter = 0;
 		verificationRealDistanceCalculationsCounter = 0;		
-		(*classificationEquivalentIt->second).neighbors = tiKNeighborhood(*tempDataset, classificationEquivalentIt->second, classificationEquivalentIt->first, TiKNeighborhoodRef::verifyKCandidateNeighborsBackward, TiKNeighborhoodRef::verifyKCandidateNeighborsForward, realDistanceCalculationsCounter, verificationRealDistanceCalculationsCounter);
-		(*classificationEquivalentIt->second).realDistanceCalculations = realDistanceCalculationsCounter + verificationRealDistanceCalculationsCounter;
+		((KNeighborhoodPoint)classificationIt->first).neighbors = tiKNeighborhood(*tempDataset, classificationEquivalentIt->second, classificationEquivalentIt->first, TiKNeighborhoodRef::verifyKCandidateNeighborsBackward, TiKNeighborhoodRef::verifyKCandidateNeighborsForward, realDistanceCalculationsCounter, verificationRealDistanceCalculationsCounter);
+		//((KNeighborhoodPoint)classificationIt->first).realDistanceCalculations = realDistanceCalculationsCounter + verificationRealDistanceCalculationsCounter;
+		//(*classificationEquivalentIt->second).neighbors = tiKNeighborhood(*tempDataset, classificationEquivalentIt->second, classificationEquivalentIt->first, TiKNeighborhoodRef::verifyKCandidateNeighborsBackward, TiKNeighborhoodRef::verifyKCandidateNeighborsForward, realDistanceCalculationsCounter, verificationRealDistanceCalculationsCounter);
+		//(*classificationEquivalentIt->second).realDistanceCalculations = realDistanceCalculationsCounter + verificationRealDistanceCalculationsCounter;
 		realDistanceCalculationsCounters.push_back(realDistanceCalculationsCounter + verificationRealDistanceCalculationsCounter);
 		verificationRealDistanceCalculationsCounters.push_back(verificationRealDistanceCalculationsCounter);
+		classificationIt++;
 	}
 
 	clusteringFinish = clock();

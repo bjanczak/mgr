@@ -246,7 +246,7 @@ double Dataset::maxDimensionValue(const unsigned long dimension){
 			/*
 		 	 * No dimension was found so dimension value is 0.
 			 */
-			if(!dimensionFound){
+			if(!dimensionFound && maxValue==-DBL_MAX){
 				
 				maxValue = 0;
 			}
@@ -1254,8 +1254,7 @@ void Dataset::printClusteringSumUp(ofstream& os){
 					os<<"        ID: "<<neighborsIt->second->id<<"\tdistance: "<<neighborsIt->first<<endl;
 				}
 				os<<endl;
-			}
-				
+			}				
 		}
 		else
 			if(this->algorithmType == Properties::CLASSIFICATION && (this->algorithmName == Properties::VP_TREE || this->algorithmName == Properties::VPS_TREE)){

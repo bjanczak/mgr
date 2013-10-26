@@ -140,12 +140,8 @@ TimeReport KNeighborhood::runDatasetIndexAccess(const Properties& properties, Da
 	clusteringFinish = clock();
 
 	timeReport.clusteringExecutionTime = ((double)(clusteringFinish - clusteringStart))/CLOCKS_PER_SEC;
-	timeReport.distanceCalculationExecutionTime = ((double)(distanceCalculationFinish - distanceCalculationStart))/CLOCKS_PER_SEC;
-	timeReport.sortingPointsExecutionTime =  ((double)(sortingFinish - sortingStart))/CLOCKS_PER_SEC;
 	timeReport.algorithmExecutionTime = timeReport.clusteringExecutionTime;	
-	timeReport.positioningExecutionTime = ((double)(positioningFinish - positioningStart))/CLOCKS_PER_SEC;
 	timeReport.indexBuildingExecutionTime = ((double)(indexBuildingFinish - indexBuildingStart))/CLOCKS_PER_SEC;
-	timeReport.placementComparisonCounters = vector<unsigned long>(placementComparisonCounters);
 	timeReport.realDistanceCalculationsCounters = vector<unsigned long>(realDistanceCalculationsCounters);
 
 	return timeReport;
@@ -153,14 +149,14 @@ TimeReport KNeighborhood::runDatasetIndexAccess(const Properties& properties, Da
 
 TimeReport KNeighborhood::runDatasetDirectAccess(const Properties& properties, Dataset& dataset){
 
-	clock_t distanceCalculationStart;
-	clock_t distanceCalculationFinish;
-	clock_t sortingStart;
-	clock_t sortingFinish;
-	clock_t clusteringStart;
-	clock_t clusteringFinish;
-	clock_t positioningStart;
-	clock_t positioningFinish;
+	clock_t distanceCalculationStart = 0;
+	clock_t distanceCalculationFinish = 0;
+	clock_t sortingStart = 0;
+	clock_t sortingFinish = 0;
+	clock_t clusteringStart = 0;
+	clock_t clusteringFinish = 0;
+	clock_t positioningStart = 0;
+	clock_t positioningFinish = 0;
 
 	TimeReport timeReport;
 
@@ -212,6 +208,11 @@ TimeReport KNeighborhood::runDatasetDirectAccess(const Properties& properties, D
 
 	classificationEquivalentEnd = classificationDatasetEquivalent.end();
 
+	/*
+	 * Clustering.
+	 */
+	clusteringStart = clock();
+
 	for(classificationEquivalentIt = classificationDatasetEquivalent.begin(); classificationEquivalentIt != classificationEquivalentEnd; classificationEquivalentIt++){
 		unsigned long realDistanceCalculationsCounter = 0;				
 		(*classificationEquivalentIt->second).neighbors = tiKNeighborhood(*tempDataset, classificationEquivalentIt->second, realDistanceCalculationsCounter);
@@ -221,11 +222,7 @@ TimeReport KNeighborhood::runDatasetDirectAccess(const Properties& properties, D
 	clusteringFinish = clock();
 
 	timeReport.clusteringExecutionTime = ((double)(clusteringFinish - clusteringStart))/CLOCKS_PER_SEC;
-	timeReport.distanceCalculationExecutionTime = ((double)(distanceCalculationFinish - distanceCalculationStart))/CLOCKS_PER_SEC;
-	timeReport.sortingPointsExecutionTime =  ((double)(sortingFinish - sortingStart))/CLOCKS_PER_SEC;
 	timeReport.algorithmExecutionTime = timeReport.clusteringExecutionTime;	
-	timeReport.positioningExecutionTime = ((double)(positioningFinish - positioningStart))/CLOCKS_PER_SEC;
-	timeReport.placementComparisonCounters = vector<unsigned long>(placementComparisonCounters);
 	timeReport.realDistanceCalculationsCounters = vector<unsigned long>(realDistanceCalculationsCounters);
 
 	return timeReport;
