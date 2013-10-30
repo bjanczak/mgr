@@ -193,10 +193,10 @@ TimeReport TiKNeighborhoodRefProjection::runDatasetIndexAccess(const Properties&
 		kNeighborhood = indexTiKNeighborhood(datasetIterators, classificationIndexEquivalentIt->second, classificationIndexEquivalentIt->first, TiKNeighborhoodRef::indexVerifyKCandidateNeighborsBackward, TiKNeighborhoodRef::indexVerifyKCandidateNeighborsForward, realDistanceCalculationsCounter, verificationRealDistanceCalculationsCounter);
 		KNeighborhoodPoint point = KNeighborhoodPoint(classificationIndexEquivalentIt->first);
 		point.neighbors = kNeighborhood;
-		point.realDistanceCalculations = realDistanceCalculationsCounter + verificationRealDistanceCalculationsCounter + 1;
+		point.realDistanceCalculations = realDistanceCalculationsCounter + verificationRealDistanceCalculationsCounter + referencePoints->size();
 		dataset.classificationKNeighborhoodDataset.push_back(point);		
 
-		realDistanceCalculationsCounters.push_back(realDistanceCalculationsCounter + verificationRealDistanceCalculationsCounter + 1);
+		realDistanceCalculationsCounters.push_back(realDistanceCalculationsCounter + verificationRealDistanceCalculationsCounter + referencePoints->size());
 		verificationRealDistanceCalculationsCounters.push_back(verificationRealDistanceCalculationsCounter);
 	}
 
@@ -349,10 +349,10 @@ TimeReport TiKNeighborhoodRefProjection::runDatasetDirectAccess(const Properties
 		kNeighborhood = tiKNeighborhood(*tempDataset, classificationEquivalentIt->second, classificationEquivalentIt->first, TiKNeighborhoodRef::verifyKCandidateNeighborsBackward, TiKNeighborhoodRef::verifyKCandidateNeighborsForward, realDistanceCalculationsCounter, verificationRealDistanceCalculationsCounter);
 		KNeighborhoodPoint point = KNeighborhoodPoint(classificationEquivalentIt->first);
 		point.neighbors = kNeighborhood;
-		point.realDistanceCalculations = realDistanceCalculationsCounter + verificationRealDistanceCalculationsCounter + 1;
+		point.realDistanceCalculations = realDistanceCalculationsCounter + verificationRealDistanceCalculationsCounter + referencePoints->size();
 		dataset.classificationKNeighborhoodDataset.push_back(point);		
 
-		realDistanceCalculationsCounters.push_back(realDistanceCalculationsCounter + verificationRealDistanceCalculationsCounter + 1);
+		realDistanceCalculationsCounters.push_back(realDistanceCalculationsCounter + verificationRealDistanceCalculationsCounter + referencePoints->size());
 		verificationRealDistanceCalculationsCounters.push_back(verificationRealDistanceCalculationsCounter);
 	}
 
