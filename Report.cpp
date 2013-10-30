@@ -534,7 +534,7 @@ void Report::print(ofstream& os){
 
 	if (this->realDistanceCalculationsCounters.size() > 0) {
 		os<<realDistanceCalculationsCountersSum<<columnSeparator;
-		os<<realDistanceCalculationsCountersSum/this->realDistanceCalculationsCounters.size()<<columnSeparator;
+		os<<(double)realDistanceCalculationsCountersSum/(double)this->realDistanceCalculationsCounters.size()<<columnSeparator;
 		os<<realDistanceCalculationsCountersMin<<columnSeparator;
 		os<<realDistanceCalculationsCountersMax<<columnSeparator;		
 	} else {
@@ -545,7 +545,7 @@ void Report::print(ofstream& os){
 	}
 	if (this->verificationRealDistanceCalculationsCounters.size() > 0) {
 		os<<verificationRealDistanceCalculationsCountersSum<<columnSeparator;
-		os<<verificationRealDistanceCalculationsCountersSum/this->verificationRealDistanceCalculationsCounters.size()<<columnSeparator;	
+		os<<(double)verificationRealDistanceCalculationsCountersSum/(double)this->verificationRealDistanceCalculationsCounters.size()<<columnSeparator;	
 		os<<verificationRealDistanceCalculationsCountersMin<<columnSeparator;
 		os<<verificationRealDistanceCalculationsCountersMax<<columnSeparator;
 	} else {
@@ -556,7 +556,7 @@ void Report::print(ofstream& os){
 	}
 	if (this->placementComparisonCounters.size() > 0) {
 		os<<placementComparisonCountersSum<<columnSeparator;
-		os<<placementComparisonCountersSum/this->placementComparisonCounters.size()<<columnSeparator;	
+		os<<(double)placementComparisonCountersSum/(double)this->placementComparisonCounters.size()<<columnSeparator;	
 		os<<placementComparisonCountersMin<<columnSeparator;
 		os<<placementComparisonCountersMax<<columnSeparator;
 	} else {

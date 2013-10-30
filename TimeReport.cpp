@@ -208,19 +208,19 @@ void TimeReport::print(ofstream &os){
 	os<<endl;
 	if (this->realDistanceCalculationsCounters.size() > 0) {
 		os<<"Real distance calculations                                : "<<realDistanceCalculationsCountersSum<<endl;
-		os<<"Average real distance calculations                        : "<<realDistanceCalculationsCountersSum/this->realDistanceCalculationsCounters.size()<<endl;
+		os<<"Average real distance calculations                        : "<<(double)realDistanceCalculationsCountersSum/(double)this->realDistanceCalculationsCounters.size()<<endl;
 		os<<"Min real distance calculations                            : "<<realDistanceCalculationsCountersMin<<endl;
 		os<<"Max real distance calculations                            : "<<realDistanceCalculationsCountersMax<<endl;
 	}
 	if (this->verificationRealDistanceCalculationsCounters.size() > 0) {
 		os<<"Verification real distance calculations                   : "<<verificationRealDistanceCalculationsCountersSum<<endl;
-		os<<"Verification average real distance calculations           : "<<verificationRealDistanceCalculationsCountersSum/this->verificationRealDistanceCalculationsCounters.size()<<endl;
+		os<<"Verification average real distance calculations           : "<<(double)verificationRealDistanceCalculationsCountersSum/(double)this->verificationRealDistanceCalculationsCounters.size()<<endl;
 		os<<"Verification min real distance calculations               : "<<verificationRealDistanceCalculationsCountersMin<<endl;
 		os<<"Verification max real distance calculations               : "<<verificationRealDistanceCalculationsCountersMax<<endl;
 	}
 	if (this->placementComparisonCounters.size() > 0) {
 		os<<"Placement comparisons                                     : "<<placementComparisonCountersSum<<endl;
-		os<<"Placement average comparisons                             : "<<placementComparisonCountersSum/this->placementComparisonCounters.size()<<endl;
+		os<<"Placement average comparisons                             : "<<(double)placementComparisonCountersSum/(double)this->placementComparisonCounters.size()<<endl;
 		os<<"Placement min comparisons                                 : "<<placementComparisonCountersMin<<endl;
 		os<<"Placement max comparisons                                 : "<<placementComparisonCountersMax<<endl;
 	}

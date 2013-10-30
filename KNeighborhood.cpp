@@ -130,11 +130,16 @@ TimeReport KNeighborhood::runDatasetIndexAccess(const Properties& properties, Da
 	clusteringStart = clock();
 
 	classificationIndexEquivalentEnd = classificationDatasetIndexEquivalent.end();
+	multimap<double, vector<KNeighborhoodPoint>::iterator, DistanceComparator> kNeighborhood;
 
 	for(classificationIndexEquivalentIt = classificationDatasetIndexEquivalent.begin(); classificationIndexEquivalentIt != classificationIndexEquivalentEnd; classificationIndexEquivalentIt++){
 		unsigned long realDistanceCalculationsCounter = 0;			
-		(**classificationIndexEquivalentIt->second).neighbors = indexTiKNeighborhood(datasetIterators, classificationIndexEquivalentIt->second, realDistanceCalculationsCounter);
-		realDistanceCalculationsCounters.push_back(realDistanceCalculationsCounter);
+
+		kNeighborhood = indexTiKNeighborhood(datasetIterators, classificationIndexEquivalentIt->second, realDistanceCalculationsCounter);
+		KNeighborhoodPoint point = KNeighborhoodPoint(classificationIndexEquivalentIt->first);
+		point.neighbors = kNeighborhood;
+		point.realDistanceCalculations = realDistanceCalculationsCounter;
+		dataset.classificationKNeighborhoodDataset.push_back(point);		
 	}
 
 	clusteringFinish = clock();
@@ -207,6 +212,7 @@ TimeReport KNeighborhood::runDatasetDirectAccess(const Properties& properties, D
 	}
 
 	classificationEquivalentEnd = classificationDatasetEquivalent.end();
+	multimap<double, vector<KNeighborhoodPoint>::iterator, DistanceComparator> kNeighborhood;
 
 	/*
 	 * Clustering.
@@ -215,8 +221,12 @@ TimeReport KNeighborhood::runDatasetDirectAccess(const Properties& properties, D
 
 	for(classificationEquivalentIt = classificationDatasetEquivalent.begin(); classificationEquivalentIt != classificationEquivalentEnd; classificationEquivalentIt++){
 		unsigned long realDistanceCalculationsCounter = 0;				
-		(*classificationEquivalentIt->second).neighbors = tiKNeighborhood(*tempDataset, classificationEquivalentIt->second, realDistanceCalculationsCounter);
-		realDistanceCalculationsCounters.push_back(realDistanceCalculationsCounter);
+
+		kNeighborhood = tiKNeighborhood(*tempDataset, classificationEquivalentIt->second, realDistanceCalculationsCounter);
+		KNeighborhoodPoint point = KNeighborhoodPoint(classificationEquivalentIt->first);
+		point.neighbors = kNeighborhood;
+		point.realDistanceCalculations = realDistanceCalculationsCounter;
+		dataset.classificationKNeighborhoodDataset.push_back(point);		
 	}
 
 	clusteringFinish = clock();

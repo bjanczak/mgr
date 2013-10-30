@@ -156,12 +156,19 @@ TimeReport TiKNeighborhood::runDatasetIndexAccess(const Properties& properties, 
 	classificationIndexEquivalentEnd = classificationDatasetIndexEquivalent.end();
 	unsigned long realDistanceCalculationsCounter;
 	unsigned long verificationRealDistanceCalculationsCounter;
+	multimap<double, vector<KNeighborhoodPoint>::iterator, DistanceComparator> kNeighborhood;
+	
 	for(classificationIndexEquivalentIt = classificationDatasetIndexEquivalent.begin(); classificationIndexEquivalentIt != classificationIndexEquivalentEnd; classificationIndexEquivalentIt++){
 		realDistanceCalculationsCounter = 0;
 		verificationRealDistanceCalculationsCounter = 0;
-		(**classificationIndexEquivalentIt->second).neighbors = indexTiKNeighborhood(datasetIterators, classificationIndexEquivalentIt->second, classificationIndexEquivalentIt->first, TiKNeighborhood::indexVerifyKCandidateNeighborsBackward, TiKNeighborhood::indexVerifyKCandidateNeighborsForward, realDistanceCalculationsCounter, verificationRealDistanceCalculationsCounter);
-		(**classificationIndexEquivalentIt->second).realDistanceCalculations = realDistanceCalculationsCounter + verificationRealDistanceCalculationsCounter;
-		realDistanceCalculationsCounters.push_back(realDistanceCalculationsCounter + verificationRealDistanceCalculationsCounter);
+		
+		kNeighborhood = indexTiKNeighborhood(datasetIterators, classificationIndexEquivalentIt->second, classificationIndexEquivalentIt->first, TiKNeighborhood::indexVerifyKCandidateNeighborsBackward, TiKNeighborhood::indexVerifyKCandidateNeighborsForward, realDistanceCalculationsCounter, verificationRealDistanceCalculationsCounter);
+		KNeighborhoodPoint point = KNeighborhoodPoint(classificationIndexEquivalentIt->first);
+		point.neighbors = kNeighborhood;
+		point.realDistanceCalculations = realDistanceCalculationsCounter + verificationRealDistanceCalculationsCounter + 1;
+		dataset.classificationKNeighborhoodDataset.push_back(point);		
+
+		realDistanceCalculationsCounters.push_back(realDistanceCalculationsCounter + verificationRealDistanceCalculationsCounter + 1);
 		verificationRealDistanceCalculationsCounters.push_back(verificationRealDistanceCalculationsCounter);
 	}
 
@@ -279,12 +286,19 @@ TimeReport TiKNeighborhood::runDatasetDirectAccess(const Properties& properties,
 	classificationEquivalentEnd = classificationDatasetEquivalent.end();
 	unsigned long realDistanceCalculationsCounter;
 	unsigned long verificationRealDistanceCalculationsCounter;
+	multimap<double, vector<KNeighborhoodPoint>::iterator, DistanceComparator> kNeighborhood;
+
 	for(classificationEquivalentIt = classificationDatasetEquivalent.begin(); classificationEquivalentIt != classificationEquivalentEnd; classificationEquivalentIt++){
 		realDistanceCalculationsCounter = 0;	
-		verificationRealDistanceCalculationsCounter = 0;
-		(*classificationEquivalentIt->second).neighbors = tiKNeighborhood(*tempDataset, classificationEquivalentIt->second, classificationEquivalentIt->first, TiKNeighborhood::verifyKCandidateNeighborsBackward, TiKNeighborhood::verifyKCandidateNeighborsForward, realDistanceCalculationsCounter, verificationRealDistanceCalculationsCounter);
-		(*classificationEquivalentIt->second).realDistanceCalculations = realDistanceCalculationsCounter + verificationRealDistanceCalculationsCounter;
-		realDistanceCalculationsCounters.push_back(realDistanceCalculationsCounter + verificationRealDistanceCalculationsCounter);
+		verificationRealDistanceCalculationsCounter = 0;		
+		
+		kNeighborhood = tiKNeighborhood(*tempDataset, classificationEquivalentIt->second, classificationEquivalentIt->first, TiKNeighborhood::verifyKCandidateNeighborsBackward, TiKNeighborhood::verifyKCandidateNeighborsForward, realDistanceCalculationsCounter, verificationRealDistanceCalculationsCounter);
+		KNeighborhoodPoint point = KNeighborhoodPoint(classificationEquivalentIt->first);
+		point.neighbors = kNeighborhood;
+		point.realDistanceCalculations = realDistanceCalculationsCounter + verificationRealDistanceCalculationsCounter + 1;
+		dataset.classificationKNeighborhoodDataset.push_back(point);		
+
+		realDistanceCalculationsCounters.push_back(realDistanceCalculationsCounter + verificationRealDistanceCalculationsCounter + 1);
 		verificationRealDistanceCalculationsCounters.push_back(verificationRealDistanceCalculationsCounter);
 	}
 

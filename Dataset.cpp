@@ -23,6 +23,7 @@ Dataset::~Dataset(){
 	this->datasetDbscanPoint.clear();
 	this->datasetKNeighborhoodPoint.clear();
 	this->classificationResult.clear();
+	this->classificationKNeighborhoodDataset.clear();
 	if(this->vpsTree != NULL){
 	
 		this->vpsTree->destroy();
@@ -42,6 +43,7 @@ Dataset::Dataset(){
 	this->datasetKNeighborhoodPoint;
 	this->classificationDataset;
 	this->classificationResult;
+	this->classificationKNeighborhoodDataset;
 	this->filePath = "";
 	this->vpsTree = NULL;
 	this->minEps = DBL_MAX;
@@ -68,6 +70,7 @@ void Dataset::clear(){
 	this->datasetDbscanPoint.clear();
 	this->datasetKNeighborhoodPoint.clear();
 	this->classificationResult.clear();
+	this->classificationKNeighborhoodDataset.clear();
 	
 	if(this->vpsTree != NULL){
 	
@@ -1237,24 +1240,27 @@ void Dataset::printClusteringSumUp(ofstream& os){
 
 			vector<pair<Point, Point*>>::iterator it;
 			vector<pair<Point, Point*>>::iterator end = this->classificationDataset.end();
+			vector<KNeighborhoodPoint>::iterator it2 = this->classificationKNeighborhoodDataset.begin();
 
 			for(it = this->classificationDataset.begin(); it != end; it++){
 				
 				os<<"Classification point ID         : "<<it->first.id<<endl;
 				os<<"Equivalent point ID             : "<<it->second->id<<endl;
-				os<<"    eps                         : "<<((KNeighborhoodPoint*)(it->second))->eps<<endl;
-				os<<"    neighbors nr                : "<<((KNeighborhoodPoint*)(it->second))->neighbors.size()<<endl;
-				os<<"    real distance calculations  : "<<((KNeighborhoodPoint*)(it->second))->realDistanceCalculations<<endl;
+				os<<"    eps                         : "<<it2->eps<<endl;
+				os<<"    neighbors nr                : "<<it2->neighbors.size()<<endl;
+				os<<"    real distance calculations  : "<<it2->realDistanceCalculations<<endl;
 				os<<"    neighbors                   : "<<endl;
 
-				neighborsEnd = ((KNeighborhoodPoint*)(it->second))->neighbors.end();
+				neighborsEnd = it2->neighbors.end();
 				
-				for(neighborsIt = ((KNeighborhoodPoint*)(it->second))->neighbors.begin(); neighborsIt != neighborsEnd; neighborsIt++){
+				for(neighborsIt = it2->neighbors.begin(); neighborsIt != neighborsEnd; neighborsIt++){
 
 					os<<"        ID: "<<neighborsIt->second->id<<"\tdistance: "<<neighborsIt->first<<endl;
 				}
 				os<<endl;
-			}				
+				it2++;
+			}	
+
 		}
 		else
 			if(this->algorithmType == Properties::CLASSIFICATION && (this->algorithmName == Properties::VP_TREE || this->algorithmName == Properties::VPS_TREE)){
@@ -1635,7 +1641,7 @@ void Dataset::fillVpsPointList(list<VpsPoint>& result, const vector<Point>& data
 
 void Dataset::calculateKNeighborhoodEps(double& minEpsP, double& avgEpsP, double& maxEpsP){
 
-	vector<KNeighborhoodPoint> dataset = this->datasetKNeighborhoodPoint;
+	vector<KNeighborhoodPoint> dataset = this->classificationKNeighborhoodDataset;
 	vector<KNeighborhoodPoint>::iterator it;
 	vector<KNeighborhoodPoint>::iterator end = dataset.end();
 

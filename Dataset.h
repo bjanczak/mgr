@@ -61,7 +61,7 @@ public:
 	 * Classification dataset
 	 */
 	vector<pair<Point, Point*>> classificationDataset;
-
+	vector<KNeighborhoodPoint> classificationKNeighborhoodDataset;
 	/**
 	 * Classification result.
 	 */
