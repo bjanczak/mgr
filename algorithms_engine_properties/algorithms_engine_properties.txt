@@ -1,2 +1,2 @@
 alfa=10000
-test_repeats=3
+test_repeats=1
